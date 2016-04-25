@@ -207,8 +207,20 @@ nwx_dev=172.28.12.149
 nwx_dev2=172.28.19.60
 nwx_dev3=172.28.19.61
 
+adjust_dotdirs_permissions() {
+    pushd ~ > /dev/null || return $?
+    {
+        git ls-files | xargs realpath | xargs dirname
+        realpath .
+    } | sort | uniq | grep --fixed-strings --invert-match --line-regex "$( realpath . )" | xargs chmod 0700
+    popd > /dev/null
+}
+
 adjust_dotfiles_permissions() {
-    pushd ~ && git ls-tree -r HEAD | cut -f 2 | xargs chmod 0600 && popd
+    pushd ~ > /dev/null || return $?
+    adjust_dotdirs_permissions
+    git ls-tree -r HEAD | cut -f 2 | xargs chmod 0600
+    popd > /dev/null
 }
 
 alias trim_trailing_whitespace='sed --binary --in-place '"'"'s/[[:blank:]]*\(\r\?\)$/\1/'"'"
