@@ -208,7 +208,7 @@ nwx_dev2=172.28.19.60
 nwx_dev3=172.28.19.61
 
 adjust_dotfiles_permissions() {
-    pushd ~ && git ls-tree HEAD | cut -f 2 | xargs chmod 0600 && popd
+    pushd ~ && git ls-tree -r HEAD | cut -f 2 | xargs chmod 0600 && popd
 }
 
 alias trim_trailing_whitespace='sed --binary --in-place '"'"'s/[[:blank:]]*\(\r\?\)$/\1/'"'"
