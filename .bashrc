@@ -208,19 +208,19 @@ nwx_dev2=172.28.19.60
 nwx_dev3=172.28.19.61
 
 adjust_dotdirs_permissions() {
-    pushd ~ > /dev/null || return $?
-    {
-        git ls-files | xargs realpath | xargs dirname
-        realpath .
-    } | sort | uniq | grep --fixed-strings --invert-match --line-regex "$( realpath . )" | xargs chmod 0700
-    popd > /dev/null
+  pushd ~ > /dev/null || return $?
+  {
+    git ls-files | xargs realpath | xargs dirname
+    realpath .
+  } | sort | uniq | grep --fixed-strings --invert-match --line-regex "$( realpath . )" | xargs chmod 0700
+  popd > /dev/null
 }
 
 adjust_dotfiles_permissions() {
-    pushd ~ > /dev/null || return $?
-    adjust_dotdirs_permissions
-    git ls-tree -r HEAD | cut -f 2 | xargs chmod 0600
-    popd > /dev/null
+  pushd ~ > /dev/null || return $?
+  adjust_dotdirs_permissions
+  git ls-files | xargs chmod 0600
+  popd > /dev/null
 }
 
 alias trim_trailing_whitespace='sed --binary --in-place '"'"'s/[[:blank:]]*\(\r\?\)$/\1/'"'"
@@ -230,33 +230,33 @@ alias ensure_ends_with_dos_newline='sed --binary --in-place -e '"'"'$s/\r\?$/\r/
 alias ensure_ends_with_unix_newline='sed --binary --in-place -e '"'"'$a\'"'"
 
 sanitize_dos_files() {
-    trim_trailing_whitespace "$@" && trim_trailing_dos_newlines "$@" && ensure_ends_with_dos_newline "$@"
-    return $?
+  trim_trailing_whitespace "$@" && trim_trailing_dos_newlines "$@" && ensure_ends_with_dos_newline "$@"
+  return $?
 }
 
 sanitize_unix_files() {
-    trim_trailing_whitespace "$@" && trim_trailing_unix_newlines "$@" && ensure_ends_with_unix_newline "$@"
-    return $?
+  trim_trailing_whitespace "$@" && trim_trailing_unix_newlines "$@" && ensure_ends_with_unix_newline "$@"
+  return $?
 }
 
 backup_repo() {
-    for repo_path; do
-        local zipname="$( basename "$repo_path" )_$( date -u +'%Y%m%dT%H%M%S' ).zip"
-        git archive \
-            --format=zip -9 \
-            --output="/cygdrive/c/Users/$( whoami )/Dropbox/backups/$zipname" \
-            --remote="$repo_path" \
-            HEAD
-    done
+  for repo_path; do
+    local zipname="$( basename "$repo_path" )_$( date -u +'%Y%m%dT%H%M%S' ).zip"
+    git archive \
+      --format=zip -9 \
+      --output="/cygdrive/c/Users/$( whoami )/Dropbox/backups/$zipname" \
+      --remote="$repo_path" \
+      HEAD
+  done
 }
 
 backup_repo_nwx() {
-    for repo_path; do
-        local zipname="$( basename "$repo_path" )_$( date -u +'%Y%m%dT%H%M%S' ).zip"
-        git archive \
-            --format=zip -9 \
-            --output="//spbfs02/P/Personal/Egor Tensin/$zipname" \
-            --remote="$repo_path" \
-            HEAD
-    done
+  for repo_path; do
+    local zipname="$( basename "$repo_path" )_$( date -u +'%Y%m%dT%H%M%S' ).zip"
+    git archive \
+      --format=zip -9 \
+      --output="//spbfs02/P/Personal/Egor Tensin/$zipname" \
+      --remote="$repo_path" \
+      HEAD
+  done
 }
