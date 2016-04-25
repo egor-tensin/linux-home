@@ -1,0 +1,25 @@
+[user]
+	name = Egor Tensin
+	email = Egor.Tensin@gmail.com
+[core]
+	editor = vim
+	ignorecase = false
+        autocrlf = true
+[push]
+	default = current
+[merge]
+	tool = kdiff3
+[mergetool "kdiff3"]
+	trustExitCode = false
+[mergetool]
+	keepBackup = false
+[diff]
+	tool = kdiff3
+[difftool]
+	keepBackup = false
+[difftool "kdiff3"]
+	trustExitCode = false
+[pull]
+	ff = only
+[config]
+	autocrlf = true
