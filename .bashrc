@@ -230,13 +230,15 @@ alias ensure_ends_with_dos_newline='sed --binary --in-place -e '"'"'$s/\r\?$/\r/
 alias ensure_ends_with_unix_newline='sed --binary --in-place -e '"'"'$a\'"'"
 
 sanitize_dos_files() {
-  trim_trailing_whitespace "$@" && trim_trailing_dos_newlines "$@" && ensure_ends_with_dos_newline "$@"
-  return $?
+  trim_trailing_whitespace "$@" \
+     && trim_trailing_dos_newlines "$@" \
+     && ensure_ends_with_dos_newline "$@"
 }
 
 sanitize_unix_files() {
-  trim_trailing_whitespace "$@" && trim_trailing_unix_newlines "$@" && ensure_ends_with_unix_newline "$@"
-  return $?
+  trim_trailing_whitespace "$@" \
+      && trim_trailing_unix_newlines "$@" \
+      && ensure_ends_with_unix_newline "$@"
 }
 
 backup_repo() {
