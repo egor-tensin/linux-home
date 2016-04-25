@@ -71,6 +71,6 @@
   # Insert a space character then performs
   # a history expansion in the line
   #Space: magic-space
- 
+
   TAB: menu-complete
 #$endif
