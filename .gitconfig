@@ -4,7 +4,7 @@
 [core]
 	editor = vim
 	ignorecase = false
-        autocrlf = true
+	autocrlf = true
 [push]
 	default = current
 [merge]
@@ -21,5 +21,3 @@
 	trustExitCode = false
 [pull]
 	ff = only
-[config]
-	autocrlf = true
