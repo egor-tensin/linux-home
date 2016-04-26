@@ -243,7 +243,7 @@ sanitize_unix_files() {
 
 backup_repo() {
   for repo_path; do
-    local zipname="$( basename "$repo_path" )_$( date -u +'%Y%m%dT%H%M%S' ).zip"
+    local zipname="$( basename "$( realpath "$repo_path" )" )_$( date -u +'%Y%m%dT%H%M%S' ).zip"
     git archive \
       --format=zip -9 \
       --output="/cygdrive/c/Users/$( whoami )/Dropbox/backups/$zipname" \
@@ -254,7 +254,7 @@ backup_repo() {
 
 backup_repo_nwx() {
   for repo_path; do
-    local zipname="$( basename "$repo_path" )_$( date -u +'%Y%m%dT%H%M%S' ).zip"
+    local zipname="$( basename "$( realpath "$repo_path" )" )_$( date -u +'%Y%m%dT%H%M%S' ).zip"
     git archive \
       --format=zip -9 \
       --output="//spbfs02/P/Personal/Egor Tensin/$zipname" \
