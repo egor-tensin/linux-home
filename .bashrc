@@ -241,6 +241,38 @@ sanitize_unix_files() {
       && ensure_ends_with_unix_newline "$@"
 }
 
+sanitize_dos_files_in_dir() {
+  if [ "$#" -lt 1 ]; then
+    echo "Usage: $FUNCNAME DIRNAME [FILENAME_MASK...]" >&2
+    return 1
+  fi
+  local cmd="$( printf 'find %q -type f' "$1" )"
+  if [ "$#" -gt 1 ]; then
+    cmd+="$( printf ' %q' '-(' )"
+    shift
+    cmd+="$( printf ' -name %q' "$1" )"
+    shift
+    local fn_mask
+    for fn_mask; do
+      cmd+="$( printf ' -o -name %q' "$fn_mask" )"
+    done
+    cmd+="$( printf ' %q' '-)' )"
+  fi
+  cmd+=' -print0'
+  local path
+  eval "$cmd" | while read -d '' -r path; do
+    sanitize_dos_files "$path"
+  done || return $?
+}
+
+sanitize_dos_files_in_dir_nwx() {
+  local root_dirname='/cygdrive/c/Netwrix Auditor/CurrentVersion-AuditCore-Dev/AuditCore/Sources'
+  sanitize_dos_files_in_dir \
+    "$root_dirname/Configuration" WebAPI*.acinc WebAPI*.acconf || return $?
+  sanitize_dos_files_in_dir \
+    "$root_dirname/Subsystems/PublicAPI" *.cpp *.h || return $?
+}
+
 backup_repo() {
   for repo_path; do
     local zipname="$( basename "$( realpath "$repo_path" )" )_$( date -u +'%Y%m%dT%H%M%S' ).zip"
