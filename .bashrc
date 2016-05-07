@@ -212,7 +212,10 @@ adjust_dotdirs_permissions() {
   {
     git ls-files | xargs realpath | xargs dirname
     realpath .
-  } | sort | uniq | grep --fixed-strings --invert-match --line-regex "$( realpath . )" | xargs chmod 0700
+  } | sort | uniq | grep --fixed-strings --invert-match --line-regex "$( realpath . )" | xargs chmod 0700 || return $?
+  if [ -d .git ]; then
+    chmod --recursive 0700 .git || return $?
+  fi
   popd > /dev/null
 }
 
@@ -293,4 +296,29 @@ backup_repo_nwx() {
       --remote="$repo_path" \
       HEAD
   done
+}
+
+list_files() {
+  local cmd='find . -type f'
+  if [ $# -gt 0 ]; then
+    cmd+="$( printf ' %q' '-(' )"
+    local ext="$1"
+    cmd+="$( printf ' -iname %q' "*.$ext" )"
+    shift
+    for ext; do
+      cmd+="$( printf ' -o -iname %q' "*.$ext" )"
+    done
+    cmd+="$( printf ' %q' '-)' )"
+  fi
+  eval "$cmd"
+}
+
+checksums_path='sha1sums.txt'
+
+update_checksums() {
+  list_files iso exe | xargs --max-lines=1 sha1sum > "$checksums_path"
+}
+
+checksums() {
+  sha1sum --check "$checksums_path"
 }
