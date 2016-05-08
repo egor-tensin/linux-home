@@ -202,10 +202,10 @@ alias l='ls -CF'                              #
 
 PS1='\[\e[33m\]\W\[\e[0m\]: '
 
-nwx_host=172.28.10.2
-nwx_dev=172.28.12.149
-nwx_dev2=172.28.19.60
-nwx_dev3=172.28.19.61
+netwrix_host=172.28.10.2
+netwrix_dev=172.28.12.149
+netwrix_dev2=172.28.19.60
+netwrix_dev3=172.28.19.61
 
 list_files() {
   local cmd='find . -type f'
@@ -232,9 +232,8 @@ list_git_files() {
 
 list_git_dirs() {
   {
-    list_git_files | xargs realpath | xargs dirname
-    realpath .
-  } | sort | uniq | grep --fixed-strings --invert-match --line-regex "$( realpath . )"
+    list_git_files | xargs realpath | xargs dirname && realpath .
+  } | sort | uniq | tail -n +2
 }
 
 adjust_dotfiles_permissions() {
@@ -249,59 +248,69 @@ adjust_dotfiles_permissions() {
     && popd > /dev/null
 }
 
-alias trim_trailing_whitespace='sed --binary --in-place '"'"'s/[[:blank:]]*\(\r\?\)$/\1/'"'"
-alias trim_trailing_dos_newlines='sed --binary --in-place -e :a -e '"'"'/^\(\r\n\)*\r$/{$d;N;ba}'"'"
-alias trim_trailing_unix_newlines='sed --binary --in-place -e :a -e '"'"'/^\n*$/{$d;N;ba}'"'"
-alias ensure_ends_with_dos_newline='sed --binary --in-place -e '"'"'$s/\r\?$/\r/;a\'"'"
-alias ensure_ends_with_unix_newline='sed --binary --in-place -e '"'"'$a\'"'"
+alias rtrim_line_whitespace='sed --binary --in-place '"'"'s/[[:blank:]]*\(\r\?\)$/\1/'"'"
+alias rtrim_file_newlines_dos='sed --binary --in-place -e :a -e '"'"'/^\(\r\n\)*\r$/{$d;N;ba}'"'"
+alias rtrim_file_newlines_unix='sed --binary --in-place -e :a -e '"'"'/^\n*$/{$d;N;ba}'"'"
+alias ensure_eol_dos='sed --binary --in-place -e '"'"'$s/\r\?$/\r/;a\'"'"
+alias ensure_eol_unix='sed --binary --in-place -e '"'"'$a\'"'"
 
-sanitize_dos_files() {
-  trim_trailing_whitespace "$@" \
-    && trim_trailing_dos_newlines "$@" \
-    && ensure_ends_with_dos_newline "$@"
+lint() {
+  rtrim_line_whitespace "$@" \
+    && rtrim_file_newlines_unix "$@" \
+    && ensure_eol_unix "$@"
 }
 
-sanitize_unix_files() {
-  trim_trailing_whitespace "$@" \
-    && trim_trailing_unix_newlines "$@" \
-    && ensure_ends_with_unix_newline "$@"
-}
-
-sanitize_dos_files_in_dir() {
+lint_all() {
   local path
-  list_files "$@" | while read -r path ; do sanitize_dos_files "$path" ; done
+  list_files "$@" | while read -r path ; do lint "$path" ; done
 }
 
-sanitize_dos_files_in_dir_nwx() {
+doslint() {
+  rtrim_line_whitespace "$@" \
+    && rtrim_file_newlines_dos "$@" \
+    && ensure_eol_dos "$@"
+}
+
+doslint_all() {
+  local path
+  list_files "$@" | while read -r path ; do doslint "$path" ; done
+}
+
+doslint_netwrix() {
   local root_dir='/cygdrive/c/Netwrix Auditor/CurrentVersion-AuditCore-Dev/AuditCore/Sources'
   pushd "$root_dir/Configuration" > /dev/null \
-    && sanitize_dos_files_in_dir 'WebAPI*.acinc' 'WebAPI*.acconf' \
+    && doslint_all 'WebAPI*.acinc' 'WebAPI*.acconf' \
     && popd > /dev/null \
     && pushd "$root_dir/Subsystems/PublicAPI" > /dev/null \
-    && sanitize_dos_files_in_dir '*.cpp' '*.h' \
+    && doslint_all '*.cpp' '*.h' \
     && popd > /dev/null
 }
 
 backup_repo() {
-  for repo_path; do
-    local zipname="$( basename "$( realpath "$repo_path" )" )_$( date -u +'%Y%m%dT%H%M%S' ).zip"
-    git archive \
-      --format=zip -9 \
-      --output="/cygdrive/c/Users/$( whoami )/Dropbox/backups/$zipname" \
-      --remote="$repo_path" \
-      HEAD
-  done
+  if [ $# -eq 1 ]; then
+    local repo_dir_path="$1"
+    local backup_dir_path="$( realpath . )" || return $?
+  elif [ $# -eq 2 ]; then
+    local repo_dir_path="$1"
+    local backup_dir_path="$2"
+  else
+    echo "Usage: $FUNCNAME REPO_DIR_PATH [BACKUP_DIR_PATH]" >&2
+    return 1
+  fi
+  local zip_name="$( basename "$( realpath "$repo_dir_path" )" )_$( date -u +'%Y%m%dT%H%M%S' ).zip" || return $?
+  git archive \
+    --format=zip -9 \
+    --output="$backup_dir_path/$zip_name" \
+    --remote="$repo_dir_path" \
+    HEAD
 }
 
-backup_repo_nwx() {
-  for repo_path; do
-    local zipname="$( basename "$( realpath "$repo_path" )" )_$( date -u +'%Y%m%dT%H%M%S' ).zip"
-    git archive \
-      --format=zip -9 \
-      --output="//spbfs02/P/Personal/Egor Tensin/$zipname" \
-      --remote="$repo_path" \
-      HEAD
-  done
+backup_repo_dropbox() {
+  backup_repo "$@" "/cygdrive/c/Users/$( whoami )/Dropbox/backups"
+}
+
+backup_repo_netwrix() {
+  backup_repo "$@" '//spbfs02/P/Personal/Egor Tensin'
 }
 
 checksums_path='sha1sums.txt'
@@ -310,7 +319,7 @@ update_checksums() {
   list_files "$@" | xargs sha1sum > "$checksums_path"
 }
 
-update_checksums_default() {
+update_distr_checksums() {
   update_checksums '*.exe' '*.iso'
 }
 
