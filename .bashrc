@@ -223,7 +223,7 @@ list_files() {
 }
 
 list_dirs() {
-  find . -type d
+  find . -type d | tail -n +2 | xargs realpath
 }
 
 list_git_files() {
