@@ -207,23 +207,46 @@ nwx_dev=172.28.12.149
 nwx_dev2=172.28.19.60
 nwx_dev3=172.28.19.61
 
-adjust_dotdirs_permissions() {
-  pushd ~ > /dev/null || return $?
-  {
-    git ls-files | xargs realpath | xargs dirname
-    realpath .
-  } | sort | uniq | grep --fixed-strings --invert-match --line-regex "$( realpath . )" | xargs chmod 0700 || return $?
-  if [ -d .git ]; then
-    chmod --recursive 0700 .git || return $?
+list_files() {
+  local cmd='find . -type f'
+  if [ $# -gt 0 ]; then
+    cmd+="$( printf ' %q' '-(' )"
+    local fmask="$1"
+    cmd+="$( printf ' -iname %q' "*.$fmask" )"
+    shift
+    for fmask; do
+      cmd+="$( printf ' -o -iname %q' "*.$fmask" )"
+    done
+    cmd+="$( printf ' %q' '-)' )"
   fi
-  popd > /dev/null
+  eval "$cmd"
+}
+
+list_dirs() {
+  find . -type d
+}
+
+list_git_files() {
+  git ls-files
+}
+
+list_git_dirs() {
+  {
+    list_git_files | xargs realpath | xargs dirname
+    realpath .
+  } | sort | uniq | grep --fixed-strings --invert-match --line-regex "$( realpath . )"
 }
 
 adjust_dotfiles_permissions() {
-  pushd ~ > /dev/null || return $?
-  adjust_dotdirs_permissions
-  git ls-files | xargs chmod 0600
-  popd > /dev/null
+  pushd ~ > /dev/null \
+    && list_git_files | xargs --max-lines=1 chmod 0600 \
+    && list_git_dirs | xargs --max-lines=1 chmod 0700 \
+    && chmod 0700 .git \
+    && pushd .git > /dev/null \
+    && list_files | xargs --max-lines=1 chmod 0600 \
+    && list_dirs | xargs --max-lines=1 chmod 0700 \
+    && popd > /dev/null \
+    && popd > /dev/null
 }
 
 alias trim_trailing_whitespace='sed --binary --in-place '"'"'s/[[:blank:]]*\(\r\?\)$/\1/'"'"
@@ -234,46 +257,29 @@ alias ensure_ends_with_unix_newline='sed --binary --in-place -e '"'"'$a\'"'"
 
 sanitize_dos_files() {
   trim_trailing_whitespace "$@" \
-     && trim_trailing_dos_newlines "$@" \
-     && ensure_ends_with_dos_newline "$@"
+    && trim_trailing_dos_newlines "$@" \
+    && ensure_ends_with_dos_newline "$@"
 }
 
 sanitize_unix_files() {
   trim_trailing_whitespace "$@" \
-      && trim_trailing_unix_newlines "$@" \
-      && ensure_ends_with_unix_newline "$@"
+    && trim_trailing_unix_newlines "$@" \
+    && ensure_ends_with_unix_newline "$@"
 }
 
 sanitize_dos_files_in_dir() {
-  if [ "$#" -lt 1 ]; then
-    echo "Usage: $FUNCNAME DIRNAME [FILENAME_MASK...]" >&2
-    return 1
-  fi
-  local cmd="$( printf 'find %q -type f' "$1" )"
-  if [ "$#" -gt 1 ]; then
-    cmd+="$( printf ' %q' '-(' )"
-    shift
-    cmd+="$( printf ' -name %q' "$1" )"
-    shift
-    local fn_mask
-    for fn_mask; do
-      cmd+="$( printf ' -o -name %q' "$fn_mask" )"
-    done
-    cmd+="$( printf ' %q' '-)' )"
-  fi
-  cmd+=' -print0'
   local path
-  eval "$cmd" | while read -d '' -r path; do
-    sanitize_dos_files "$path"
-  done || return $?
+  list_files "$@" | while read -r path ; do sanitize_dos_files "$path" ; done
 }
 
 sanitize_dos_files_in_dir_nwx() {
-  local root_dirname='/cygdrive/c/Netwrix Auditor/CurrentVersion-AuditCore-Dev/AuditCore/Sources'
-  sanitize_dos_files_in_dir \
-    "$root_dirname/Configuration" WebAPI*.acinc WebAPI*.acconf || return $?
-  sanitize_dos_files_in_dir \
-    "$root_dirname/Subsystems/PublicAPI" *.cpp *.h || return $?
+  local root_dir='/cygdrive/c/Netwrix Auditor/CurrentVersion-AuditCore-Dev/AuditCore/Sources'
+  pushd "$root_dir/Configuration" > /dev/null \
+    && sanitize_dos_files_in_dir WebAPI*.acinc WebAPI*.acconf \
+    && popd > /dev/null \
+    && pushd "$root_dir/Subsystems/PublicAPI" *.cpp *.h \
+    && sanitize_dos_files_in_dir *.cpp *.h \
+    && popd
 }
 
 backup_repo() {
@@ -298,25 +304,10 @@ backup_repo_nwx() {
   done
 }
 
-list_files() {
-  local cmd='find . -type f'
-  if [ $# -gt 0 ]; then
-    cmd+="$( printf ' %q' '-(' )"
-    local ext="$1"
-    cmd+="$( printf ' -iname %q' "*.$ext" )"
-    shift
-    for ext; do
-      cmd+="$( printf ' -o -iname %q' "*.$ext" )"
-    done
-    cmd+="$( printf ' %q' '-)' )"
-  fi
-  eval "$cmd"
-}
-
 checksums_path='sha1sums.txt'
 
 update_checksums() {
-  list_files iso exe | xargs --max-lines=1 sha1sum > "$checksums_path"
+  list_files '*.iso' '*.exe' | xargs --max-lines=1 sha1sum > "$checksums_path"
 }
 
 checksums() {
