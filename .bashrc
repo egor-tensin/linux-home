@@ -212,10 +212,10 @@ list_files() {
   if [ $# -gt 0 ]; then
     cmd+="$( printf ' %q' '-(' )"
     local fmask="$1"
-    cmd+="$( printf ' -iname %q' "*.$fmask" )"
+    cmd+="$( printf ' -iname %q' "$fmask" )"
     shift
     for fmask; do
-      cmd+="$( printf ' -o -iname %q' "*.$fmask" )"
+      cmd+="$( printf ' -o -iname %q' "$fmask" )"
     done
     cmd+="$( printf ' %q' '-)' )"
   fi
@@ -239,12 +239,12 @@ list_git_dirs() {
 
 adjust_dotfiles_permissions() {
   pushd ~ > /dev/null \
-    && list_git_files | xargs --max-lines=1 chmod 0600 \
-    && list_git_dirs | xargs --max-lines=1 chmod 0700 \
+    && list_git_files | xargs chmod 0600 \
+    && list_git_dirs | xargs chmod 0700 \
     && chmod 0700 .git \
     && pushd .git > /dev/null \
-    && list_files | xargs --max-lines=1 chmod 0600 \
-    && list_dirs | xargs --max-lines=1 chmod 0700 \
+    && list_files | xargs chmod 0600 \
+    && list_dirs | xargs chmod 0700 \
     && popd > /dev/null \
     && popd > /dev/null
 }
@@ -275,11 +275,11 @@ sanitize_dos_files_in_dir() {
 sanitize_dos_files_in_dir_nwx() {
   local root_dir='/cygdrive/c/Netwrix Auditor/CurrentVersion-AuditCore-Dev/AuditCore/Sources'
   pushd "$root_dir/Configuration" > /dev/null \
-    && sanitize_dos_files_in_dir WebAPI*.acinc WebAPI*.acconf \
+    && sanitize_dos_files_in_dir 'WebAPI*.acinc' 'WebAPI*.acconf' \
     && popd > /dev/null \
-    && pushd "$root_dir/Subsystems/PublicAPI" *.cpp *.h \
-    && sanitize_dos_files_in_dir *.cpp *.h \
-    && popd
+    && pushd "$root_dir/Subsystems/PublicAPI" > /dev/null \
+    && sanitize_dos_files_in_dir '*.cpp' '*.h' \
+    && popd > /dev/null
 }
 
 backup_repo() {
@@ -307,9 +307,13 @@ backup_repo_nwx() {
 checksums_path='sha1sums.txt'
 
 update_checksums() {
-  list_files '*.iso' '*.exe' | xargs --max-lines=1 sha1sum > "$checksums_path"
+  list_files "$@" | xargs sha1sum > "$checksums_path"
 }
 
-checksums() {
+update_checksums_default() {
+  update_checksums '*.exe' '*.iso'
+}
+
+verify_checksums() {
   sha1sum --check "$checksums_path"
 }
