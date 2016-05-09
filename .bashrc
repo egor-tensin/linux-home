@@ -202,10 +202,9 @@ alias l='ls -CF'                              #
 
 PS1='\[\e[33m\]\W\[\e[0m\]: '
 
-netwrix_host=172.28.10.2
-netwrix_dev=172.28.12.149
-netwrix_dev2=172.28.19.60
-netwrix_dev3=172.28.19.61
+nwx_host=172.28.10.2
+nwx_dev2=172.28.19.60
+nwx_dev3=172.28.19.61
 
 list_files() {
   local cmd='find . -type f'
