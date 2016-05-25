@@ -247,6 +247,8 @@ adjust_dotfiles_permissions() {
     && popd > /dev/null
 }
 
+alias dos2unix_='sed --binary --in-place '"'"'s/\(\r\?\)$//'"'"
+alias unix2dos_='sed --binary --in-place '"'"'s/\r\?$/\r/'"'"
 alias rtrim_line_whitespace='sed --binary --in-place '"'"'s/[[:blank:]]*\(\r\?\)$/\1/'"'"
 alias rtrim_file_newlines_dos='sed --binary --in-place -e :a -e '"'"'/^\(\r\n\)*\r$/{$d;N;ba}'"'"
 alias rtrim_file_newlines_unix='sed --binary --in-place -e :a -e '"'"'/^\n*$/{$d;N;ba}'"'"
