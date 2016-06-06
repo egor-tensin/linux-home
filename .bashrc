@@ -254,6 +254,7 @@ alias rtrim_file_newlines_dos='sed --binary --in-place -e :a -e '"'"'/^\(\r\n\)*
 alias rtrim_file_newlines_unix='sed --binary --in-place -e :a -e '"'"'/^\n*$/{$d;N;ba}'"'"
 alias ensure_eol_dos='sed --binary --in-place -e '"'"'$s/\r\?$/\r/;a\'"'"
 alias ensure_eol_unix='sed --binary --in-place -e '"'"'$a\'"'"
+alias ltrim_utf8_bom='sed --binary --in-place '"'"'s/^\xef\xbb\xbf//'"'"
 
 lint() {
   rtrim_line_whitespace "$@" \
@@ -277,7 +278,7 @@ doslint_all() {
   list_files "$@" | while read -r path ; do doslint "$path" ; done
 }
 
-doslint_netwrix() {
+doslint_webapi() {
   local root_dir='/cygdrive/c/Netwrix Auditor/CurrentVersion-AuditCore-Dev/AuditCore/Sources'
   pushd "$root_dir/Configuration" > /dev/null \
     && doslint_all 'WebAPI*.acinc' 'WebAPI*.acconf' \
