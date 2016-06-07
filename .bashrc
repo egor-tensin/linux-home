@@ -274,32 +274,32 @@ doslint_webapi() (
 backup_repo() (
   set -o errexit
 
+  local repo_dir="$( realpath . )"
+  local repo_name="$( basename "$repo_dir" )"
+  local backup_dir="$repo_dir"
+
   if [ $# -eq 1 ]; then
-    local repo_dir_path="$1"
-    local backup_dir_path="$( realpath . )"
-  elif [ $# -eq 2 ]; then
-    local repo_dir_path="$1"
-    local backup_dir_path="$2"
-  else
-    echo "Usage: $FUNCNAME REPO_DIR_PATH [BACKUP_DIR_PATH]" >&2
+    local backup_dir="$1"
+  elif [ $# -gt 1 ]; then
+    echo "Usage: $FUNCNAME [BACKUP_DIR]" >&2
     exit 1
   fi
 
-  local zip_name="$( basename "$( realpath "$repo_dir_path" )" )_$( date -u +'%Y%m%dT%H%M%S' ).zip"
+  local zip_name="${repo_name}_$( date -u +'%Y%m%dT%H%M%S' ).zip"
 
   git archive \
     --format=zip -9 \
-    --output="$backup_dir_path/$zip_name" \
-    --remote="$repo_dir_path" \
+    --output="$backup_dir/$zip_name" \
+    --remote="$repo_dir" \
     HEAD
 )
 
 backup_repo_dropbox() {
-  backup_repo "$@" "$USERPROFILE/Dropbox/backups"
+  backup_repo "$USERPROFILE/Dropbox/backups"
 }
 
 backup_repo_netwrix() {
-  backup_repo "$@" '//spbfs02/P/Personal/Egor Tensin'
+  backup_repo '//spbfs02/P/Personal/Egor Tensin'
 }
 
 checksums_path='sha1sums.txt'
