@@ -28,6 +28,7 @@
 
 set -o pipefail
 set -o nounset
+shopt -s nullglob
 
 # Shell Options
 #
@@ -206,46 +207,28 @@ nwx_host=172.28.10.2
 nwx_dev2=172.28.19.60
 nwx_dev3=172.28.19.61
 
-list_files() {
-  local cmd='find . -type f'
-  if [ $# -gt 0 ]; then
-    cmd+="$( printf ' %q' '-(' )"
-    local fmask="$1"
-    cmd+="$( printf ' -iname %q' "$fmask" )"
-    shift
-    for fmask; do
-      cmd+="$( printf ' -o -iname %q' "$fmask" )"
-    done
-    cmd+="$( printf ' %q' '-)' )"
+symlink_sublime_preferences() (
+  set -o errexit
+
+  local src_dir="$HOME/.Sublime Text 3"
+  local dest_dir="$APPDATA/Sublime Text 3/Packages/User"
+
+  if [ ! -d "$dest_dir" ]; then
+    mkdir -p "$dest_dir"
   fi
-  eval "$cmd"
-}
 
-list_dirs() {
-  find . -type d | tail -n +2 | xargs realpath
-}
+  find "$src_dir" -maxdepth 1 -type f -exec ln -fs {} "$dest_dir" \;
+)
 
-list_git_files() {
-  git ls-files
-}
+tighten_up_file_permissions_in_repo() (
+  set -o errexit
 
-list_git_dirs() {
-  {
-    list_git_files | xargs realpath | xargs dirname && realpath .
-  } | sort | uniq | tail -n +2
-}
+  git ls-files | xargs chmod 0600
 
-adjust_dotfiles_permissions() {
-  pushd ~ > /dev/null \
-    && list_git_files | xargs chmod 0600 \
-    && list_git_dirs | xargs chmod 0700 \
-    && chmod 0700 .git \
-    && pushd .git > /dev/null \
-    && list_files | xargs chmod 0600 \
-    && list_dirs | xargs chmod 0700 \
-    && popd > /dev/null \
-    && popd > /dev/null
-}
+  { echo . ; git ls-files ; } | xargs dirname | sort | uniq | tail -n +2 | xargs chmod 0700
+
+  chmod 0700 .git
+)
 
 alias dos2unix_='sed --binary --in-place '"'"'s/\(\r\?\)$//'"'"
 alias unix2dos_='sed --binary --in-place '"'"'s/\r\?$/\r/'"'"
@@ -262,53 +245,52 @@ lint() {
     && ensure_eol_unix "$@"
 }
 
-lint_all() {
-  local path
-  list_files "$@" | while read -r path ; do lint "$path" ; done
-}
-
 doslint() {
   rtrim_line_whitespace "$@" \
     && rtrim_file_newlines_dos "$@" \
     && ensure_eol_dos "$@"
 }
 
-doslint_all() {
-  local path
-  list_files "$@" | while read -r path ; do doslint "$path" ; done
-}
+doslint_webapi() (
+  set -o errexit
 
-doslint_webapi() {
   local root_dir='/cygdrive/c/Netwrix Auditor/CurrentVersion-AuditCore-Dev/AuditCore/Sources'
-  pushd "$root_dir/Configuration" > /dev/null \
-    && doslint_all 'WebAPI*.acinc' 'WebAPI*.acconf' \
-    && popd > /dev/null \
-    && pushd "$root_dir/Subsystems/PublicAPI" > /dev/null \
-    && doslint_all '*.cpp' '*.h' \
-    && popd > /dev/null
-}
 
-backup_repo() {
+  cd "$root_dir/Configuration"
+  doslint WebAPI*.acinc WebAPI*.acconf
+
+  cd "$root_dir/Subsystems/PublicAPI"
+  local path
+  find . -type f -\( -iname '*.cpp' -o -iname '*.h' -\) | while read -r path ; do
+    doslint "$path"
+  done
+)
+
+backup_repo() (
+  set -o errexit
+
   if [ $# -eq 1 ]; then
     local repo_dir_path="$1"
-    local backup_dir_path="$( realpath . )" || return $?
+    local backup_dir_path="$( realpath . )"
   elif [ $# -eq 2 ]; then
     local repo_dir_path="$1"
     local backup_dir_path="$2"
   else
     echo "Usage: $FUNCNAME REPO_DIR_PATH [BACKUP_DIR_PATH]" >&2
-    return 1
+    exit 1
   fi
-  local zip_name="$( basename "$( realpath "$repo_dir_path" )" )_$( date -u +'%Y%m%dT%H%M%S' ).zip" || return $?
+
+  local zip_name="$( basename "$( realpath "$repo_dir_path" )" )_$( date -u +'%Y%m%dT%H%M%S' ).zip"
+
   git archive \
     --format=zip -9 \
     --output="$backup_dir_path/$zip_name" \
     --remote="$repo_dir_path" \
     HEAD
-}
+)
 
 backup_repo_dropbox() {
-  backup_repo "$@" "/cygdrive/c/Users/$( whoami )/Dropbox/backups"
+  backup_repo "$@" "$USERPROFILE/Dropbox/backups"
 }
 
 backup_repo_netwrix() {
@@ -318,11 +300,11 @@ backup_repo_netwrix() {
 checksums_path='sha1sums.txt'
 
 update_checksums() {
-  list_files "$@" | xargs sha1sum > "$checksums_path"
+  sha1sum "$@" > "$checksums_path"
 }
 
-update_distr_checksums() {
-  update_checksums '*.exe' '*.iso'
+update_checksums_distr() {
+  update_checksums *.exe *.iso
 }
 
 verify_checksums() {
