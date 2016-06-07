@@ -217,15 +217,20 @@ symlink_sublime_preferences() (
     mkdir -p "$dest_dir"
   fi
 
-  find "$src_dir" -maxdepth 1 -type f -exec ln -fs {} "$dest_dir" \;
+  find "$src_dir" -maxdepth 1 -type f -exec ln --force -s {} "$dest_dir" \;
 )
 
 tighten_up_file_permissions_in_repo() (
   set -o errexit
 
-  git ls-files | xargs chmod 0600
+  git ls-files -z | xargs -0 chmod 0600
 
-  { echo . ; git ls-files ; } | xargs dirname | sort | uniq | tail -n +2 | xargs chmod 0700
+  { printf '.\0' ; git ls-files -z ; } \
+    | xargs -0 dirname -z \
+    | sort -z \
+    | uniq -z \
+    | tail -z -n +2 \
+    | xargs -0 chmod 0700
 
   chmod 0700 .git
 )
