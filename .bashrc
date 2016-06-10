@@ -201,6 +201,8 @@ alias l='ls -CF'                              #
 # 
 # alias cd=cd_func
 
+alias list_packages='cygcheck -cd'
+
 PS1='\[\e[33m\]\W\[\e[0m\]: '
 
 nwx_host=172.28.10.2
@@ -220,40 +222,45 @@ symlink_sublime_preferences() (
   find "$src_dir" -maxdepth 1 -type f -exec ln --force -s {} "$dest_dir" \;
 )
 
-tighten_up_file_permissions_in_repo() (
+alias list_git_files='git ls-files -z'
+
+list_git_directories() (
   set -o errexit
 
-  git ls-files -z | xargs -0 chmod 0600
-
-  { printf '.\0' ; git ls-files -z ; } \
+  { printf '.\0' ; list_git_files ; } \
     | xargs -0 dirname -z \
     | sort -z \
     | uniq -z \
-    | tail -z -n +2 \
-    | xargs -0 chmod 0700
+    | tail -z -n +2
+)
 
+tighten_git_file_permissions() (
+  set -o errexit
+
+  list_git_files | xargs -0 chmod 0600
+  list_git_directories | xargs -0 chmod 0700
   chmod 0700 .git
 )
 
-alias dos2unix_='sed --binary --in-place '"'"'s/\(\r\?\)$//'"'"
-alias unix2dos_='sed --binary --in-place '"'"'s/\r\?$/\r/'"'"
-alias rtrim_line_whitespace='sed --binary --in-place '"'"'s/[[:blank:]]*\(\r\?\)$/\1/'"'"
-alias rtrim_file_newlines_dos='sed --binary --in-place -e :a -e '"'"'/^\(\r\n\)*\r$/{$d;N;ba}'"'"
-alias rtrim_file_newlines_unix='sed --binary --in-place -e :a -e '"'"'/^\n*$/{$d;N;ba}'"'"
-alias ensure_eol_dos='sed --binary --in-place -e '"'"'$s/\r\?$/\r/;a\'"'"
-alias ensure_eol_unix='sed --binary --in-place -e '"'"'$a\'"'"
-alias ltrim_utf8_bom='sed --binary --in-place '"'"'s/^\xef\xbb\xbf//'"'"
+alias newlines_to_dos='sed --binary --in-place '"'"'s/\r\?$/\r/'"'"
+alias newlines_to_unix='sed --binary --in-place '"'"'s/\(\r\?\)$//'"'"
+alias drop_trailing_whitespace='sed --binary --in-place '"'"'s/[[:blank:]]*\(\r\?\)$/\1/'"'"
+alias drop_trailing_newlines_dos='sed --binary --in-place -e :a -e '"'"'/^\(\r\n\)*\r$/{$d;N;ba}'"'"
+alias drop_trailing_newlines_unix='sed --binary --in-place -e :a -e '"'"'/^\n*$/{$d;N;ba}'"'"
+alias append_newline_dos='sed --binary --in-place -e '"'"'$s/\r\?$/\r/;a\'"'"
+alias append_newline_unix='sed --binary --in-place -e '"'"'$a\'"'"
+alias drop_utf8_bom='sed --binary --in-place '"'"'s/^\xef\xbb\xbf//'"'"
 
 lint() {
-  rtrim_line_whitespace "$@" \
-    && rtrim_file_newlines_unix "$@" \
-    && ensure_eol_unix "$@"
+  drop_trailing_whitespace "$@" \
+    && drop_trailing_newlines_unix "$@" \
+    && append_newline_unix "$@"
 }
 
 doslint() {
-  rtrim_line_whitespace "$@" \
-    && rtrim_file_newlines_dos "$@" \
-    && ensure_eol_dos "$@"
+  drop_trailing_whitespace "$@" \
+    && drop_trailing_newlines_dos "$@" \
+    && append_newline_dos "$@"
 }
 
 doslint_webapi() (
