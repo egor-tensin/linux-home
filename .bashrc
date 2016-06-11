@@ -253,7 +253,7 @@ alias trimdoseol='sed --binary --in-place -e :a -e '"'"'/^\(\r\n\)*\r$/{$d;N;ba}
 alias eol='sed --binary --in-place '"'"'$a\'"'"
 alias doseol='sed --binary --in-place '"'"'$s/\r\?$/\r/;a\'"'"
 
-alias trimbom8='sed --binary --in-place '"'"'1 s/^\xef\xbb\xbf//'"'"
+alias trimbom='sed --binary --in-place '"'"'1 s/^\xef\xbb\xbf//'"'"
 
 lint() {
   trim "$@" && trimeol "$@" && eol "$@"
