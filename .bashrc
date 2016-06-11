@@ -222,48 +222,48 @@ symlink_sublime_preferences() (
   find "$src_dir" -maxdepth 1 -type f -exec ln --force -s {} "$dest_dir" \;
 )
 
-alias list_git_files='git ls-files -z'
+alias list_repo_files='git ls-files -z'
 
-list_git_directories() (
+list_repo_dirs() (
   set -o errexit
 
-  { printf '.\0' ; list_git_files ; } \
+  { printf '.\0' ; list_repo_files ; } \
     | xargs -0 dirname -z \
     | sort -z \
     | uniq -z \
     | tail -z -n +2
 )
 
-tighten_git_file_permissions() (
+tighten_repo_security() (
   set -o errexit
 
-  list_git_files | xargs -0 chmod 0600
-  list_git_directories | xargs -0 chmod 0700
+  list_repo_files | xargs -0 chmod 0600
+  list_repo_dirs | xargs -0 chmod 0700
   chmod 0700 .git
 )
 
-alias newlines_to_dos='sed --binary --in-place '"'"'s/\r\?$/\r/'"'"
-alias newlines_to_unix='sed --binary --in-place '"'"'s/\(\r\?\)$//'"'"
-alias drop_trailing_whitespace='sed --binary --in-place '"'"'s/[[:blank:]]*\(\r\?\)$/\1/'"'"
-alias drop_trailing_newlines_dos='sed --binary --in-place -e :a -e '"'"'/^\(\r\n\)*\r$/{$d;N;ba}'"'"
-alias drop_trailing_newlines_unix='sed --binary --in-place -e :a -e '"'"'/^\n*$/{$d;N;ba}'"'"
-alias append_newline_dos='sed --binary --in-place -e '"'"'$s/\r\?$/\r/;a\'"'"
-alias append_newline_unix='sed --binary --in-place -e '"'"'$a\'"'"
-alias drop_utf8_bom='sed --binary --in-place '"'"'s/^\xef\xbb\xbf//'"'"
+alias dos2eol='sed --binary --in-place '"'"'s/\(\r\?\)$//'"'"
+alias eol2dos='sed --binary --in-place '"'"'s/\r\?$/\r/'"'"
+
+alias trim='sed --binary --in-place '"'"'s/[[:blank:]]*\(\r\?\)$/\1/'"'"
+
+alias trimeol='sed --binary --in-place -e :a -e '"'"'/^\n*$/{$d;N;ba}'"'"
+alias trimdoseol='sed --binary --in-place -e :a -e '"'"'/^\(\r\n\)*\r$/{$d;N;ba}'"'"
+
+alias eol='sed --binary --in-place '"'"'$a\'"'"
+alias doseol='sed --binary --in-place '"'"'$s/\r\?$/\r/;a\'"'"
+
+alias trimbom8='sed --binary --in-place '"'"'1 s/^\xef\xbb\xbf//'"'"
 
 lint() {
-  drop_trailing_whitespace "$@" \
-    && drop_trailing_newlines_unix "$@" \
-    && append_newline_unix "$@"
+  trim "$@" && trimeol "$@" && eol "$@"
 }
 
 doslint() {
-  drop_trailing_whitespace "$@" \
-    && drop_trailing_newlines_dos "$@" \
-    && append_newline_dos "$@"
+  trim "$@" && trimdoseol "$@" && doseol "$@"
 }
 
-doslint_webapi() (
+lint_webapi() (
   set -o errexit
 
   local root_dir='/cygdrive/c/Netwrix Auditor/CurrentVersion-AuditCore-Dev/AuditCore/Sources'
@@ -305,7 +305,7 @@ backup_repo_dropbox() {
   backup_repo "$USERPROFILE/Dropbox/backups"
 }
 
-backup_repo_netwrix() {
+backup_repo_nwx() {
   backup_repo '//spbfs02/P/Personal/Egor Tensin'
 }
 
