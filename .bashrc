@@ -322,3 +322,41 @@ update_checksums_distr() {
 verify_checksums() {
   sha1sum --check "$checksums_path"
 }
+
+runc() (
+  set -o errexit
+
+  local -a src_files
+  local src_file
+
+  for src_file in "$@"; do
+    src_files+=("$( realpath "$src_file" )")
+  done
+
+  local build_dir="$( mktemp -d )"
+  pushd "$build_dir" > /dev/null
+
+  set +o errexit
+
+  gcc -Wall -Wextra "${src_files[@]}" && ./a.exe
+  popd > /dev/null && rm -rf "$build_dir"
+)
+
+runcpp() (
+  set -o errexit
+
+  local -a src_files
+  local src_file
+
+  for src_file in "$@"; do
+    src_files+=("$( realpath "$src_file" )")
+  done
+
+  local build_dir="$( mktemp -d )"
+  pushd "$build_dir" > /dev/null
+
+  set +o errexit
+
+  g++ -std=c++14 -Wall -Wextra "${src_files[@]}" && ./a.exe
+  popd > /dev/null && rm -rf "$build_dir"
+)
