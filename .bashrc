@@ -286,7 +286,7 @@ backup_repo() (
   local backup_dir="$repo_dir"
 
   if [ $# -eq 1 ]; then
-    local backup_dir="$1"
+    backup_dir="$1"
   elif [ $# -gt 1 ]; then
     echo "Usage: $FUNCNAME [BACKUP_DIR]" >&2
     exit 1
