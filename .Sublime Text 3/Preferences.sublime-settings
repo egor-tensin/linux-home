@@ -27,4 +27,5 @@
     "word_wrap": false,
     "hot_exit": false,
     "remember_open_files": false,
+    "folder_exclude_patterns": [".git", "__pycache__"],
 }
