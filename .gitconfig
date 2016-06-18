@@ -21,3 +21,6 @@
 	trustExitCode = false
 [pull]
 	ff = only
+[alias]
+	clean-ignored = clean -fdX
+	clean-all = clean -fdx
