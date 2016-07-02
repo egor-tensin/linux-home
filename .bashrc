@@ -360,3 +360,5 @@ runcpp() (
   g++ -std=c++14 -Wall -Wextra "${src_files[@]}" && ./a.exe
   popd > /dev/null && rm -rf "$build_dir"
 )
+
+export PYTHONSTARTUP=~/.pythonrc
