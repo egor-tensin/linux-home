@@ -1,31 +1,35 @@
 {
-    "always_show_minimap_viewport": true,
-    "auto_complete_commit_on_tab": true,
-    "color_scheme": "Packages/Color Scheme - Default/Dawn.tmTheme",
-    "detect_indentation": false,
-    "draw_indent_guides": false,
-    "draw_minimap_border": true,
-    "fallback_encoding": "Cyrillic (Windows 1251)",
-    "font_options":
-    [
-        "no_italic",
-        "no_bold"
-    ],
-    "font_size": 11,
-    "highlight_line": true,
-    "highlight_modified_tabs": true,
-    "rulers":
-    [
-        79
-    ],
-    "scroll_speed": 0,
-    "show_encoding": true,
-    "show_line_endings": true,
-    "smart_indent": false,
-    "translate_tabs_to_spaces": true,
-    "trim_trailing_white_space_on_save": true,
-    "word_wrap": false,
-    "hot_exit": false,
-    "remember_open_files": false,
-    "folder_exclude_patterns": [".git", "__pycache__"],
+	"always_show_minimap_viewport": true,
+	"auto_complete_commit_on_tab": true,
+	"color_scheme": "Packages/Color Scheme - Default/Dawn.tmTheme",
+	"detect_indentation": false,
+	"draw_indent_guides": false,
+	"draw_minimap_border": true,
+	"fallback_encoding": "Cyrillic (Windows 1251)",
+	"folder_exclude_patterns":
+	[
+		".git",
+		"__pycache__"
+	],
+	"font_options":
+	[
+		"no_italic",
+		"no_bold"
+	],
+	"font_size": 11,
+	"highlight_line": true,
+	"highlight_modified_tabs": true,
+	"hot_exit": false,
+	"remember_open_files": false,
+	"rulers":
+	[
+		79
+	],
+	"scroll_speed": 0,
+	"show_encoding": true,
+	"show_line_endings": true,
+	"smart_indent": false,
+	"translate_tabs_to_spaces": true,
+	"trim_trailing_white_space_on_save": true,
+	"word_wrap": false
 }
