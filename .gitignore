@@ -1,6 +1,7 @@
-.bash_history
-.lesshst
-.rnd
-.ssh/
-.vim/
-.viminfo
+/.bash_history
+/.lesshst
+/.python_history
+/.rnd
+/.ssh/
+/.vim/
+/.viminfo
