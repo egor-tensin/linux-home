@@ -45,15 +45,14 @@ fi
 
 spawn_ssh_agent() {
   if [ -z "${SSH_AGENT_PID:+x}" -o -z "${SSH_AUTH_SOCK:+x}" ]; then
-    local ssh_agent
-    ssh_agent="$( which ssh-agent 2> /dev/null )" || return $?
+    local ssh_agent="$( command -v ssh-agent )" || return $?
     eval "$( "$ssh_agent" -s )" > /dev/null || return $?
     trap "kill $SSH_AGENT_PID" 0
     ssh-add || return $?
   fi
 }
 
-if [ "$( uname -o )" == "Cygwin" ]; then
+if [ "$( uname -o )" == 'Cygwin' ]; then
   spawn_ssh_agent
 fi
 
