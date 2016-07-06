@@ -362,3 +362,5 @@ runcpp() (
 )
 
 export PYTHONSTARTUP=~/.pythonrc
+
+alias strip_pgn_clk='sed --binary --in-place '"'"'s/ {\[%clk [[:digit:]]:[[:digit:]]\{2\}:[[:digit:]]\{2\}\]}//g'"'"
