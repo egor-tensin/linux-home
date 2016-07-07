@@ -3,3 +3,24 @@ Font=Consolas
 FontHeight=11
 Rows=25
 ScrollbackLines=9000
+
+#ForegroundColour = 200, 200, 200
+BackgroundColour =  40,  40,  40
+CursorColour     = 200, 200, 200
+
+Black       =  40,  40,  40
+BoldBlack   =  40,  40,  40
+Red         = 200, 120, 120
+BoldRed     = 200, 120, 120
+Green       = 120, 200, 120
+BoldGreen   = 120, 200, 120
+Yellow      = 200, 200, 120
+BoldYellow  = 200, 200, 120
+Blue        = 120, 160, 200
+BoldBlue    = 120, 160, 200
+Magenta     = 240,  80, 160
+BoldMagenta = 240,  80, 160
+Cyan        =  80, 200, 200
+BoldCyan    =  80, 200, 200
+White       = 200, 200, 200
+BoldWhite   = 200, 200, 200
