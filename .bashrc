@@ -209,18 +209,29 @@ nwx_host=172.28.10.2
 nwx_dev2=172.28.19.60
 nwx_dev3=172.28.19.61
 
-symlink_sublime_preferences() (
+symlink_preferences() (
   set -o errexit
 
-  local src_dir="$HOME/.Sublime Text 3"
-  local dest_dir="$APPDATA/Sublime Text 3/Packages/User"
-
-  if [ ! -d "$dest_dir" ]; then
-    mkdir -p "$dest_dir"
+  if [ "$#" -ne 2 ]; then
+    echo "Usage: $FUNCNAME SRC_DIR DEST_DIR" >&2
+    return 1
   fi
+
+  local src_dir="$1"
+  local dest_dir="$2"
+
+  [ -d "$dest_dir" ] || mkdir -p "$dest_dir"
 
   find "$src_dir" -maxdepth 1 -type f -exec ln --force -s {} "$dest_dir" \;
 )
+
+symlink_sublime_preferences() {
+  symlink_preferences "$HOME/.Sublime Text 3" "$APPDATA/Sublime Text 3/Packages/User"
+}
+
+symlink_ghc_preferences() {
+  symlink_preferences "$HOME/.GHC" "$APPDATA/ghc"
+}
 
 alias list_repo_files='git ls-files -z'
 
