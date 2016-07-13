@@ -1,0 +1,50 @@
+alias list_repo_files='git ls-files -z'
+
+list_repo_dirs() (
+  set -o errexit
+
+  { printf '.\0' ; list_repo_files ; } \
+    | xargs -0 dirname -z \
+    | sort -z \
+    | uniq -z \
+    | tail -z -n +2
+)
+
+tighten_repo_security() (
+  set -o errexit
+
+  list_repo_files | xargs -0 chmod 0600
+  list_repo_dirs | xargs -0 chmod 0700
+  chmod 0700 .git
+)
+
+backup_repo() (
+  set -o errexit
+
+  local repo_dir="$( realpath . )"
+  local repo_name="$( basename "$repo_dir" )"
+  local backup_dir="$repo_dir"
+
+  if [ $# -eq 1 ]; then
+    backup_dir="$1"
+  elif [ $# -gt 1 ]; then
+    echo "$FUNCNAME: usage: $FUNCNAME [BACKUP_DIR]" >&2
+    exit 1
+  fi
+
+  local zip_name="${repo_name}_$( date -u +'%Y%m%dT%H%M%S' ).zip"
+
+  git archive \
+    --format=zip -9 \
+    --output="$backup_dir/$zip_name" \
+    --remote="$repo_dir" \
+    HEAD
+)
+
+backup_repo_dropbox() {
+  backup_repo "$USERPROFILE/Dropbox/backups"
+}
+
+backup_repo_nwx() {
+  backup_repo '//spbfs02/P/Personal/Egor Tensin'
+}

@@ -1,0 +1,18 @@
+nwx_host=172.28.10.2
+nwx_dev2=172.28.19.60
+nwx_dev3=172.28.19.61
+
+lint_webapi() (
+  set -o errexit
+
+  local root_dir='/cygdrive/c/Netwrix Auditor/CurrentVersion-AuditCore-Dev/AuditCore/Sources'
+
+  cd "$root_dir/Configuration"
+  doslint WebAPI*.acinc WebAPI*.acconf
+
+  cd "$root_dir/Subsystems/PublicAPI"
+  local path
+  find . -type f -\( -iname '*.cpp' -o -iname '*.h' -\) | while read -r path ; do
+    doslint "$path"
+  done
+)

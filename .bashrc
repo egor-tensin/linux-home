@@ -201,75 +201,15 @@ alias ls='ls -lAh --color=tty'                 # classify files in colour
 # 
 # alias cd=cd_func
 
-alias list_packages='cygcheck -cd'
-
 PS1='\[\e[33m\]\W\[\e[0m\]: '
 
-nwx_host=172.28.10.2
-nwx_dev2=172.28.19.60
-nwx_dev3=172.28.19.61
+# Cygwin stuff
+# ------------
 
-ensure_symlinks_enabled() {
-  [ -z "${CYGWIN+x}" ] && return 1
+alias list_packages='cygcheck -cd'
 
-  case "$CYGWIN" in
-    *winsymlinks:native*)       ;;
-    *winsymlinks:nativestrict*) ;;
-
-    *)
-      return 1
-      ;;
-  esac
-}
-
-symlink_preferences() (
-  if ! ensure_symlinks_enabled; then
-    echo "$FUNCNAME: it seems like native Windows symlinks aren't enabled in Cygwin." >&2
-    return 1
-  fi
-
-  set -o errexit
-
-  if [ "$#" -ne 2 ]; then
-    echo "$FUNCNAME: usage: $FUNCNAME SRC_DIR DEST_DIR" >&2
-    return 1
-  fi
-
-  local src_dir="$1"
-  local dest_dir="$2"
-
-  [ -d "$dest_dir" ] || mkdir -p "$dest_dir"
-
-  find "$src_dir" -maxdepth 1 -type f -exec ln --force -s {} "$dest_dir" \;
-)
-
-symlink_sublime_preferences() {
-  symlink_preferences "$HOME/.Sublime Text 3" "$APPDATA/Sublime Text 3/Packages/User"
-}
-
-symlink_ghc_preferences() {
-  symlink_preferences "$HOME/.GHC" "$APPDATA/ghc"
-}
-
-alias list_repo_files='git ls-files -z'
-
-list_repo_dirs() (
-  set -o errexit
-
-  { printf '.\0' ; list_repo_files ; } \
-    | xargs -0 dirname -z \
-    | sort -z \
-    | uniq -z \
-    | tail -z -n +2
-)
-
-tighten_repo_security() (
-  set -o errexit
-
-  list_repo_files | xargs -0 chmod 0600
-  list_repo_dirs | xargs -0 chmod 0700
-  chmod 0700 .git
-)
+# Common sed one-liners
+# ---------------------
 
 alias dos2eol='sed --binary --in-place '"'"'s/\(\r\?\)$//'"'"
 alias eol2dos='sed --binary --in-place '"'"'s/\r\?$/\r/'"'"
@@ -292,51 +232,15 @@ doslint() {
   trim "$@" && trimdoseol "$@" && doseol "$@"
 }
 
-lint_webapi() (
-  set -o errexit
+# Factored-out stuff
+# ------------------
 
-  local root_dir='/cygdrive/c/Netwrix Auditor/CurrentVersion-AuditCore-Dev/AuditCore/Sources'
+[ -f '.bashrc_git'         ] && source .bashrc_git
+[ -f '.bashrc_netwrix'     ] && source .bashrc_netwrix
+[ -f ".bashrc_third_party" ] && source .bashrc_third_party
 
-  cd "$root_dir/Configuration"
-  doslint WebAPI*.acinc WebAPI*.acconf
-
-  cd "$root_dir/Subsystems/PublicAPI"
-  local path
-  find . -type f -\( -iname '*.cpp' -o -iname '*.h' -\) | while read -r path ; do
-    doslint "$path"
-  done
-)
-
-backup_repo() (
-  set -o errexit
-
-  local repo_dir="$( realpath . )"
-  local repo_name="$( basename "$repo_dir" )"
-  local backup_dir="$repo_dir"
-
-  if [ $# -eq 1 ]; then
-    backup_dir="$1"
-  elif [ $# -gt 1 ]; then
-    echo "Usage: $FUNCNAME [BACKUP_DIR]" >&2
-    exit 1
-  fi
-
-  local zip_name="${repo_name}_$( date -u +'%Y%m%dT%H%M%S' ).zip"
-
-  git archive \
-    --format=zip -9 \
-    --output="$backup_dir/$zip_name" \
-    --remote="$repo_dir" \
-    HEAD
-)
-
-backup_repo_dropbox() {
-  backup_repo "$USERPROFILE/Dropbox/backups"
-}
-
-backup_repo_nwx() {
-  backup_repo '//spbfs02/P/Personal/Egor Tensin'
-}
+# "distr" paranoia
+# ----------------
 
 checksums_path='sha1sums.txt'
 
@@ -351,6 +255,9 @@ update_checksums_distr() {
 verify_checksums() {
   sha1sum --check "$checksums_path"
 }
+
+# `runhaskell` (from the Haskell world) alternatives for C/C++
+# ------------------------------------------------------------
 
 runc() (
   set -o errexit
@@ -390,6 +297,9 @@ runcpp() (
   popd > /dev/null && rm -rf "$build_dir"
 )
 
-export PYTHONSTARTUP=~/.pythonrc
+# Miscellaneous
+# -------------
+
+PYTHONSTARTUP="$HOME/.pythonrc"
 
 alias strip_pgn_clk='sed --binary --in-place '"'"'s/ {\[%clk [[:digit:]]:[[:digit:]]\{2\}:[[:digit:]]\{2\}\]}//g'"'"

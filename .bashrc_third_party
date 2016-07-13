@@ -1,0 +1,41 @@
+ensure_symlinks_enabled() {
+  [ -z "${CYGWIN+x}" ] && return 1
+
+  case "$CYGWIN" in
+    *winsymlinks:native*)       ;;
+    *winsymlinks:nativestrict*) ;;
+
+    *)
+      return 1
+      ;;
+  esac
+}
+
+symlink_preferences() (
+  if ! ensure_symlinks_enabled; then
+    echo "$FUNCNAME: it seems like native Windows symlinks aren't enabled in Cygwin." >&2
+    return 1
+  fi
+
+  set -o errexit
+
+  if [ "$#" -ne 2 ]; then
+    echo "$FUNCNAME: usage: $FUNCNAME SRC_DIR DEST_DIR" >&2
+    return 1
+  fi
+
+  local src_dir="$1"
+  local dest_dir="$2"
+
+  [ -d "$dest_dir" ] || mkdir -p "$dest_dir"
+
+  find "$src_dir" -maxdepth 1 -type f -exec ln --force -s {} "$dest_dir" \;
+)
+
+symlink_sublime_preferences() {
+  symlink_preferences "$HOME/.Sublime Text 3" "$APPDATA/Sublime Text 3/Packages/User"
+}
+
+symlink_ghc_preferences() {
+  symlink_preferences "$HOME/.GHC" "$APPDATA/ghc"
+}
