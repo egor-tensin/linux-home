@@ -209,11 +209,29 @@ nwx_host=172.28.10.2
 nwx_dev2=172.28.19.60
 nwx_dev3=172.28.19.61
 
+ensure_symlinks_enabled() {
+  [ -z "${CYGWIN+x}" ] && return 1
+
+  case "$CYGWIN" in
+    *winsymlinks:native*)       ;;
+    *winsymlinks:nativestrict*) ;;
+
+    *)
+      return 1
+      ;;
+  esac
+}
+
 symlink_preferences() (
+  if ! ensure_symlinks_enabled; then
+    echo "$FUNCNAME: it seems like native Windows symlinks aren't enabled in Cygwin." >&2
+    return 1
+  fi
+
   set -o errexit
 
   if [ "$#" -ne 2 ]; then
-    echo "Usage: $FUNCNAME SRC_DIR DEST_DIR" >&2
+    echo "$FUNCNAME: usage: $FUNCNAME SRC_DIR DEST_DIR" >&2
     return 1
   fi
 
