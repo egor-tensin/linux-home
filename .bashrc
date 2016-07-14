@@ -5,7 +5,7 @@
 # with this software. 
 # If not, see <http://creativecommons.org/publicdomain/zero/1.0/>. 
 
-# base-files version 4.2-3
+# base-files version 4.2-4
 
 # ~/.bashrc: executed by bash(1) for interactive shells.
 
@@ -25,10 +25,6 @@
 
 # If not running interactively, don't do anything
 [[ "$-" != *i* ]] && return
-
-set -o pipefail
-set -o nounset
-shopt -s nullglob
 
 # Shell Options
 #
@@ -104,14 +100,14 @@ alias df='df -h'
 alias du='du -h'
 #
 # Misc :)
-alias less='less -R'                          # raw control characters
+# alias less='less -r'                          # raw control characters
 # alias whence='type -a'                        # where, of a sort
 alias grep='grep --color'                     # show differences in colour
 alias egrep='egrep --color=auto'              # show differences in colour
 alias fgrep='fgrep --color=auto'              # show differences in colour
 #
 # Some shortcuts for different directory listings
-alias ls='ls -lAh --color=tty'                 # classify files in colour
+# alias ls='ls -hF --color=tty'                 # classify files in colour
 # alias dir='ls --color=auto --format=vertical'
 # alias vdir='ls --color=auto --format=long'
 # alias ll='ls -l'                              # long list
@@ -200,6 +196,13 @@ alias ls='ls -lAh --color=tty'                 # classify files in colour
 # }
 # 
 # alias cd=cd_func
+
+set -o pipefail
+set -o nounset
+shopt -s nullglob
+
+alias less='less -R'
+alias ls='ls -lAh --color=tty'
 
 PS1='\[\e[33m\]\W\[\e[0m\]: '
 
