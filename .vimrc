@@ -1,7 +1,7 @@
 " An example for a vimrc file.
 "
 " Maintainer:	Bram Moolenaar <Bram@vim.org>
-" Last change:	2014 Nov 05
+" Last change:	2016 Apr 05
 "
 " To use it, copy it to
 "     for Unix and OS/2:  ~/.vimrc
@@ -21,14 +21,12 @@ set nocompatible
 " allow backspacing over everything in insert mode
 set backspace=indent,eol,start
 
-"if has("vms")
+if has("vms")
   set nobackup		" do not keep a backup file, use versions instead
-  set nowritebackup
-  set noswapfile
-"else
-"  set backup		" keep a backup file (restore to previous version)
-"  set undofile		" keep an undo file (undo changes after closing)
-"endif
+else
+  set backup		" keep a backup file (restore to previous version)
+  set undofile		" keep an undo file (undo changes after closing)
+endif
 set history=50		" keep 50 lines of command line history
 set ruler		" show the cursor position all the time
 set showcmd		" display incomplete commands
@@ -49,11 +47,16 @@ if has('mouse')
   set mouse=a
 endif
 
-" Switch syntax highlighting on, when the terminal has colors
-" Also switch on highlighting the last used search pattern.
+" Switch syntax highlighting on when the terminal has colors or when using the
+" GUI (which always has colors).
 if &t_Co > 2 || has("gui_running")
   syntax on
+
+  " Also switch on highlighting the last used search pattern.
   set hlsearch
+
+  " I like highlighting strings inside C comments.
+  let c_comment_strings=1
 endif
 
 " Only do this part when compiled with support for autocommands.
@@ -75,10 +78,8 @@ if has("autocmd")
   " When editing a file, always jump to the last known cursor position.
   " Don't do it when the position is invalid or when inside an event handler
   " (happens when dropping a file on gvim).
-  " Also don't do it when the mark is in the first line, that is the default
-  " position when opening a file.
   autocmd BufReadPost *
-    \ if line("'\"") > 1 && line("'\"") <= line("$") |
+    \ if line("'\"") >= 1 && line("'\"") <= line("$") |
     \   exe "normal! g`\"" |
     \ endif
 
@@ -105,6 +106,13 @@ if has('langmap') && exists('+langnoremap')
   set langnoremap
 endif
 
+
+" Add optional packages.
+"
+" The matchit plugin makes the % command work better, but it is not backwards
+" compatible.
+packadd matchit
+
 color desert
 set expandtab
 set shiftwidth=4
@@ -117,3 +125,8 @@ set showmode
 
 set exrc
 set secure
+
+set nobackup
+set noswapfile
+set noundofile
+set nowritebackup
