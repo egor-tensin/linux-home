@@ -44,7 +44,3 @@ backup_repo() (
 backup_repo_dropbox() {
   backup_repo "$USERPROFILE/Dropbox/backups"
 }
-
-backup_repo_nwx() {
-  backup_repo '//spbfs02/P/Personal/Egor Tensin'
-}

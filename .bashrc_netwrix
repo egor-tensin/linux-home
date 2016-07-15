@@ -16,3 +16,7 @@ lint_webapi() (
     doslint "$path"
   done
 )
+
+backup_repo_nwx() {
+  backup_repo '//spbfs02/P/Personal/Egor Tensin'
+}
