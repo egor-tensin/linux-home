@@ -259,45 +259,101 @@ verify_checksums() {
   sha1sum --check "$checksums_path"
 }
 
-# `runhaskell` (from the Haskell world) alternatives for C/C++
-# ------------------------------------------------------------
+# `runhaskell` alternatives for C/C++
+# -----------------------------------
+
+C_FLAGS=('-Wall' '-Wextra')
 
 runc() (
   set -o errexit
 
-  local -a src_files
-  local src_file
+  local -a c_flags=("${C_FLAGS[@]}")
+  local -a src_files=()
+  local -a prog_flags=()
 
-  for src_file in "$@"; do
-    src_files+=("$( realpath "$src_file" )")
+  while [ "$#" -gt 0 ]; do
+    case "$1" in
+      --c-flags)
+        if [ "$#" -le 1 ]; then
+          echo "$FUNCNAME: usage error: missing value for option: $1" >&2
+          return 1
+        fi
+        shift
+        c_flags+=("$1")
+        shift
+        ;;
+
+      --)
+        shift
+        break
+        ;;
+
+      *)
+        src_files+=("$( realpath "$1" )")
+        shift
+        ;;
+    esac
   done
 
-  local build_dir="$( mktemp -d )"
+  prog_flags=("$@")
+
+  local build_dir="$( mktemp --directory )"
+  trap "$( printf 'popd > /dev/null && rm -rf %q' "$build_dir" )" 0
   pushd "$build_dir" > /dev/null
+  local output_name="$( mktemp --tmpdir=. "${FUNCNAME}XXX.exe" )"
 
-  set +o errexit
+  gcc -o "$output_name" \
+      "${c_flags[@]+"${c_flags[@]}"}" \
+      "${src_files[@]+"${src_files[@]}"}"
 
-  gcc -Wall -Wextra "${src_files[@]}" && ./a.exe
-  popd > /dev/null && rm -rf "$build_dir"
+  "$output_name" "${prog_flags[@]+"${prog_flags[@]}"}"
 )
 
-runcpp() (
+CXX_FLAGS=('-Wall' '-Wextra' '-std=c++14')
+
+runcxx() (
   set -o errexit
 
-  local -a src_files
-  local src_file
+  local cxx_flags=("${CXX_FLAGS[@]}")
+  local -a src_files=()
+  local -a prog_flags=()
 
-  for src_file in "$@"; do
-    src_files+=("$( realpath "$src_file" )")
+  while [ "$#" -gt 0 ]; do
+    case "$1" in
+      --cxx-flags)
+        if [ "$#" -le 1 ]; then
+          echo "$FUNCNAME: usage error: missing value for option: $1" >&2
+          return 1
+        fi
+        shift
+        cxx_flags+=("$1")
+        shift
+        ;;
+
+      --)
+        shift
+        break
+        ;;
+
+      *)
+        src_files+=("$( realpath "$1" )")
+        shift
+        ;;
+    esac
   done
 
-  local build_dir="$( mktemp -d )"
+  prog_flags=("$@")
+
+  local build_dir="$( mktemp --directory )"
+  trap "$( printf 'popd > /dev/null && rm -rf %q' "$build_dir" )" 0
   pushd "$build_dir" > /dev/null
+  local output_name="$( mktemp --tmpdir=. "${FUNCNAME}XXX.exe" )"
 
-  set +o errexit
+  g++ -o "$output_name" \
+      "${cxx_flags[@]+"${cxx_flags[@]}"}" \
+      "${src_files[@]+"${src_files[@]}"}"
 
-  g++ -std=c++14 -Wall -Wextra "${src_files[@]}" && ./a.exe
-  popd > /dev/null && rm -rf "$build_dir"
+  "$output_name" "${prog_flags[@]+"${prog_flags[@]}"}"
 )
 
 # Miscellaneous
