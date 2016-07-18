@@ -278,20 +278,13 @@ runc() (
           echo "$FUNCNAME: usage error: missing value for option: $1" >&2
           return 1
         fi
-        shift
-        c_flags+=("$1")
-        shift
-        ;;
+        shift ; c_flags+=("$1") ; shift ;;
 
       --)
-        shift
-        break
-        ;;
+        shift ; break ;;
 
       *)
-        src_files+=("$( realpath "$1" )")
-        shift
-        ;;
+        src_files+=("$( realpath "$1" )") ; shift ;;
     esac
   done
 
@@ -325,20 +318,13 @@ runcxx() (
           echo "$FUNCNAME: usage error: missing value for option: $1" >&2
           return 1
         fi
-        shift
-        cxx_flags+=("$1")
-        shift
-        ;;
+        shift ; cxx_flags+=("$1") ; shift ;;
 
       --)
-        shift
-        break
-        ;;
+        shift ; break ;;
 
       *)
-        src_files+=("$( realpath "$1" )")
-        shift
-        ;;
+        src_files+=("$( realpath "$1" )") ; shift ;;
     esac
   done
 
