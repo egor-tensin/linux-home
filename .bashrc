@@ -347,4 +347,13 @@ runcxx() (
 
 PYTHONSTARTUP="$HOME/.pythonrc"
 
-alias strip_pgn_clk='sed --binary --in-place '"'"'s/ {\[%clk [[:digit:]]:[[:digit:]]\{2\}:[[:digit:]]\{2\}\]}//g'"'"
+alias strip_pgn_clk='sed --binary --in-place '"'"'s/ {\[%clk [[:digit:]]\+:[[:digit:]]\+\(:[[:digit:]]\+\)*\]}//g'"'"
+alias slice_pgn_moves='sed --binary --in-place '"'"'s/ \([[:digit:]]\+\.\)/\n\1/g'"'"
+
+normalize_pgn() {
+  dos2eol "$@" \
+    && lint "$@" \
+    && strip_pgn_clk "$@" \
+    && slice_pgn_moves "$@" \
+    && eol2dos "$@"
+}
