@@ -357,3 +357,27 @@ normalize_pgn() {
     && slice_pgn_moves "$@" \
     && eol2dos "$@"
 }
+
+append_pgn() {
+  if [ "$#" -ne 2 ]; then
+    echo "$FUNCNAME: usage: $FUNCNAME DEST_PGN SRC_PGN" >&2
+    return 1
+  fi
+
+  printf '\r\n' >> "$1" \
+    && cat "$2" >> "$1"
+}
+
+join_pgns() (
+  [ "$#" -eq 0 ] && return
+
+  set -o errexit
+
+  cat "$1"
+
+  local i
+  for i in "${@:2}"; do
+    printf '\r\n'
+    cat "$i"
+  done
+)
