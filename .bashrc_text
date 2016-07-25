@@ -1,8 +1,5 @@
 [ ! -z "${BASHRC_TEXT+x}" ] && return || readonly BASHRC_TEXT=1
 
-# Handy sed one-liners
-# --------------------
-
 alias dos2eol='sed --binary --in-place '"'"'s/\(\r\?\)$//'"'"
 alias eol2dos='sed --binary --in-place '"'"'s/\r\?$/\r/'"'"
 
