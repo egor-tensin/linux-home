@@ -197,6 +197,8 @@ alias fgrep='fgrep --color=auto'              # show differences in colour
 # 
 # alias cd=cd_func
 
+PS1='\[\e[33m\]\W\[\e[0m\]: '
+
 set -o pipefail
 set -o nounset
 shopt -s nullglob
@@ -204,180 +206,14 @@ shopt -s nullglob
 alias less='less -R'
 alias ls='ls -lAh --color=tty'
 
-PS1='\[\e[33m\]\W\[\e[0m\]: '
-
-# Cygwin stuff
-# ------------
-
 alias list_packages='cygcheck -cd'
-
-# Common sed one-liners
-# ---------------------
-
-alias dos2eol='sed --binary --in-place '"'"'s/\(\r\?\)$//'"'"
-alias eol2dos='sed --binary --in-place '"'"'s/\r\?$/\r/'"'"
-
-alias trim='sed --binary --in-place '"'"'s/[[:blank:]]*\(\r\?\)$/\1/'"'"
-
-alias trimeol='sed --binary --in-place -e :a -e '"'"'/^\n*$/{$d;N;ba}'"'"
-alias trimdoseol='sed --binary --in-place -e :a -e '"'"'/^\(\r\n\)*\r$/{$d;N;ba}'"'"
-
-alias eol='sed --binary --in-place '"'"'$a\'"'"
-alias doseol='sed --binary --in-place '"'"'$s/\r\?$/\r/;a\'"'"
-
-alias trimbom='sed --binary --in-place '"'"'1 s/^\xef\xbb\xbf//'"'"
-
-lint() {
-  trim "$@" && trimeol "$@" && eol "$@"
-}
-
-doslint() {
-  trim "$@" && trimdoseol "$@" && doseol "$@"
-}
-
-# Factored-out stuff
-# ------------------
-
-[ -f '.bashrc_git'         ] && source .bashrc_git
-[ -f '.bashrc_netwrix'     ] && source .bashrc_netwrix
-[ -f ".bashrc_third_party" ] && source .bashrc_third_party
-
-# "distr" paranoia
-# ----------------
-
-checksums_path='sha1sums.txt'
-
-update_checksums() {
-  sha1sum "$@" > "$checksums_path"
-}
-
-update_checksums_distr() {
-  update_checksums *.exe *.iso
-}
-
-verify_checksums() {
-  sha1sum --check "$checksums_path"
-}
-
-# `runhaskell` alternatives for C/C++
-# -----------------------------------
-
-C_FLAGS=('-Wall' '-Wextra')
-
-runc() (
-  set -o errexit
-
-  local -a c_flags=("${C_FLAGS[@]}")
-  local -a src_files=()
-  local -a prog_flags=()
-
-  while [ "$#" -gt 0 ]; do
-    case "$1" in
-      --c-flags)
-        if [ "$#" -le 1 ]; then
-          echo "$FUNCNAME: usage error: missing value for option: $1" >&2
-          return 1
-        fi
-        shift ; c_flags+=("$1") ; shift ;;
-
-      --)
-        shift ; break ;;
-
-      *)
-        src_files+=("$( realpath "$1" )") ; shift ;;
-    esac
-  done
-
-  prog_flags=("$@")
-
-  local build_dir="$( mktemp --directory )"
-  trap "$( printf 'popd > /dev/null && rm -rf %q' "$build_dir" )" 0
-  pushd "$build_dir" > /dev/null
-  local output_name="$( mktemp --tmpdir=. "${FUNCNAME}XXX.exe" )"
-
-  gcc -o "$output_name" \
-      "${c_flags[@]+"${c_flags[@]}"}" \
-      "${src_files[@]+"${src_files[@]}"}"
-
-  "$output_name" "${prog_flags[@]+"${prog_flags[@]}"}"
-)
-
-CXX_FLAGS=('-Wall' '-Wextra' '-std=c++14')
-
-runcxx() (
-  set -o errexit
-
-  local cxx_flags=("${CXX_FLAGS[@]}")
-  local -a src_files=()
-  local -a prog_flags=()
-
-  while [ "$#" -gt 0 ]; do
-    case "$1" in
-      --cxx-flags)
-        if [ "$#" -le 1 ]; then
-          echo "$FUNCNAME: usage error: missing value for option: $1" >&2
-          return 1
-        fi
-        shift ; cxx_flags+=("$1") ; shift ;;
-
-      --)
-        shift ; break ;;
-
-      *)
-        src_files+=("$( realpath "$1" )") ; shift ;;
-    esac
-  done
-
-  prog_flags=("$@")
-
-  local build_dir="$( mktemp --directory )"
-  trap "$( printf 'popd > /dev/null && rm -rf %q' "$build_dir" )" 0
-  pushd "$build_dir" > /dev/null
-  local output_name="$( mktemp --tmpdir=. "${FUNCNAME}XXX.exe" )"
-
-  g++ -o "$output_name" \
-      "${cxx_flags[@]+"${cxx_flags[@]}"}" \
-      "${src_files[@]+"${src_files[@]}"}"
-
-  "$output_name" "${prog_flags[@]+"${prog_flags[@]}"}"
-)
-
-# Miscellaneous
-# -------------
 
 PYTHONSTARTUP="$HOME/.pythonrc"
 
-alias strip_pgn_clk='sed --binary --in-place '"'"'s/ {\[%clk [[:digit:]]\+:[[:digit:]]\+\(:[[:digit:]]\+\)*\]}//g'"'"
-alias slice_pgn_moves='sed --binary --in-place '"'"'s/ \([[:digit:]]\+\.\)/\n\1/g'"'"
-
-normalize_pgn() {
-  dos2eol "$@" \
-    && lint "$@" \
-    && strip_pgn_clk "$@" \
-    && slice_pgn_moves "$@" \
-    && eol2dos "$@"
-}
-
-append_pgn() {
-  if [ "$#" -ne 2 ]; then
-    echo "$FUNCNAME: usage: $FUNCNAME DEST_PGN SRC_PGN" >&2
-    return 1
-  fi
-
-  printf '\r\n' >> "$1" \
-    && cat "$2" >> "$1"
-}
-
-join_pgns() (
-  [ "$#" -eq 0 ] && return
-
-  set -o errexit
-
-  cat "$1"
-
-  local i
-  for i in "${@:2}"; do
-    printf '\r\n'
-    cat "$i"
-  done
-)
+[ -f '.bashrc_cxx'         ] && source .bashrc_cxx
+[ -f '.bashrc_distr'       ] && source .bashrc_distr
+[ -f '.bashrc_git'         ] && source .bashrc_git
+[ -f '.bashrc_netwrix'     ] && source .bashrc_netwrix
+[ -f '.bashrc_pgn'         ] && source .bashrc_pgn
+[ -f '.bashrc_text'        ] && source .bashrc_text
+[ -f ".bashrc_third_party" ] && source .bashrc_third_party

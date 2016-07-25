@@ -1,0 +1,15 @@
+[ ! -z "${BASHRC_DISTR+x}" ] && return || readonly BASHRC_DISTR=1
+
+checksums_path='sha1sums.txt'
+
+update_checksums() {
+  sha1sum "$@" > "$checksums_path"
+}
+
+update_checksums_distr() {
+  update_checksums *.exe *.iso
+}
+
+verify_checksums() {
+  sha1sum --check "$checksums_path"
+}

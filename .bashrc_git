@@ -1,3 +1,5 @@
+[ ! -z "${BASHRC_GIT+x}" ] && return || readonly BASHRC_GIT=1
+
 alias list_repo_files='git ls-files -z'
 
 list_repo_dirs() (

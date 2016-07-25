@@ -1,3 +1,7 @@
+[ ! -z "${BASHRC_NETWRIX+x}" ] && return || readonly BASHRC_NETWRIX=1
+
+source .bashrc_text || return
+
 nwx_host=172.28.10.2
 nwx_dev2=172.28.19.60
 nwx_dev3=172.28.19.61

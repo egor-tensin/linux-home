@@ -1,3 +1,5 @@
+[ ! -z "${BASHRC_THIRD_PARTY+x}" ] && return || readonly BASHRC_THIRD_PARTY=1
+
 ensure_symlinks_enabled() {
   [ -z "${CYGWIN+x}" ] && return 1
 
