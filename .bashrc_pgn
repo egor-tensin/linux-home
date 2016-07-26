@@ -15,7 +15,7 @@ normalize_pgn() {
 
 append_pgn() {
   if [ "$#" -ne 2 ]; then
-    echo "$FUNCNAME: usage: $FUNCNAME DEST_PGN SRC_PGN" >&2
+    echo "usage: $FUNCNAME DEST_PGN SRC_PGN" >&2
     return 1
   fi
 

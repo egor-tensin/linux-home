@@ -22,7 +22,7 @@ symlink_preferences() (
   set -o errexit
 
   if [ "$#" -ne 2 ]; then
-    echo "$FUNCNAME: usage: $FUNCNAME SRC_DIR DEST_DIR" >&2
+    echo "usage: $FUNCNAME SRC_DIR DEST_DIR" >&2
     return 1
   fi
 

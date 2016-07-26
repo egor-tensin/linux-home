@@ -13,10 +13,15 @@ runc() (
     case "$1" in
       --c-flags)
         if [ "$#" -le 1 ]; then
-          echo "$FUNCNAME: usage error: missing value for option: $1" >&2
+          echo "$FUNCNAME: missing argument for parameter: $1" >&2
           return 1
         fi
         shift ; c_flags+=("$1") ; shift ;;
+
+      -h)
+        echo "usage: $FUNCNAME [-h] [--c-flags FLAG]"
+        return 0
+        ;;
 
       --)
         shift ; break ;;
@@ -53,10 +58,15 @@ runcxx() (
     case "$1" in
       --cxx-flags)
         if [ "$#" -le 1 ]; then
-          echo "$FUNCNAME: usage error: missing value for option: $1" >&2
+          echo "$FUNCNAME: missing argument for parameter: $1" >&2
           return 1
         fi
         shift ; cxx_flags+=("$1") ; shift ;;
+
+      -h)
+        echo "usage: $FUNCNAME [-h] [--cxx-flags FLAG]"
+        return 0
+        ;;
 
       --)
         shift ; break ;;
