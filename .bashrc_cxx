@@ -11,7 +11,7 @@ runc() (
 
   while [ "$#" -gt 0 ]; do
     case "$1" in
-      --c-flags)
+      -c|--c-flags)
         if [ "$#" -le 1 ]; then
           echo "$FUNCNAME: missing argument for parameter: $1" >&2
           return 1
@@ -19,7 +19,7 @@ runc() (
         shift ; c_flags+=("$1") ; shift ;;
 
       -h)
-        echo "usage: $FUNCNAME [-h] [--c-flags FLAG]"
+        echo "usage: $FUNCNAME [-h] [-c|--c-flags FLAG]"
         return 0
         ;;
 
@@ -56,7 +56,7 @@ runcxx() (
 
   while [ "$#" -gt 0 ]; do
     case "$1" in
-      --cxx-flags)
+      -c|--cxx-flags)
         if [ "$#" -le 1 ]; then
           echo "$FUNCNAME: missing argument for parameter: $1" >&2
           return 1
@@ -64,7 +64,7 @@ runcxx() (
         shift ; cxx_flags+=("$1") ; shift ;;
 
       -h)
-        echo "usage: $FUNCNAME [-h] [--cxx-flags FLAG]"
+        echo "usage: $FUNCNAME [-h] [-c|--cxx-flags FLAG]"
         return 0
         ;;
 
