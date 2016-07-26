@@ -1,22 +1,66 @@
 [ ! -z "${BASHRC_GIT+x}" ] && return || readonly BASHRC_GIT=1
 
-alias list_repo_files='git ls-files -z'
+list_repo_files() (
+  local -a cmd=(git ls-files)
+
+  while [ "$#" -gt 0 ]; do
+    case "$1" in
+      -z|-0):
+        cmd+=(-z)
+        shift
+        ;;
+
+      -h):
+        echo "usage: $FUNCNAME [-h] [-z|-0]"
+        return 0
+        ;;
+
+      *)
+        echo "$FUNCNAME: unrecognized parameter: $1" >&2
+        return 1
+        ;;
+    esac
+  done
+
+  eval "${cmd[@]}"
+)
 
 list_repo_dirs() (
   set -o errexit
 
-  { printf '.\0' ; list_repo_files ; } \
+  local terminator='\n'
+
+  while [ "$#" -gt 0 ]; do
+    case "$1" in
+      -z|-0):
+        terminator='\000'
+        shift
+        ;;
+
+      -h):
+        echo "usage: $FUNCNAME [-h] [-z|-0]"
+        return 0
+        ;;
+
+      *)
+        echo "$FUNCNAME: unrecognized parameter: $1" >&2
+        return 1
+        ;;
+    esac
+  done
+
+  { printf '.\0' ; list_repo_files -z ; } \
     | xargs -0 dirname -z \
-    | sort -z \
-    | uniq -z \
-    | tail -z -n +2
+    | sort -uz \
+    | tail -z -n +2 \
+    | tr '\000' "$terminator"
 )
 
 tighten_repo_security() (
   set -o errexit
 
-  list_repo_files | xargs -0 chmod 0600
-  list_repo_dirs | xargs -0 chmod 0700
+  list_repo_files -z | xargs -0 chmod 0600
+  list_repo_dirs  -z | xargs -0 chmod 0700
   chmod 0700 .git
 )
 
@@ -30,7 +74,7 @@ backup_repo() (
   if [ $# -eq 1 ]; then
     backup_dir="$1"
   elif [ $# -gt 1 ]; then
-    echo "$FUNCNAME: usage: $FUNCNAME [BACKUP_DIR]" >&2
+    echo "usage: $FUNCNAME [BACKUP_DIR]" >&2
     exit 1
   fi
 
