@@ -214,6 +214,5 @@ PYTHONSTARTUP="$HOME/.pythonrc"
 [ -f '.bashrc_distr'       ] && source .bashrc_distr
 [ -f '.bashrc_git'         ] && source .bashrc_git
 [ -f '.bashrc_netwrix'     ] && source .bashrc_netwrix
-[ -f '.bashrc_pgn'         ] && source .bashrc_pgn
 [ -f '.bashrc_text'        ] && source .bashrc_text
 [ -f ".bashrc_third_party" ] && source .bashrc_third_party
