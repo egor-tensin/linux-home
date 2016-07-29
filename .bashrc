@@ -202,6 +202,7 @@ PS1='\[\e[33m\]\W\[\e[0m\]: '
 set -o pipefail
 set -o nounset
 shopt -s nullglob
+shopt -s dotglob
 
 alias less='less -R'
 alias ls='ls -lAh --color=tty'
