@@ -1,119 +1,119 @@
 #!/usr/bin/env bash
 
 if [ -n "${BASHRC_CXX+x}" ]; then
-  return 0
+    return 0
 else
-  readonly BASHRC_CXX=1
+    readonly BASHRC_CXX=1
 fi
 
 C_FLAGS=('-Wall' '-Wextra')
 
 runc() (
-  set -o errexit
+    set -o errexit
 
-  local -a c_flags=("${C_FLAGS[@]}")
-  local -a src_files=()
-  local -a prog_flags=()
+    local -a c_flags=("${C_FLAGS[@]}")
+    local -a src_files=()
+    local -a prog_flags=()
 
-  while [ "$#" -gt 0 ]; do
-    case "$1" in
-      -c|--c-flags)
-        if [ "$#" -le 1 ]; then
-          echo "${FUNCNAME[0]}: missing argument for parameter: $1" >&2
-          return 1
-        fi
-        shift
-        c_flags+=("$1")
-        shift
-        ;;
+    while [ "$#" -gt 0 ]; do
+        case "$1" in
+            -c|--c-flags)
+                if [ "$#" -le 1 ]; then
+                    echo "${FUNCNAME[0]}: missing argument for parameter: $1" >&2
+                    return 1
+                fi
+                shift
+                c_flags+=("$1")
+                shift
+                ;;
 
-      -h)
-        echo "usage: ${FUNCNAME[0]} [-h] [-c|--c-flags FLAG]"
-        return 0
-        ;;
+            -h)
+                echo "usage: ${FUNCNAME[0]} [-h] [-c|--c-flags FLAG]"
+                return 0
+                ;;
 
-      --)
-        shift
-        break
-        ;;
+            --)
+                shift
+                break
+                ;;
 
-      *)
-        src_files+=("$( realpath "$1" )")
-        shift
-        ;;
-    esac
-  done
+            *)
+                src_files+=("$( realpath "$1" )")
+                shift
+                ;;
+        esac
+    done
 
-  prog_flags=("$@")
+    prog_flags=("$@")
 
-  local build_dir
-  build_dir="$( mktemp --directory )"
+    local build_dir
+    build_dir="$( mktemp --directory )"
 
-  trap "$( printf 'popd > /dev/null && rm -rf %q' "$build_dir" )" 0
-  pushd "$build_dir" > /dev/null
+    trap "$( printf 'popd > /dev/null && rm -rf %q' "$build_dir" )" 0
+    pushd "$build_dir" > /dev/null
 
-  local output_name
-  output_name="$( mktemp --tmpdir=. "${FUNCNAME[0]}XXX.exe" )"
+    local output_name
+    output_name="$( mktemp --tmpdir=. "${FUNCNAME[0]}XXX.exe" )"
 
-  gcc -o "$output_name" \
-      "${c_flags[@]+"${c_flags[@]}"}" \
-      "${src_files[@]+"${src_files[@]}"}"
+    gcc -o "$output_name" \
+        "${c_flags[@]+"${c_flags[@]}"}" \
+        "${src_files[@]+"${src_files[@]}"}"
 
-  "$output_name" "${prog_flags[@]+"${prog_flags[@]}"}"
+    "$output_name" "${prog_flags[@]+"${prog_flags[@]}"}"
 )
 
 CXX_FLAGS=('-Wall' '-Wextra' '-std=c++14')
 
 runcxx() (
-  set -o errexit
+    set -o errexit
 
-  local cxx_flags=("${CXX_FLAGS[@]}")
-  local -a src_files=()
-  local -a prog_flags=()
+    local cxx_flags=("${CXX_FLAGS[@]}")
+    local -a src_files=()
+    local -a prog_flags=()
 
-  while [ "$#" -gt 0 ]; do
-    case "$1" in
-      -c|--cxx-flags)
-        if [ "$#" -le 1 ]; then
-          echo "${FUNCNAME[0]}: missing argument for parameter: $1" >&2
-          return 1
-        fi
-        shift
-        cxx_flags+=("$1")
-        shift
-        ;;
+    while [ "$#" -gt 0 ]; do
+        case "$1" in
+            -c|--cxx-flags)
+                if [ "$#" -le 1 ]; then
+                    echo "${FUNCNAME[0]}: missing argument for parameter: $1" >&2
+                    return 1
+                fi
+                shift
+                cxx_flags+=("$1")
+                shift
+                ;;
 
-      -h)
-        echo "usage: ${FUNCNAME[0]} [-h] [-c|--cxx-flags FLAG]"
-        return 0
-        ;;
+            -h|--help)
+                echo "usage: ${FUNCNAME[0]} [-h|--help] [-c|--cxx-flags FLAG]"
+                return 0
+                ;;
 
-      --)
-        shift
-        break
-        ;;
+            --)
+                shift
+                break
+                ;;
 
-      *)
-        src_files+=("$( realpath "$1" )")
-        shift
-        ;;
-    esac
-  done
+            *)
+                src_files+=("$( realpath "$1" )")
+                shift
+                ;;
+        esac
+    done
 
-  prog_flags=("$@")
+    prog_flags=("$@")
 
-  local build_dir
-  build_dir="$( mktemp --directory )"
+    local build_dir
+    build_dir="$( mktemp --directory )"
 
-  trap "$( printf 'popd > /dev/null && rm -rf %q' "$build_dir" )" 0
-  pushd "$build_dir" > /dev/null
+    trap "$( printf 'popd > /dev/null && rm -rf %q' "$build_dir" )" 0
+    pushd "$build_dir" > /dev/null
 
-  local output_name
-  output_name="$( mktemp --tmpdir=. "${FUNCNAME[0]}XXX.exe" )"
+    local output_name
+    output_name="$( mktemp --tmpdir=. "${FUNCNAME[0]}XXX.exe" )"
 
-  g++ -o "$output_name" \
-      "${cxx_flags[@]+"${cxx_flags[@]}"}" \
-      "${src_files[@]+"${src_files[@]}"}"
+    g++ -o "$output_name" \
+        "${cxx_flags[@]+"${cxx_flags[@]}"}" \
+        "${src_files[@]+"${src_files[@]}"}"
 
-  "$output_name" "${prog_flags[@]+"${prog_flags[@]}"}"
+    "$output_name" "${prog_flags[@]+"${prog_flags[@]}"}"
 )

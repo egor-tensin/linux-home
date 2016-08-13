@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 
 if [ -n "${BASHRC_NETWRIX+x}" ]; then
-  return 0
+    return 0
 else
-  readonly BASHRC_NETWRIX=1
+    readonly BASHRC_NETWRIX=1
 fi
 
 source .bashrc_git  || return
@@ -14,20 +14,20 @@ export nwx_dev2=172.28.19.60
 export nwx_dev3=172.28.19.61
 
 lint_webapi() (
-  set -o errexit
+    set -o errexit
 
-  local root_dir='/cygdrive/c/Netwrix Auditor/CurrentVersion-AuditCore-Dev/AuditCore/Sources'
+    local root_dir='/cygdrive/c/Netwrix Auditor/CurrentVersion-AuditCore-Dev/AuditCore/Sources'
 
-  cd "$root_dir/Configuration"
-  doslint WebAPI*.acinc WebAPI*.acconf
+    cd "$root_dir/Configuration"
+    doslint WebAPI*.acinc WebAPI*.acconf
 
-  cd "$root_dir/Subsystems/PublicAPI"
-  local path
-  find . -type f -\( -iname '*.cpp' -o -iname '*.h' -\) | while read -r path ; do
-    doslint "$path"
-  done
+    cd "$root_dir/Subsystems/PublicAPI"
+    local path
+    find . -type f -\( -iname '*.cpp' -o -iname '*.h' -\) | while read -r path; do
+        doslint "$path"
+    done
 )
 
 backup_repo_nwx() {
-  backup_repo '//spbfs02/P/Personal/Egor Tensin'
+    backup_repo '//spbfs02/P/Personal/Egor Tensin'
 }

@@ -1,45 +1,45 @@
 #!/usr/bin/env bash
 
 if [ -n "${BASHRC_THIRD_PARTY+x}" ]; then
-  return 0
+    return 0
 else
-  readonly BASHRC_THIRD_PARTY=1
+    readonly BASHRC_THIRD_PARTY=1
 fi
 
 ensure_symlinks_enabled() {
-  case "${CYGWIN:-}" in
-    *winsymlinks:native*)       ;;
-    *winsymlinks:nativestrict*) ;;
+    case "${CYGWIN:-}" in
+        *winsymlinks:native*)       ;;
+        *winsymlinks:nativestrict*) ;;
 
-    *)
-      echo "${FUNCNAME[0]}: native Windows symlinks aren't enabled in Cygwin" >&2
-      return 1
-      ;;
-  esac
+        *)
+            echo "${FUNCNAME[0]}: native Windows symlinks aren't enabled in Cygwin" >&2
+            return 1
+            ;;
+    esac
 }
 
 symlink_preferences() (
-  set -o errexit
+    set -o errexit
 
-  ensure_symlinks_enabled
+    ensure_symlinks_enabled
 
-  if [ "$#" -ne 2 ]; then
-    echo "usage: ${FUNCNAME[0]} SRC_DIR DEST_DIR" >&2
-    return 1
-  fi
+    if [ "$#" -ne 2 ]; then
+        echo "usage: ${FUNCNAME[0]} SRC_DIR DEST_DIR" >&2
+        return 1
+    fi
 
-  local src_dir="$1"
-  local dest_dir="$2"
+    local src_dir="$1"
+    local dest_dir="$2"
 
-  [ -d "$dest_dir" ] || mkdir -p "$dest_dir"
+    mkdir -p "$dest_dir"
 
-  find "$src_dir" -maxdepth 1 -type f -exec ln --force -s {} "$dest_dir" \;
+    find "$src_dir" -maxdepth 1 -type f -exec ln --force -s {} "$dest_dir" \;
 )
 
 symlink_sublime_preferences() {
-  symlink_preferences "$HOME/.Sublime Text 3" "$APPDATA/Sublime Text 3/Packages/User"
+    symlink_preferences "$HOME/.Sublime Text 3" "$APPDATA/Sublime Text 3/Packages/User"
 }
 
 symlink_ghc_preferences() {
-  symlink_preferences "$HOME/.GHC" "$APPDATA/ghc"
+    symlink_preferences "$HOME/.GHC" "$APPDATA/ghc"
 }

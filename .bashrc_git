@@ -1,101 +1,101 @@
 #!/usr/bin/env bash
 
 if [ -n "${BASHRC_GIT+x}" ]; then
-  return 0
+    return 0
 else
-  readonly BASHRC_GIT=1
+    readonly BASHRC_GIT=1
 fi
 
 list_repo_files() (
-  local -a cmd=(git ls-files)
+    local -a cmd=(git ls-files)
 
-  while [ "$#" -gt 0 ]; do
-    case "$1" in
-      -z|-0)
-        cmd+=(-z)
-        shift
-        ;;
+    while [ "$#" -gt 0 ]; do
+        case "$1" in
+            -z|-0)
+                cmd+=(-z)
+                shift
+                ;;
 
-      -h)
-        echo "usage: ${FUNCNAME[0]} [-h] [-z|-0]"
-        return 0
-        ;;
+            -h|--help)
+                echo "usage: ${FUNCNAME[0]} [-h|--help] [-z|-0]"
+                return 0
+                ;;
 
-      *)
-        echo "${FUNCNAME[0]}: unrecognized parameter: $1" >&2
-        return 1
-        ;;
-    esac
-  done
+            *)
+                echo "${FUNCNAME[0]}: unrecognized parameter: $1" >&2
+                return 1
+                ;;
+        esac
+    done
 
-  eval "${cmd[@]}"
+    eval "${cmd[@]}"
 )
 
 list_repo_dirs() (
-  set -o errexit
+    set -o errexit
 
-  local terminator='\n'
+    local terminator='\n'
 
-  while [ "$#" -gt 0 ]; do
-    case "$1" in
-      -z|-0)
-        terminator='\000'
-        shift
-        ;;
+    while [ "$#" -gt 0 ]; do
+        case "$1" in
+            -z|-0)
+                terminator='\000'
+                shift
+                ;;
 
-      -h)
-        echo "usage: ${FUNCNAME[0]} [-h] [-z|-0]"
-        return 0
-        ;;
+            -h|--help)
+                echo "usage: ${FUNCNAME[0]} [-h|--help] [-z|-0]"
+                return 0
+                ;;
 
-      *)
-        echo "${FUNCNAME[0]}: unrecognized parameter: $1" >&2
-        return 1
-        ;;
-    esac
-  done
+            *)
+                echo "${FUNCNAME[0]}: unrecognized parameter: $1" >&2
+                return 1
+                ;;
+        esac
+    done
 
-  { printf '.\0' ; list_repo_files -z ; } \
-    | xargs -0 dirname -z \
-    | sort -uz \
-    | tail -z -n +2 \
-    | tr '\000' "$terminator"
+    { printf '.\0' ; list_repo_files -z ; } \
+        | xargs -0 dirname -z \
+        | sort -uz \
+        | tail -z -n +2 \
+        | tr '\000' "$terminator"
 )
 
 tighten_repo_security() (
-  set -o errexit
+    set -o errexit
 
-  list_repo_files -z | xargs -0 chmod 0600
-  list_repo_dirs  -z | xargs -0 chmod 0700
-  chmod 0700 .git
+    list_repo_files -z | xargs -0 chmod 0600
+    list_repo_dirs  -z | xargs -0 chmod 0700
+    chmod 0700 .git
 )
 
 backup_repo() (
-  set -o errexit
+    set -o errexit
 
-  local repo_dir
-  repo_dir="$( realpath . )"
-  local repo_name
-  repo_name="$( basename "$repo_dir" )"
-  local backup_dir="$repo_dir"
+    local repo_dir
+    repo_dir="$( realpath . )"
+    local repo_name
+    repo_name="$( basename "$repo_dir" )"
+    local backup_dir="$repo_dir"
 
-  if [ $# -eq 1 ]; then
-    backup_dir="$1"
-  elif [ $# -gt 1 ]; then
-    echo "usage: ${FUNCNAME[0]} [BACKUP_DIR]" >&2
-    exit 1
-  fi
+    if [ $# -eq 1 ]; then
+        backup_dir="$1"
+    elif [ $# -gt 1 ]; then
+        echo "usage: ${FUNCNAME[0]} [BACKUP_DIR]" >&2
+        exit 1
+    fi
 
-  local zip_name
-  zip_name="${repo_name}_$( date -u +'%Y%m%dT%H%M%S' ).zip"
+    local zip_name
+    zip_name="${repo_name}_$( date -u +'%Y%m%dT%H%M%S' ).zip"
 
-  git archive \
-    --format=zip -9 \
-    --output="$backup_dir/$zip_name" \
-    --remote="$repo_dir" \
-    HEAD
+    git archive \
+        --format=zip -9 \
+        --output="$backup_dir/$zip_name" \
+        --remote="$repo_dir" \
+        HEAD
 )
 
 backup_repo_dropbox() {
-  backup_repo "$USERPROFILE/Dropbox/backups"
+    backup_repo "$USERPROFILE/Dropbox/backups"
 }
