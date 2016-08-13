@@ -1,11 +1,17 @@
-[ ! -z "${BASHRC_NETWRIX+x}" ] && return || readonly BASHRC_NETWRIX=1
+#!/usr/bin/env bash
 
-source .bashrc_git
-source .bashrc_text
+if [ -n "${BASHRC_NETWRIX+x}" ]; then
+  return 0
+else
+  readonly BASHRC_NETWRIX=1
+fi
 
-nwx_host=172.28.10.2
-nwx_dev2=172.28.19.60
-nwx_dev3=172.28.19.61
+source .bashrc_git  || return
+source .bashrc_text || return
+
+export nwx_host=172.28.10.2
+export nwx_dev2=172.28.19.60
+export nwx_dev3=172.28.19.61
 
 lint_webapi() (
   set -o errexit

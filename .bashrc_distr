@@ -1,13 +1,24 @@
-[ ! -z "${BASHRC_DISTR+x}" ] && return || readonly BASHRC_DISTR=1
+#!/usr/bin/env bash
+
+if [ -n "${BASHRC_DISTR+x}" ]; then
+  return 0
+else
+  readonly BASHRC_DISTR=1
+fi
 
 checksums_path='sha1sums.txt'
 
 update_checksums() {
-  sha1sum "$@" > "$checksums_path"
+  sha1sum -- "$@" > "$checksums_path"
 }
 
 update_checksums_distr() {
-  update_checksums *.exe *.iso
+  local -a paths=()
+  local path
+  while IFS= read -r -d $'\0' path; do
+    paths+=("$path")
+  done < <( find . -type f -\( -iname '*.exe' -o -iname '*.iso' -\) -print0 )
+  update_checksums "${paths[@]+"${paths[@]}"}"
 }
 
 verify_checksums() {

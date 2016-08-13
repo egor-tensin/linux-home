@@ -1,4 +1,10 @@
-[ ! -z "${BASHRC_CXX+x}" ] && return || readonly BASHRC_CXX=1
+#!/usr/bin/env bash
+
+if [ -n "${BASHRC_CXX+x}" ]; then
+  return 0
+else
+  readonly BASHRC_CXX=1
+fi
 
 C_FLAGS=('-Wall' '-Wextra')
 
@@ -13,7 +19,7 @@ runc() (
     case "$1" in
       -c|--c-flags)
         if [ "$#" -le 1 ]; then
-          echo "$FUNCNAME: missing argument for parameter: $1" >&2
+          echo "${FUNCNAME[0]}: missing argument for parameter: $1" >&2
           return 1
         fi
         shift
@@ -22,7 +28,7 @@ runc() (
         ;;
 
       -h)
-        echo "usage: $FUNCNAME [-h] [-c|--c-flags FLAG]"
+        echo "usage: ${FUNCNAME[0]} [-h] [-c|--c-flags FLAG]"
         return 0
         ;;
 
@@ -40,10 +46,14 @@ runc() (
 
   prog_flags=("$@")
 
-  local build_dir="$( mktemp --directory )"
+  local build_dir
+  build_dir="$( mktemp --directory )"
+
   trap "$( printf 'popd > /dev/null && rm -rf %q' "$build_dir" )" 0
   pushd "$build_dir" > /dev/null
-  local output_name="$( mktemp --tmpdir=. "${FUNCNAME}XXX.exe" )"
+
+  local output_name
+  output_name="$( mktemp --tmpdir=. "${FUNCNAME[0]}XXX.exe" )"
 
   gcc -o "$output_name" \
       "${c_flags[@]+"${c_flags[@]}"}" \
@@ -65,7 +75,7 @@ runcxx() (
     case "$1" in
       -c|--cxx-flags)
         if [ "$#" -le 1 ]; then
-          echo "$FUNCNAME: missing argument for parameter: $1" >&2
+          echo "${FUNCNAME[0]}: missing argument for parameter: $1" >&2
           return 1
         fi
         shift
@@ -74,7 +84,7 @@ runcxx() (
         ;;
 
       -h)
-        echo "usage: $FUNCNAME [-h] [-c|--cxx-flags FLAG]"
+        echo "usage: ${FUNCNAME[0]} [-h] [-c|--cxx-flags FLAG]"
         return 0
         ;;
 
@@ -92,10 +102,14 @@ runcxx() (
 
   prog_flags=("$@")
 
-  local build_dir="$( mktemp --directory )"
+  local build_dir
+  build_dir="$( mktemp --directory )"
+
   trap "$( printf 'popd > /dev/null && rm -rf %q' "$build_dir" )" 0
   pushd "$build_dir" > /dev/null
-  local output_name="$( mktemp --tmpdir=. "${FUNCNAME}XXX.exe" )"
+
+  local output_name
+  output_name="$( mktemp --tmpdir=. "${FUNCNAME[0]}XXX.exe" )"
 
   g++ -o "$output_name" \
       "${cxx_flags[@]+"${cxx_flags[@]}"}" \

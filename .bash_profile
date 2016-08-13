@@ -44,7 +44,7 @@ fi
 # fi
 
 spawn_ssh_agent() {
-  [ ! -z "${SSH_AGENT_PID:+x}" ] && return 0
+  [ -n "${SSH_AGENT_PID:+x}" ] && return 0
 
   eval "$( ssh-agent -s )" > /dev/null \
     && trap "$( printf 'kill %q' "$SSH_AGENT_PID" )" 0 \

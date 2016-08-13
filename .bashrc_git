@@ -1,22 +1,28 @@
-[ ! -z "${BASHRC_GIT+x}" ] && return || readonly BASHRC_GIT=1
+#!/usr/bin/env bash
+
+if [ -n "${BASHRC_GIT+x}" ]; then
+  return 0
+else
+  readonly BASHRC_GIT=1
+fi
 
 list_repo_files() (
   local -a cmd=(git ls-files)
 
   while [ "$#" -gt 0 ]; do
     case "$1" in
-      -z|-0):
+      -z|-0)
         cmd+=(-z)
         shift
         ;;
 
-      -h):
-        echo "usage: $FUNCNAME [-h] [-z|-0]"
+      -h)
+        echo "usage: ${FUNCNAME[0]} [-h] [-z|-0]"
         return 0
         ;;
 
       *)
-        echo "$FUNCNAME: unrecognized parameter: $1" >&2
+        echo "${FUNCNAME[0]}: unrecognized parameter: $1" >&2
         return 1
         ;;
     esac
@@ -32,18 +38,18 @@ list_repo_dirs() (
 
   while [ "$#" -gt 0 ]; do
     case "$1" in
-      -z|-0):
+      -z|-0)
         terminator='\000'
         shift
         ;;
 
-      -h):
-        echo "usage: $FUNCNAME [-h] [-z|-0]"
+      -h)
+        echo "usage: ${FUNCNAME[0]} [-h] [-z|-0]"
         return 0
         ;;
 
       *)
-        echo "$FUNCNAME: unrecognized parameter: $1" >&2
+        echo "${FUNCNAME[0]}: unrecognized parameter: $1" >&2
         return 1
         ;;
     esac
@@ -67,18 +73,21 @@ tighten_repo_security() (
 backup_repo() (
   set -o errexit
 
-  local repo_dir="$( realpath . )"
-  local repo_name="$( basename "$repo_dir" )"
+  local repo_dir
+  repo_dir="$( realpath . )"
+  local repo_name
+  repo_name="$( basename "$repo_dir" )"
   local backup_dir="$repo_dir"
 
   if [ $# -eq 1 ]; then
     backup_dir="$1"
   elif [ $# -gt 1 ]; then
-    echo "usage: $FUNCNAME [BACKUP_DIR]" >&2
+    echo "usage: ${FUNCNAME[0]} [BACKUP_DIR]" >&2
     exit 1
   fi
 
-  local zip_name="${repo_name}_$( date -u +'%Y%m%dT%H%M%S' ).zip"
+  local zip_name
+  zip_name="${repo_name}_$( date -u +'%Y%m%dT%H%M%S' ).zip"
 
   git archive \
     --format=zip -9 \

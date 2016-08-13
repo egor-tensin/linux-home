@@ -1,28 +1,30 @@
-[ ! -z "${BASHRC_THIRD_PARTY+x}" ] && return || readonly BASHRC_THIRD_PARTY=1
+#!/usr/bin/env bash
+
+if [ -n "${BASHRC_THIRD_PARTY+x}" ]; then
+  return 0
+else
+  readonly BASHRC_THIRD_PARTY=1
+fi
 
 ensure_symlinks_enabled() {
-  [ -z "${CYGWIN+x}" ] && return 1
-
-  case "$CYGWIN" in
+  case "${CYGWIN:-}" in
     *winsymlinks:native*)       ;;
     *winsymlinks:nativestrict*) ;;
 
     *)
+      echo "${FUNCNAME[0]}: native Windows symlinks aren't enabled in Cygwin" >&2
       return 1
       ;;
   esac
 }
 
 symlink_preferences() (
-  if ! ensure_symlinks_enabled; then
-    echo "$FUNCNAME: it seems like native Windows symlinks aren't enabled in Cygwin." >&2
-    return 1
-  fi
-
   set -o errexit
 
+  ensure_symlinks_enabled
+
   if [ "$#" -ne 2 ]; then
-    echo "usage: $FUNCNAME SRC_DIR DEST_DIR" >&2
+    echo "usage: ${FUNCNAME[0]} SRC_DIR DEST_DIR" >&2
     return 1
   fi
 

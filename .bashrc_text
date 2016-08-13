@@ -1,4 +1,10 @@
-[ ! -z "${BASHRC_TEXT+x}" ] && return || readonly BASHRC_TEXT=1
+#!/usr/bin/env bash
+
+if [ -n "${BASHRC_TEXT+x}" ]; then
+  return 0
+else
+  readonly BASHRC_TEXT=1
+fi
 
 alias dos2eol='sed --binary --in-place '"'"'s/\(\r\?\)$//'"'"
 alias eol2dos='sed --binary --in-place '"'"'s/\r\?$/\r/'"'"
