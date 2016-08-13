@@ -27,8 +27,8 @@ runc() (
                 shift
                 ;;
 
-            -h)
-                echo "usage: ${FUNCNAME[0]} [-h] [-c|--c-flags FLAG]"
+            -h|--help)
+                echo "usage: ${FUNCNAME[0]} [-h|--help] [-c|--c-flags FLAG]"
                 return 0
                 ;;
 
