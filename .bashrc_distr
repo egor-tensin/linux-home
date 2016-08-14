@@ -13,9 +13,9 @@ update_checksums() {
 }
 
 update_checksums_distr() {
-    local -a paths=()
+    local -a paths
     local path
-    while IFS= read -r -d $'\0' path; do
+    while IFS= read -d '' -r path; do
         paths+=("$path")
     done < <( find . -type f -\( -iname '*.exe' -o -iname '*.iso' -\) -print0 )
     update_checksums "${paths[@]+"${paths[@]}"}"

@@ -15,17 +15,24 @@ export nwx_dev3=172.28.19.61
 
 lint_webapi() (
     set -o errexit
+    set -o pipefail
 
     local root_dir='/cygdrive/c/Netwrix Auditor/CurrentVersion-AuditCore-Dev/AuditCore/Sources'
 
+    local -a paths
+    local path
+
     cd "$root_dir/Configuration"
-    doslint WebAPI*.acinc WebAPI*.acconf
+    while IFS= read -d '' -r path; do
+        paths+=("$path")
+    done < <( find . -type f -\( -iname 'WebAPI*.acinc' -o -iname 'WebAPI*.acconf' -\) -print0 )
 
     cd "$root_dir/Subsystems/PublicAPI"
-    local path
-    find . -type f -\( -iname '*.cpp' -o -iname '*.h' -\) | while read -r path; do
-        doslint "$path"
-    done
+    while IFS= read -d '' -r path; do
+        paths+=("$path")
+    done < <( find . -type f -\( -iname '*.cpp' -o -iname '*.h' -\) -print0 )
+
+    doslint "${paths[@]+"${paths[@]}"}"
 )
 
 backup_repo_nwx() {

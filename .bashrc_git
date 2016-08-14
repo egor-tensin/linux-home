@@ -28,11 +28,12 @@ list_repo_files() (
         esac
     done
 
-    eval "${cmd[@]}"
+    eval "${cmd[@]+"${cmd[@]}"}"
 )
 
 list_repo_dirs() (
     set -o errexit
+    set -o pipefail
 
     local terminator='\n'
 
@@ -64,6 +65,7 @@ list_repo_dirs() (
 
 tighten_repo_security() (
     set -o errexit
+    set -o pipefail
 
     list_repo_files -z | xargs -0 chmod 0600
     list_repo_dirs  -z | xargs -0 chmod 0700
