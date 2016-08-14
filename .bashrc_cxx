@@ -11,7 +11,7 @@ C_FLAGS=('-Wall' '-Wextra')
 runc() (
     set -o errexit -o nounset -o pipefail
 
-    local -a c_flags=("${C_FLAGS[@]}")
+    local -a c_flags=("${C_FLAGS[@]+"${C_FLAGS[@]}"}")
     local -a src_files
     local -a prog_flags
 
@@ -67,7 +67,7 @@ CXX_FLAGS=('-Wall' '-Wextra' '-std=c++14')
 runcxx() (
     set -o errexit -o nounset -o pipefail
 
-    local cxx_flags=("${CXX_FLAGS[@]}")
+    local -a cxx_flags=("${CXX_FLAGS[@]+"${CXX_FLAGS[@]}"}")
     local -a src_files
     local -a prog_flags
 
