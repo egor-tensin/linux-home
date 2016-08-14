@@ -1,11 +1,5 @@
 #!/usr/bin/env bash
 
-if [ -n "${BASHRC_CXX+x}" ]; then
-    return 0
-else
-    readonly BASHRC_CXX=1
-fi
-
 C_FLAGS=('-Wall' '-Wextra')
 
 runc() (

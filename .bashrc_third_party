@@ -1,11 +1,5 @@
 #!/usr/bin/env bash
 
-if [ -n "${BASHRC_THIRD_PARTY+x}" ]; then
-    return 0
-else
-    readonly BASHRC_THIRD_PARTY=1
-fi
-
 ensure_symlinks_enabled() {
     case "${CYGWIN:-}" in
         *winsymlinks:native*)       ;;

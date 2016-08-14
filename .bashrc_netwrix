@@ -1,11 +1,5 @@
 #!/usr/bin/env bash
 
-if [ -n "${BASHRC_NETWRIX+x}" ]; then
-    return 0
-else
-    readonly BASHRC_NETWRIX=1
-fi
-
 source .bashrc_git  || return
 source .bashrc_text || return
 

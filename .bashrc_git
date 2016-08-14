@@ -1,11 +1,5 @@
 #!/usr/bin/env bash
 
-if [ -n "${BASHRC_GIT+x}" ]; then
-    return 0
-else
-    readonly BASHRC_GIT=1
-fi
-
 list_repo_files() (
     set -o errexit -o nounset -o pipefail
 

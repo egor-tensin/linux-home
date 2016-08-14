@@ -1,11 +1,5 @@
 #!/usr/bin/env bash
 
-if [ -n "${BASHRC_DISTR+x}" ]; then
-    return 0
-else
-    readonly BASHRC_DISTR=1
-fi
-
 checksums_path='sha1sums.txt'
 
 update_checksums() {
