@@ -35,12 +35,12 @@ list_repo_files() (
 list_repo_dirs() (
     set -o errexit -o nounset -o pipefail
 
-    local terminator='\n'
+    local -a cmd=(git ls-tree -d -r)
 
     while [ "$#" -gt 0 ]; do
         case "$1" in
             -z|-0)
-                terminator='\000'
+                cmd+=(-z)
                 shift
                 ;;
 
@@ -56,11 +56,9 @@ list_repo_dirs() (
         esac
     done
 
-    { printf '.\0' ; list_repo_files -z ; } \
-        | xargs -0 dirname -z \
-        | sort -uz \
-        | tail -z -n +2 \
-        | tr '\000' "$terminator"
+    cmd+=(--name-only HEAD)
+
+    eval "${cmd[@]+"${cmd[@]}"}"
 )
 
 tighten_repo_security() (
