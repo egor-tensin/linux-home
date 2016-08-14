@@ -46,7 +46,7 @@
 #set convert-meta off
 #set input-meta on
 #set output-meta on
-#$if Bash
+$if Bash
   # Don't ring bell on completion
   set bell-style none
 
@@ -73,4 +73,4 @@
   #Space: magic-space
 
   TAB: menu-complete
-#$endif
+$endif
