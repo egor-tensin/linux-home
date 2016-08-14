@@ -7,6 +7,8 @@ else
 fi
 
 list_repo_files() (
+    set -o errexit -o nounset -o pipefail
+
     local -a cmd=(git ls-files)
 
     while [ "$#" -gt 0 ]; do
@@ -32,8 +34,7 @@ list_repo_files() (
 )
 
 list_repo_dirs() (
-    set -o errexit
-    set -o pipefail
+    set -o errexit -o nounset -o pipefail
 
     local terminator='\n'
 
@@ -64,8 +65,7 @@ list_repo_dirs() (
 )
 
 tighten_repo_security() (
-    set -o errexit
-    set -o pipefail
+    set -o errexit -o nounset -o pipefail
 
     list_repo_files -z | xargs -0 chmod 0600
     list_repo_dirs  -z | xargs -0 chmod 0700
@@ -73,7 +73,7 @@ tighten_repo_security() (
 )
 
 backup_repo() (
-    set -o errexit
+    set -o errexit -o nounset -o pipefail
 
     local repo_dir
     repo_dir="$( realpath . )"
@@ -98,6 +98,8 @@ backup_repo() (
         HEAD
 )
 
-backup_repo_dropbox() {
+backup_repo_dropbox() (
+    set -o errexit -o nounset -o pipefail
+
     backup_repo "$USERPROFILE/Dropbox/backups"
-}
+)

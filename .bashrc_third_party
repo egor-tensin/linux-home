@@ -19,14 +19,14 @@ ensure_symlinks_enabled() {
 }
 
 symlink_preferences() (
-    set -o errexit
-
-    ensure_symlinks_enabled
+    set -o errexit -o nounset -o pipefail
 
     if [ "$#" -ne 2 ]; then
         echo "usage: ${FUNCNAME[0]} SRC_DIR DEST_DIR" >&2
         return 1
     fi
+
+    ensure_symlinks_enabled
 
     local src_dir="$1"
     local dest_dir="$2"
@@ -36,10 +36,14 @@ symlink_preferences() (
     find "$src_dir" -maxdepth 1 -type f -exec ln --force -s {} "$dest_dir" \;
 )
 
-symlink_sublime_preferences() {
-    symlink_preferences "$HOME/.Sublime Text 3" "$APPDATA/Sublime Text 3/Packages/User"
-}
+symlink_sublime_preferences() (
+    set -o errexit -o nounset -o pipefail
 
-symlink_ghc_preferences() {
+    symlink_preferences "$HOME/.Sublime Text 3" "$APPDATA/Sublime Text 3/Packages/User"
+)
+
+symlink_ghc_preferences() (
+    set -o errexit -o nounset -o pipefail
+
     symlink_preferences "$HOME/.GHC" "$APPDATA/ghc"
-}
+)

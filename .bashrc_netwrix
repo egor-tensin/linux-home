@@ -14,8 +14,7 @@ export nwx_dev2=172.28.19.60
 export nwx_dev3=172.28.19.61
 
 lint_webapi() (
-    set -o errexit
-    set -o pipefail
+    set -o errexit -o nounset -o pipefail
 
     local root_dir='/cygdrive/c/Netwrix Auditor/CurrentVersion-AuditCore-Dev/AuditCore/Sources'
 

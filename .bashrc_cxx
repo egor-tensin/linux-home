@@ -9,11 +9,11 @@ fi
 C_FLAGS=('-Wall' '-Wextra')
 
 runc() (
-    set -o errexit
+    set -o errexit -o nounset -o pipefail
 
     local -a c_flags=("${C_FLAGS[@]}")
-    local -a src_files=()
-    local -a prog_flags=()
+    local -a src_files
+    local -a prog_flags
 
     while [ "$#" -gt 0 ]; do
         case "$1" in
@@ -65,11 +65,11 @@ runc() (
 CXX_FLAGS=('-Wall' '-Wextra' '-std=c++14')
 
 runcxx() (
-    set -o errexit
+    set -o errexit -o nounset -o pipefail
 
     local cxx_flags=("${CXX_FLAGS[@]}")
-    local -a src_files=()
-    local -a prog_flags=()
+    local -a src_files
+    local -a prog_flags
 
     while [ "$#" -gt 0 ]; do
         case "$1" in
