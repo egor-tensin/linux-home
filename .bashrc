@@ -199,17 +199,17 @@ alias fgrep='fgrep --color=auto'              # show differences in colour
 
 PS1='\[\e[33m\]\W\[\e[0m\]: '
 
-set -o pipefail
 set -o nounset
-shopt -s nullglob
+set -o pipefail
 shopt -s dotglob
+shopt -s nullglob
 
 alias less='less -R'
 alias ls='ls -lAh --color=tty'
 
 alias list_packages='cygcheck -cd'
 
-PYTHONSTARTUP="$HOME/.pythonrc"
+export PYTHONSTARTUP="$HOME/.pythonrc"
 
 [ -f '.bashrc_cxx'         ] && source .bashrc_cxx
 [ -f '.bashrc_distr'       ] && source .bashrc_distr
