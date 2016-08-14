@@ -204,8 +204,6 @@ set -o nounset
 shopt -s nullglob
 shopt -s dotglob
 
-export SHELLOPTS
-
 alias less='less -R'
 alias ls='ls -lAh --color=tty'
 
