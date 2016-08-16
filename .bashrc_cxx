@@ -5,12 +5,12 @@
 # For details, see https://github.com/egor-tensin/cygwin-home.
 # Distributed under the MIT License.
 
-C_FLAGS=('-Wall' '-Wextra')
+runc_flags=('-Wall' '-Wextra')
 
 runc() (
     set -o errexit -o nounset -o pipefail
 
-    local -a c_flags=("${C_FLAGS[@]+"${C_FLAGS[@]}"}")
+    local -a c_flags=("${runc_flags[@]+"${runc_flags[@]}"}")
     local -a src_files
     local -a prog_flags
 
@@ -61,12 +61,12 @@ runc() (
     "$output_name" "${prog_flags[@]+"${prog_flags[@]}"}"
 )
 
-CXX_FLAGS=('-Wall' '-Wextra' '-std=c++14')
+runcxx_flags=('-Wall' '-Wextra' '-std=c++14')
 
 runcxx() (
     set -o errexit -o nounset -o pipefail
 
-    local -a cxx_flags=("${CXX_FLAGS[@]+"${CXX_FLAGS[@]}"}")
+    local -a cxx_flags=("${runcxx_flags[@]+"${runcxx_flags[@]}"}")
     local -a src_files
     local -a prog_flags
 
