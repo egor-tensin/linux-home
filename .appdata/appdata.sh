@@ -5,6 +5,18 @@
 # For details, see https://github.com/egor-tensin/cygwin-home.
 # Distributed under the MIT License.
 
+# This relies on the availability of native symlinks.
+# Those are indeed available on NTFS, but require Administrator privileges for
+# creation.
+# It likely won't bother you as long as you don't use the functions defined in
+# this file.
+# In any case, you will see `ln` complaining about some access being denied in
+# case something goes wrong.
+#
+# Remember that in order to force `ln` to use native NTFS symlinks, your
+# `CYGWIN` Windows environment variable value **must** include either
+# `winsymlinks:native` or `winsymlinks:nativestrict`!
+ 
 ensure_symlinks_enabled() {
     case "${CYGWIN:-}" in
         *winsymlinks:native*)       ;;
