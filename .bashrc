@@ -206,6 +206,7 @@ shopt -s nullglob
 
 alias less='less -R'
 alias ls='ls -lAh --color=tty'
+alias tree='tree -a'
 
 alias list_packages='cygcheck -cd'
 
