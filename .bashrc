@@ -37,7 +37,7 @@
 # set -o ignoreeof
 #
 # Use case-insensitive filename globbing
-shopt -s nocaseglob
+# shopt -s nocaseglob
 #
 # Make bash append rather than overwrite the history on disk
 # shopt -s histappend
@@ -96,15 +96,15 @@ shopt -s nocaseglob
 # alias mv='mv -i'
 #
 # Default to human readable figures
-alias df='df -h'
-alias du='du -h'
+# alias df='df -h'
+# alias du='du -h'
 #
 # Misc :)
 # alias less='less -r'                          # raw control characters
 # alias whence='type -a'                        # where, of a sort
-alias grep='grep --color'                     # show differences in colour
-alias egrep='egrep --color=auto'              # show differences in colour
-alias fgrep='fgrep --color=auto'              # show differences in colour
+# alias grep='grep --color'                     # show differences in colour
+# alias egrep='egrep --color=auto'              # show differences in colour
+# alias fgrep='fgrep --color=auto'              # show differences in colour
 #
 # Some shortcuts for different directory listings
 # alias ls='ls -hF --color=tty'                 # classify files in colour
@@ -201,16 +201,23 @@ PS1='\[\e[33m\]\W\[\e[0m\]: '
 
 set -o nounset
 set -o pipefail
+
 shopt -s dotglob
 shopt -s nullglob
-
-alias less='less -R'
-alias ls='ls -lAh --color=tty'
-alias tree='tree -a'
-
-alias list_packages='cygcheck -cd'
+shopt -s nocaseglob
 
 export PYTHONSTARTUP="$HOME/.pythonrc"
+
+alias df='df --human-readable'
+alias du='du --human-readable'
+alias egrep='egrep --color=auto'
+alias fgrep='fgrep --color=auto'
+alias grep='grep --color=auto'
+alias less='less --RAW-CONTROL-CHARS'
+alias ls='ls --almost-all -l --human-readable --color=auto'
+alias tree='tree -a'
+
+alias cygwin_packages='cygcheck -cd'
 
 [ -f '.bash_utils/cxx.sh'     ] && source .bash_utils/cxx.sh
 [ -f '.bash_utils/distr.sh'   ] && source .bash_utils/distr.sh
