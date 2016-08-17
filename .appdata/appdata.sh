@@ -6,7 +6,7 @@
 # Distributed under the MIT License.
 
 # This relies on the availability of native symlinks.
-# Those are indeed available on NTFS, but require Administrator privileges for
+# Those are indeed supported by NTFS, but require Administrator privileges for
 # creation.
 # It likely won't bother you as long as you don't use the functions defined in
 # this file.
