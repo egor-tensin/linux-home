@@ -5,8 +5,8 @@
 # For details, see https://github.com/egor-tensin/cygwin-home.
 # Distributed under the MIT License.
 
-source .bashrc_git  || return
-source .bashrc_text || return
+source .bash_utils/git.sh  || return
+source .bash_utils/text.sh || return
 
 export nwx_host=172.28.10.2
 export nwx_dev2=172.28.19.60

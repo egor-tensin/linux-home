@@ -211,9 +211,8 @@ alias list_packages='cygcheck -cd'
 
 export PYTHONSTARTUP="$HOME/.pythonrc"
 
-[ -f '.bashrc_cxx'         ] && source .bashrc_cxx
-[ -f '.bashrc_distr'       ] && source .bashrc_distr
-[ -f '.bashrc_git'         ] && source .bashrc_git
-[ -f '.bashrc_netwrix'     ] && source .bashrc_netwrix
-[ -f '.bashrc_text'        ] && source .bashrc_text
-[ -f ".bashrc_third_party" ] && source .bashrc_third_party
+[ -f '.bash_utils/cxx.sh'     ] && source .bash_utils/cxx.sh
+[ -f '.bash_utils/distr.sh'   ] && source .bash_utils/distr.sh
+[ -f '.bash_utils/git.sh'     ] && source .bash_utils/git.sh
+[ -f '.bash_utils/netwrix.sh' ] && source .bash_utils/netwrix.sh
+[ -f '.bash_utils/text.sh'    ] && source .bash_utils/text.sh
