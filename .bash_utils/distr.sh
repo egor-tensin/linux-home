@@ -5,7 +5,7 @@
 # For details, see https://github.com/egor-tensin/cygwin-home.
 # Distributed under the MIT License.
 
-readonly checksums_path='sha1sums.txt'
+checksums_path='sha1sums.txt'
 
 update_checksums() {
     sha1sum -- "$@" > "$checksums_path"
