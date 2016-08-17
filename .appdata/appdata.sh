@@ -39,7 +39,7 @@ symlink_sublime_preferences() (
     set -o errexit -o nounset -o pipefail
 
     symlink_preferences \
-        "$HOME/.appdata/Sublime Text 3" \
+        "$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/Sublime Text 3" \
         "$APPDATA/Sublime Text 3/Packages/User"
 )
 
@@ -47,6 +47,6 @@ symlink_ghc_preferences() (
     set -o errexit -o nounset -o pipefail
 
     symlink_preferences \
-        "$HOME/.appdata/ghc" \
+        "$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/ghc" \
         "$APPDATA/ghc"
 )
