@@ -47,3 +47,7 @@ endif
 " Enable current-directory .vimrc files.
 set exrc
 set secure
+
+" Case-insensitive (more precisely, so-called smart) search.
+set ignorecase
+set smartcase
