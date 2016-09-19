@@ -1,6 +1,0 @@
-[
-	{ "keys": ["f5"], "command": "revert" },
-
-	{ "keys": ["alt+shift+up"], "command": "select_lines", "args": {"forward": false} },
-	{ "keys": ["alt+shift+down"], "command": "select_lines", "args": {"forward": true} },
-]

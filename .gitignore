@@ -8,9 +8,6 @@
 !/.LICENSE.txt
 !/.README.md
 
-# Various Windows apps
-!/.appdata/
-
 # bash, customized versions of the files found in /etc/defaults/etc/skel
 !/.bash_profile
 !/.bashrc
