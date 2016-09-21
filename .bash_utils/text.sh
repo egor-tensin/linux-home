@@ -25,3 +25,17 @@ lint() {
 doslint() {
     trim "$@" && trimdoseol "$@" && doseol "$@"
 }
+
+replace_word() (
+    set -o errexit -o nounset -o pipefail
+
+    if [ "$#" -lt 3 ]; then
+        echo "usage: ${FUNCNAME[0]} OLD NEW PATH [PATH...]" >&2
+        return 1
+    fi
+
+    local old="$1"
+    local new="$2"
+
+    shift && shift && sed --binary --in-place "s/\\b$old\\b/$new/g" "$@"
+)
