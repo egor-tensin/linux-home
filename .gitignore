@@ -16,6 +16,7 @@
 
 # Custom bash functions & utilities
 !/.bash_utils/
+!/.bash_utils/*
 
 # A file I've been carrying around since the first releases of Ubuntu.
 # Can't remember exactly why it's so important or what it does, but I'm
@@ -31,3 +32,4 @@
 # Vim
 !/.vimrc
 !/.vimtmp/
+!/.vimtmp/*
