@@ -30,7 +30,7 @@ replace_word() (
     set -o errexit -o nounset -o pipefail
 
     if [ "$#" -lt 3 ]; then
-        echo "usage: ${FUNCNAME[0]} OLD NEW PATH [PATH...]" >&2
+        echo "usage: ${FUNCNAME[0]} OLD NEW PATH..." >&2
         return 1
     fi
 

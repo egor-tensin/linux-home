@@ -27,7 +27,7 @@ runc() (
                 ;;
 
             -h|--help)
-                echo "usage: ${FUNCNAME[0]} [-h|--help] [-c|--c-flags FLAG]"
+                echo "usage: ${FUNCNAME[0]} [-h|--help] [-c|--c-flags FLAG]... [--] [SRC_PATH]..."
                 return 0
                 ;;
 
@@ -83,7 +83,7 @@ runcxx() (
                 ;;
 
             -h|--help)
-                echo "usage: ${FUNCNAME[0]} [-h|--help] [-c|--cxx-flags FLAG]"
+                echo "usage: ${FUNCNAME[0]} [-h|--help] [-c|--cxx-flags FLAG]... [--] [SRC_PATH]..."
                 return 0
                 ;;
 
