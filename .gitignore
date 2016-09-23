@@ -23,11 +23,19 @@
 # completely sure it is/was necessary for proper font rendering.
 !/.fonts.conf
 
+# GnuPG configuration
+!/.gnupg/
+!/.gnupg/*
+
 # Mintty
 !/.minttyrc
 
 # Python
 !/.pythonrc
+
+# SSH configuration
+!/.ssh/
+!/.ssh/*
 
 # Vim
 !/.vimrc
