@@ -30,6 +30,9 @@
 # Mintty
 !/.minttyrc
 
+# Nano
+!/.nanorc
+
 # Python
 !/.pythonrc
 
