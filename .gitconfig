@@ -22,8 +22,9 @@
 [pull]
 	ff = only
 [alias]
-	clean-ignored = clean -fdX
 	clean-all = clean -fdx
+	clean-ignored = clean -fdX
+	clean-unknown = clean -fd
 	l = log --oneline
 [fetch]
 	prune = true
