@@ -1,46 +1,6 @@
-*
-
-# Git
-!/.gitattributes
-!/.gitconfig
-!/.gitignore
-
-!/.LICENSE.txt
-!/.README.md
-
-# bash, customized versions of the files found in /etc/defaults/etc/skel
-!/.bash_profile
-!/.bashrc
-!/.inputrc
-!/.profile
-
-# Custom bash functions & utilities
-!/.bash_utils/
-!/.bash_utils/*
-
-# A file I've been carrying around since the first releases of Ubuntu.
-# Can't remember exactly why it's so important or what it does, but I'm
-# completely sure it is/was necessary for proper font rendering.
-!/.fonts.conf
-
-# GnuPG configuration
-!/.gnupg/
-!/.gnupg/*
-
-# Mintty
-!/.minttyrc
-
-# Nano
-!/.nanorc
-
-# Python
-!/.pythonrc
-
-# SSH configuration
-!/.ssh/
-!/.ssh/*
-
-# Vim
-!/.vimrc
-!/.vimtmp/
-!/.vimtmp/*
+.bash_history
+.lesshst
+.python_history
+.rnd
+.vim/
+.viminfo
