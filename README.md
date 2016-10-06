@@ -1,50 +1,27 @@
 Cygwin configuration files
 ==========================
 
-My Cygwin home (`~`) configuration files.
+Personal Cygwin environment.
+The files are maintained in this repository and synced across different
+machines using [config-links].
+
+[config-links]: https://github.com/egor-tensin/config-links
 
 Deployment
 ----------
 
-To deploy on a fresh Cygwin installation, execute the lines below.
-**Be careful** though, some of your files will be **deleted**.
-Basically, every file/directory **not** listed in ".gitignore" will be deleted.
-Execute the lines below one-by-one and, **most importantly**, review the list
-of files `git clean` will delete by adding the `--dry-run` parameter.
+Using [config-links]:
 
-    git init
-    curl --silent --show-error --location https://github.com/egor-tensin/cygwin-home/raw/master/.gitignore -o .gitignore
-    git clean -d --force
+    > pwd
+    /cygdrive/d/workspace/personal/cygwin-home
 
-    git remote add origin https://github.com/egor-tensin/cygwin-home.git
-    git pull origin master
-    git branch --set-upstream-to=origin/master master
-
-The deployment should preferably take place right after you install Cygwin.
-
-File permissions
-----------------
-
-`git` doesn't preserve file permissions.
-After the deployment, anyone will be able to read any of the files in the
-repository.
-To adjust the permissions so that only you can read the files, `source`
-".bashrc" (`bash` does this automatically) and execute:
-
-    ( cd && tighten_repo_security )
-
-This also makes sure the directories in the repository are accessible only by
-yourself (including the ".git" directory).
-
-The important thing to note is that the permissions are reset each time `git`
-writes to a file.
-It is thus necessary to execute the line above after each invokation of `git
-pull`, `git checkout`, etc.
+    > ../config-links/update.sh -d db.bin -s .
+    ...
 
 License
 -------
 
 Distributed under the MIT License.
-See [.LICENSE.txt] for details.
+See [LICENSE.txt] for details.
 
-[.LICENSE.txt]: .LICENSE.txt
+[LICENSE.txt]: .LICENSE.txt
