@@ -5,6 +5,7 @@
 	editor = vim
 	ignorecase = false
 	autocrlf = true
+	filemode = false
 [push]
 	default = current
 [merge]
