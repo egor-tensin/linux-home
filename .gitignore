@@ -1,6 +1,1 @@
-.bash_history
-.lesshst
-.python_history
-.rnd
-.vim/
-.viminfo
+/db.bin
