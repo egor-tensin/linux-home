@@ -43,6 +43,8 @@ fi
 #   INFOPATH="${HOME}/info:${INFOPATH}"
 # fi
 
+echo "Welcome to $( hostname )"
+
 spawn_ssh_agent() {
   [ -n "${SSH_AGENT_PID:+x}" ] && return 0
 
@@ -52,5 +54,3 @@ spawn_ssh_agent() {
 }
 
 [ "$( uname -o )" == 'Cygwin' ] && spawn_ssh_agent
-
-echo "Welcome to $( hostname )"
