@@ -29,7 +29,7 @@ list_repo_files() (
         esac
     done
 
-    eval "${cmd[@]+"${cmd[@]}"}"
+    eval ${cmd[@]+"${cmd[@]}"}
 )
 
 list_repo_dirs() (
@@ -58,7 +58,7 @@ list_repo_dirs() (
 
     cmd+=(--name-only HEAD)
 
-    eval "${cmd[@]+"${cmd[@]}"}"
+    eval ${cmd[@]+"${cmd[@]}"}
 )
 
 tighten_repo_security() (

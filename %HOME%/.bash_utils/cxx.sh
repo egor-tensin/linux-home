@@ -10,7 +10,7 @@ runc_flags=('-Wall' '-Wextra')
 runc() (
     set -o errexit -o nounset -o pipefail
 
-    local -a c_flags=("${runc_flags[@]+"${runc_flags[@]}"}")
+    local -a c_flags=(${runc_flags[@]+"${runc_flags[@]}"})
     local -a src_files
     local -a prog_flags
 
@@ -55,10 +55,10 @@ runc() (
     output_name="$( mktemp --tmpdir=. "${FUNCNAME[0]}XXX.exe" )"
 
     gcc -o "$output_name" \
-        "${c_flags[@]+"${c_flags[@]}"}" \
-        "${src_files[@]+"${src_files[@]}"}"
+        ${c_flags[@]+"${c_flags[@]}"} \
+        ${src_files[@]+"${src_files[@]}"}
 
-    "$output_name" "${prog_flags[@]+"${prog_flags[@]}"}"
+    "$output_name" ${prog_flags[@]+"${prog_flags[@]}"}
 )
 
 runcxx_flags=('-Wall' '-Wextra' '-std=c++14')
@@ -66,7 +66,7 @@ runcxx_flags=('-Wall' '-Wextra' '-std=c++14')
 runcxx() (
     set -o errexit -o nounset -o pipefail
 
-    local -a cxx_flags=("${runcxx_flags[@]+"${runcxx_flags[@]}"}")
+    local -a cxx_flags=(${runcxx_flags[@]+"${runcxx_flags[@]}"})
     local -a src_files
     local -a prog_flags
 
@@ -111,8 +111,8 @@ runcxx() (
     output_name="$( mktemp --tmpdir=. "${FUNCNAME[0]}XXX.exe" )"
 
     g++ -o "$output_name" \
-        "${cxx_flags[@]+"${cxx_flags[@]}"}" \
-        "${src_files[@]+"${src_files[@]}"}"
+        ${cxx_flags[@]+"${cxx_flags[@]}"} \
+        ${src_files[@]+"${src_files[@]}"}
 
-    "$output_name" "${prog_flags[@]+"${prog_flags[@]}"}"
+    "$output_name" ${prog_flags[@]+"${prog_flags[@]}"}
 )

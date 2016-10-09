@@ -35,7 +35,7 @@ update_checksums() (
         fi
     done
 
-    sha1sum -- "${missing[@]+"${missing[@]}"}" >> "$checksums_path"
+    sha1sum -- ${missing[@]+"${missing[@]}"} >> "$checksums_path"
 )
 
 update_checksums_distr() (
@@ -48,7 +48,7 @@ update_checksums_distr() (
         paths+=("$path")
     done < <( find . -type f -\( -iname '*.exe' -o -iname '*.iso' -\) -printf '%P\0' )
 
-    update_checksums "${paths[@]+"${paths[@]}"}"
+    update_checksums ${paths[@]+"${paths[@]}"}
 )
 
 verify_checksums() {
