@@ -15,7 +15,7 @@ Using [config-links]:
     > pwd
     /cygdrive/d/workspace/personal/cygwin-home
 
-    > ../config-links/update.sh -d db.bin -s .
+    > ../config-links/update.sh -c .
     ...
 
 License
