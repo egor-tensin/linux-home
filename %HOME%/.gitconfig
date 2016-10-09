@@ -27,5 +27,6 @@
 	clean-ignored = clean -fdX
 	clean-unknown = clean -fd
 	l = log --oneline
+	wdiff = diff --word-diff
 [fetch]
 	prune = true
