@@ -36,7 +36,7 @@ replace_word() (
 
     local old="$1"
     shift
-    local new="$2"
+    local new="$1"
     shift
 
     sed --binary --in-place "s/\\b$old\\b/$new/g" "$@"
