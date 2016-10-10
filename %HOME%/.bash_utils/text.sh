@@ -41,3 +41,36 @@ replace_word() (
 
     sed --binary --in-place "s/\\b$old\\b/$new/g" "$@"
 )
+
+str_tolower() (
+    set -o errexit -o nounset -o pipefail
+
+    local s
+    for s; do
+        echo "${s,,}" # | tr '[:upper:]' '[:lower:]'
+    done
+)
+
+str_toupper() (
+    set -o errexit -o nounset -o pipefail
+
+    local s
+    for s; do
+        echo "${s^^}" # | tr '[:lower:]' '[:upper:]'
+    done
+)
+
+str_contains() (
+    set -o errexit -o nounset -o pipefail
+
+    if [ "$#" -ne 2 ]; then
+        echo "usage: ${FUNCNAME[0]} STR SUB"
+        return 1
+    fi
+
+    local str="$1"
+    local sub
+    sub="$( printf '%q' "$2" )"
+
+    test "$str" != "${str#*$sub}"
+)
