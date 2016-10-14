@@ -217,10 +217,10 @@ alias less='less --RAW-CONTROL-CHARS'
 alias ls='ls --almost-all -l --human-readable --color=auto'
 alias tree='tree -a'
 
-alias cygwin_packages='cygcheck -cd'
+[ "$( uname -o )" == 'Cygwin' ] && alias list_packages='cygcheck -cd'
 
-[ -f '.bash_utils/cxx.sh'     ] && source .bash_utils/cxx.sh
-[ -f '.bash_utils/distr.sh'   ] && source .bash_utils/distr.sh
-[ -f '.bash_utils/file.sh'    ] && source .bash_utils/file.sh
-[ -f '.bash_utils/git.sh'     ] && source .bash_utils/git.sh
-[ -f '.bash_utils/text.sh'    ] && source .bash_utils/text.sh
+[ -f '.bash_utils/cxx.sh'   ] && source .bash_utils/cxx.sh
+[ -f '.bash_utils/distr.sh' ] && source .bash_utils/distr.sh
+[ -f '.bash_utils/file.sh'  ] && source .bash_utils/file.sh
+[ -f '.bash_utils/git.sh'   ] && source .bash_utils/git.sh
+[ -f '.bash_utils/text.sh'  ] && source .bash_utils/text.sh
