@@ -5,6 +5,8 @@
 # For details, see https://github.com/egor-tensin/cygwin-home.
 # Distributed under the MIT License.
 
+source "$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/text.sh"
+
 list_repo_files() (
     set -o errexit -o nounset -o pipefail
 
@@ -67,6 +69,32 @@ tighten_repo_security() (
     list_repo_files -z | xargs -0 chmod 0600
     list_repo_dirs  -z | xargs -0 chmod 0700
     chmod 0700 .git
+)
+
+doslint_repo() (
+    set -o errexit -o nounset -o pipefail
+
+    local -a paths
+    local path
+
+    while IFS= read -d '' -r path; do
+        paths+=("$path")
+    done < <( list_repo_files -z )
+
+    doslint ${paths[@]+"${paths[@]}"}
+)
+
+lint_repo() (
+    set -o errexit -o nounset -o pipefail
+
+    local -a paths
+    local path
+
+    while IFS= read -d '' -r path; do
+        paths+=("$path")
+    done < <( list_repo_files -z )
+
+    lint ${paths[@]+"${paths[@]}"}
 )
 
 backup_repo() (
