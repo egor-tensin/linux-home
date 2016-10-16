@@ -219,8 +219,8 @@ alias tree='tree -a'
 
 [ "$( uname -o )" == 'Cygwin' ] && alias list_packages='cygcheck -cd'
 
-[ -f '.bash_utils/cxx.sh'   ] && source .bash_utils/cxx.sh
-[ -f '.bash_utils/distr.sh' ] && source .bash_utils/distr.sh
-[ -f '.bash_utils/file.sh'  ] && source .bash_utils/file.sh
-[ -f '.bash_utils/git.sh'   ] && source .bash_utils/git.sh
-[ -f '.bash_utils/text.sh'  ] && source .bash_utils/text.sh
+[ -f "$HOME/.bash_utils/cxx.sh"   ] && source "$HOME/.bash_utils/cxx.sh"
+[ -f "$HOME/.bash_utils/distr.sh" ] && source "$HOME/.bash_utils/distr.sh"
+[ -f "$HOME/.bash_utils/file.sh"  ] && source "$HOME/.bash_utils/file.sh"
+[ -f "$HOME/.bash_utils/git.sh"   ] && source "$HOME/.bash_utils/git.sh"
+[ -f "$HOME/.bash_utils/text.sh"  ] && source "$HOME/.bash_utils/text.sh"
