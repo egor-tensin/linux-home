@@ -7,6 +7,7 @@ color desert
 set softtabstop=4
 set shiftwidth=4
 set expandtab
+set cinoptions+=g0
 
 highlight ColorColumn ctermbg=darkgrey
 
