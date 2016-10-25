@@ -7,9 +7,11 @@ color desert
 set softtabstop=4
 set shiftwidth=4
 set expandtab
+
+" C++'s public/private/protected keywords don't increase indentation level.
 set cinoptions+=g0
 
-highlight ColorColumn ctermbg=darkgrey
+set colorcolumn=80
 
 " In insert mode, press F2 to enter 'paste mode'.
 " Now you can paste text from elsewhere and _not_ mess up indentation.
@@ -52,3 +54,11 @@ set secure
 " Case-insensitive (more precisely, so-called smart) search.
 set ignorecase
 set smartcase
+
+hi Search    ctermfg=black
+hi IncSearch ctermfg=black
+
+hi MatchParen ctermfg=black
+
+hi Error    ctermfg=black
+hi ErrorMsg ctermfg=black
