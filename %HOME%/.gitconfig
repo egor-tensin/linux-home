@@ -3,9 +3,7 @@
 	email = Egor.Tensin@gmail.com
 [core]
 	editor = vim
-	ignorecase = false
 	autocrlf = true
-	filemode = false
 [push]
 	default = current
 [merge]
@@ -28,5 +26,6 @@
 	clean-unknown = clean -fd
 	l = log --oneline
 	wdiff = diff --word-diff
+	xx = update-index --chmod=+x
 [fetch]
 	prune = true
