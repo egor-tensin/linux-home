@@ -5,7 +5,7 @@
 # For details, see https://github.com/egor-tensin/cygwin-home.
 # Distributed under the MIT License.
 
-source "$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/text.sh"
+source "$HOME/.bash_utils/text.sh"
 
 list_repo_files() (
     set -o errexit -o nounset -o pipefail
