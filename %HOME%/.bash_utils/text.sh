@@ -74,3 +74,106 @@ str_contains() (
 
     test "$str" != "${str#*$sub}"
 )
+
+str_starts_with() (
+    set -o errexit -o nounset -o pipefail
+
+    if [ "$#" -ne 2 ]; then
+        echo "usage: ${FUNCNAME[0]} STR SUB"
+        return 1
+     fi
+
+     local str="$1"
+     local sub
+     sub="$( printf '%q' "$2" )"
+
+     test "$str" != "${str#$sub}"
+)
+
+str_split() (
+    set -o errexit -o nounset -o pipefail
+
+    local zero=
+    local -a args
+
+    while [ "$#" -ne 0 ]; do
+        case "$1" in
+            -z|-0)
+                zero=1
+                shift
+                ;;
+
+            -h|--help)
+                echo "usage: ${FUNCNAME[0]} [-z|-0] [-h|--help] [--] STR DELIM"
+                return 0
+                ;;
+
+            --)
+                shift
+                break
+                ;;
+
+            -*)
+                echo "${FUNCNAME[0]}: unrecognized parameter: $1" >&2
+                return 1
+                ;;
+
+            *)
+                args+=("$1")
+                shift
+                ;;
+        esac
+    done
+
+    args+=("$@")
+
+    if [ "${#args[@]}" -ne 2 ]; then
+        echo "usage: ${FUNCNAME[0]} [-z|-0] [-h|--help] [--] STR DELIM"
+        return 1
+    fi
+
+    local str="${args[0]}"
+    local old_delim="${args[1]}"
+
+    local -a xs
+    local x
+
+    IFS="$old_delim" read -ra xs <<< "$str"
+
+    for x in ${xs[@]+"${xs[@]}"}; do
+        if [ -z "$zero" ]; then
+            printf '%s\n' "$x"
+        else
+            printf '%s\0' "$x"
+        fi
+    done
+)
+
+str_join() (
+    set -o errexit -o nounset -o pipefail
+
+    if [ "$#" -lt 1 ]; then
+        echo "usage: ${FUNCNAME[0]} DELIM [STR]..."
+        return 1
+    fi
+
+    local delim="$1"
+    shift
+
+    case "$#" in
+        0)
+            ;;
+        1)
+            echo "$@"
+            ;;
+        *)
+            local s="$1"
+            shift
+            printf '%s' "$s"
+
+            for s; do
+                printf '%s%s' "$delim" "$s"
+            done
+            ;;
+    esac
+)
