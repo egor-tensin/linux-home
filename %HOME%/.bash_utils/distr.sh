@@ -13,7 +13,7 @@ list_checksums_paths() (
     if [ -f "$checksums_path" ]; then
         local path
         while IFS= read -r path; do
-            printf "$path"'\0'
+            printf '%s\0' "$path"
         done < <( sed --binary 's/^\\\?[[:alnum:]]\+ [ *]//' "$checksums_path" )
     fi
 )
