@@ -44,8 +44,10 @@ update_ruby_settings() {
     command -v ruby &> /dev/null \
         && command -v gem &> /dev/null \
         && user_dir="$( ruby -e 'print Gem.user_dir' )"  \
-        && add_path -- "$user_dir" \
+        && add_path "$user_dir/bin" \
         && export GEM_HOME="$user_dir"
 }
 
 update_ruby_settings
+
+[ "$( uname -o )" != 'Cygwin' ] && complete -r
