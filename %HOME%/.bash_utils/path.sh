@@ -17,7 +17,7 @@ add_missing_path() (
 
     while IFS= read -d '' -r path; do
         new_paths+=("$path")
-    done < <( readlink --zero --canonicalize-missing "$@" )
+    done < <( readlink --zero --canonicalize-missing -- "$@" )
 
     for path; do
         if str_contains "$path" ':'; then
@@ -30,7 +30,7 @@ add_missing_path() (
 
     while IFS= read -d '' -r path; do
         old_paths[$path]=1
-    done < <( str_split -z -- "${PATH-}" ':' | xargs --null readlink --zero --canonicalize-missing )
+    done < <( str_split -z -- "${PATH-}" ':' | xargs --null readlink --zero --canonicalize-missing -- )
 
     for path in ${new_paths[@]+"${new_paths[@]}"}; do
         old_paths[$path]=1
@@ -40,6 +40,8 @@ add_missing_path() (
 )
 
 add_path() {
-    PATH="$( add_missing_path "$@" )" || return $?
-    export PATH
+    local new_path
+
+    new_path="$( add_missing_path "$@" )" \
+        && export PATH="$new_path"
 }
