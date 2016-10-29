@@ -11,4 +11,4 @@ spawn_ssh_agent() {
         && trap "$( printf 'kill %q' "$SSH_AGENT_PID" )" 0
 }
 
-[ "$( uname -o )" == 'Cygwin' ] && spawn_ssh_agent
+spawn_ssh_agent
