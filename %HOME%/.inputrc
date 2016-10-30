@@ -27,6 +27,7 @@ $if Bash
   #set bell-style none
   set bell-style visible
   set completion-ignore-case on
+  set show-all-if-unmodified on
   set show-all-if-ambiguous on
   set expand-tilde on
   set mark-directories on
