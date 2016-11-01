@@ -12,11 +12,11 @@ runc() (
 
     local -a c_flags=(${runc_flags[@]+"${runc_flags[@]}"})
     local -a src_files
-    local -a prog_flags
+    local -a prog_args
 
     while [ "$#" -gt 0 ]; do
         case "$1" in
-            -c|--c-flags)
+            -c|--comp-arg)
                 if [ "$#" -le 1 ]; then
                     echo "${FUNCNAME[0]}: missing argument for parameter: $1" >&2
                     return 1
@@ -27,7 +27,7 @@ runc() (
                 ;;
 
             -h|--help)
-                echo "usage: ${FUNCNAME[0]} [-h|--help] [-c|--c-flags FLAG]... [--] [SRC_PATH]..."
+                echo "usage: ${FUNCNAME[0]} [-h|--help] [-c|--comp-arg ARG]... C_PATH... [-- [PROG_ARG]...]"
                 return 0
                 ;;
 
@@ -43,7 +43,7 @@ runc() (
         esac
     done
 
-    prog_flags=("$@")
+    prog_args=("$@")
 
     local build_dir
     build_dir="$( mktemp --directory )"
@@ -58,7 +58,7 @@ runc() (
         ${c_flags[@]+"${c_flags[@]}"} \
         ${src_files[@]+"${src_files[@]}"}
 
-    "$output_name" ${prog_flags[@]+"${prog_flags[@]}"}
+    "$output_name" ${prog_args[@]+"${prog_args[@]}"}
 )
 
 runcxx_flags=('-Wall' '-Wextra' '-std=c++14')
@@ -68,11 +68,11 @@ runcxx() (
 
     local -a cxx_flags=(${runcxx_flags[@]+"${runcxx_flags[@]}"})
     local -a src_files
-    local -a prog_flags
+    local -a prog_args
 
     while [ "$#" -gt 0 ]; do
         case "$1" in
-            -c|--cxx-flags)
+            -c|--comp-arg)
                 if [ "$#" -le 1 ]; then
                     echo "${FUNCNAME[0]}: missing argument for parameter: $1" >&2
                     return 1
@@ -83,7 +83,7 @@ runcxx() (
                 ;;
 
             -h|--help)
-                echo "usage: ${FUNCNAME[0]} [-h|--help] [-c|--cxx-flags FLAG]... [--] [SRC_PATH]..."
+                echo "usage: ${FUNCNAME[0]} [-h|--help] [-c|--comp-arg ARG]... CPP_PATH... [-- [PROG_ARG]...]"
                 return 0
                 ;;
 
@@ -99,7 +99,7 @@ runcxx() (
         esac
     done
 
-    prog_flags=("$@")
+    prog_args=("$@")
 
     local build_dir
     build_dir="$( mktemp --directory )"
@@ -114,5 +114,5 @@ runcxx() (
         ${cxx_flags[@]+"${cxx_flags[@]}"} \
         ${src_files[@]+"${src_files[@]}"}
 
-    "$output_name" ${prog_flags[@]+"${prog_flags[@]}"}
+    "$output_name" ${prog_args[@]+"${prog_args[@]}"}
 )
