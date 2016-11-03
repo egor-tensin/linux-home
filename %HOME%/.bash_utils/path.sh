@@ -26,17 +26,21 @@ add_missing_path() (
         fi
     done
 
-    local -A old_paths
+    local -A old_paths_dict
+    local -a old_paths_list
 
     while IFS= read -d '' -r path; do
-        old_paths[$path]=1
-    done < <( str_split -z -- "${PATH-}" ':' | xargs --null readlink --zero --canonicalize-missing -- )
+        old_paths_dict[$path]=1
+        old_paths_list+=("$path")
+    done < <( str_split -z -- "${PATH-}" ':' | xargs -0 readlink --zero --canonicalize-missing -- )
 
     for path in ${new_paths[@]+"${new_paths[@]}"}; do
-        old_paths[$path]=1
+        [ -n "${old_paths_dict[$path]+x}" ] && continue
+        old_paths_dict[$path]=1
+        old_paths_list+=("$path")
     done
 
-    str_join ':' "${!old_paths[@]}"
+    str_join ':' ${old_paths_list[@]+"${old_paths_list[@]}"}
 )
 
 add_path() {
