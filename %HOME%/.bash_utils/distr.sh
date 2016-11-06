@@ -48,7 +48,7 @@ sums_update() (
     local -A existing
     while IFS= read -d '' -r path; do
         existing[$path]=1
-    done < <( sums_list_paths )
+    done < <( sums_list_paths -z )
 
     local -a missing
     for path in "$@"; do
