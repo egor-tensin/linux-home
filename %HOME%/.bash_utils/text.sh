@@ -98,7 +98,7 @@ str_split() (
 
     while [ "$#" -ne 0 ]; do
         case "$1" in
-            -z|-0)
+            -0|-z)
                 zero=1
                 shift
                 ;;

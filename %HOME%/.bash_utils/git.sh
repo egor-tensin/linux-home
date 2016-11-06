@@ -14,13 +14,13 @@ list_repo_files() (
 
     while [ "$#" -gt 0 ]; do
         case "$1" in
-            -z|-0)
+            -0|-z)
                 cmd+=(-z)
                 shift
                 ;;
 
             -h|--help)
-                echo "usage: ${FUNCNAME[0]} [-h|--help] [-z|-0]"
+                echo "usage: ${FUNCNAME[0]} [-h|--help] [-0|-z]"
                 return 0
                 ;;
 
