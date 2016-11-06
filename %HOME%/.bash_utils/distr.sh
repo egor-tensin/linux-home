@@ -5,20 +5,42 @@
 # For details, see https://github.com/egor-tensin/cygwin-home.
 # Distributed under the MIT License.
 
-checksums_path='sha1sums.txt'
+sums_path='sha1sums.txt'
 
-list_checksums_paths() (
+sums_list_paths() (
     set -o errexit -o nounset -o pipefail
 
-    if [ -f "$checksums_path" ]; then
-        local path
-        while IFS= read -r path; do
-            printf '%s\0' "$path"
-        done < <( sed --binary 's/^\\\?[[:alnum:]]\+ [ *]//' "$checksums_path" )
-    fi
+    local fmt='%s\n'
+
+    while [ "$#" -gt 0 ]; do
+        local key="$1"
+        shift
+        case "$key" in
+            -h|--help)
+                echo "usage: ${FUNCNAME[0]} [-h|--help] [-0|-z]"
+                return 0
+                ;;
+
+            -0|-z)
+                fmt='%s\0'
+                ;;
+
+            *)
+                echo "${FUNCNAME[0]}: unrecognized parameter: $key" >&2
+                return 1
+                ;;
+        esac
+    done
+
+    [ -f "$sums_path" ] || return 0
+
+    local path
+    while IFS= read -r path; do
+        printf "$fmt" "$path"
+    done < <( sed --binary 's/^\\\?[[:alnum:]]\+ [ *]//' "$sums_path" )
 )
 
-update_checksums() (
+sums_update() (
     set -o errexit -o nounset -o pipefail
 
     local path
@@ -26,7 +48,7 @@ update_checksums() (
     local -A existing
     while IFS= read -d '' -r path; do
         existing[$path]=1
-    done < <( list_checksums_paths )
+    done < <( sums_list_paths )
 
     local -a missing
     for path in "$@"; do
@@ -35,10 +57,10 @@ update_checksums() (
         fi
     done
 
-    sha1sum -- ${missing[@]+"${missing[@]}"} >> "$checksums_path"
+    sha1sum -- ${missing[@]+"${missing[@]}"} >> "$sums_path"
 )
 
-update_checksums_distr() (
+sums_update_distr() (
     set -o errexit -o nounset -o pipefail
 
     local -a paths
@@ -48,9 +70,9 @@ update_checksums_distr() (
         paths+=("$path")
     done < <( find . -type f -\( -iname '*.exe' -o -iname '*.iso' -\) -printf '%P\0' )
 
-    update_checksums ${paths[@]+"${paths[@]}"}
+    sums_update ${paths[@]+"${paths[@]}"}
 )
 
-verify_checksums() {
-    sha1sum --check "$checksums_path"
+sums_verify() {
+    sha1sum --check -- "$sums_path"
 }
