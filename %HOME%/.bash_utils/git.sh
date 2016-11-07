@@ -7,61 +7,8 @@
 
 source "$HOME/.bash_utils/text.sh"
 
-list_repo_files() (
-    set -o errexit -o nounset -o pipefail
-
-    local -a cmd=(git ls-tree -r)
-
-    while [ "$#" -gt 0 ]; do
-        local key="$1"
-        shift
-        case "$key" in
-            -h|--help)
-                echo "usage: ${FUNCNAME[0]} [-h|--help] [-0|-z]"
-                return 0
-                ;;
-            -0|-z)
-                cmd+=(-z)
-                ;;
-            *)
-                echo "${FUNCNAME[0]}: unrecognized parameter: $key" >&2
-                return 1
-                ;;
-        esac
-    done
-
-    cmd+=(--name-only HEAD)
-
-    eval ${cmd[@]+"${cmd[@]}"}
-)
-
-list_repo_dirs() (
-    set -o errexit -o nounset -o pipefail
-
-    local -a cmd=(git ls-tree -r -d)
-
-    while [ "$#" -gt 0 ]; do
-        local key="$1"
-        shift
-        case "$key" in
-            -h|--help)
-                echo "usage: ${FUNCNAME[0]} [-h|--help] [-z|-0]"
-                return 0
-                ;;
-            -z|-0)
-                cmd+=(-z)
-                ;;
-            *)
-                echo "${FUNCNAME[0]}: unrecognized parameter: $key" >&2
-                return 1
-                ;;
-        esac
-    done
-
-    cmd+=(--name-only HEAD)
-
-    eval ${cmd[@]+"${cmd[@]}"}
-)
+alias list_repo_files='git ls-tree -r --name-only HEAD'
+alias list_repo_dirs='git ls-tree -r --name-only HEAD -d'
 
 tighten_repo_security() (
     set -o errexit -o nounset -o pipefail
