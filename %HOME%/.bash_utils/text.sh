@@ -26,7 +26,23 @@ doslint() {
     trim "$@" && trimdoseol "$@" && doseol "$@"
 }
 
-replace_word() (
+str_replace() (
+    set -o errexit -o nounset -o pipefail
+
+    if [ "$#" -lt 3 ]; then
+        echo "usage: ${FUNCNAME[0]} OLD NEW PATH..." >&2
+        return 1
+    fi
+
+    local old="$1"
+    shift
+    local new="$1"
+    shift
+
+    sed --binary --in-place -- "s/$old/$new/g" "$@"
+)
+
+str_replace_word() (
     set -o errexit -o nounset -o pipefail
 
     if [ "$#" -lt 3 ]; then
@@ -101,7 +117,7 @@ str_split() (
         shift
         case "$key" in
             -h|--help)
-                echo "usage: ${FUNCNAME[0]} [-h|--help] [-z|-0] [--] STR DELIM"
+                echo "usage: ${FUNCNAME[0]} [-h|--help] [-0|-z] [--] STR DELIM"
                 return 0
                 ;;
             -0|-z)
@@ -123,7 +139,7 @@ str_split() (
     args+=("$@")
 
     if [ "${#args[@]}" -ne 2 ]; then
-        echo "usage: ${FUNCNAME[0]} [-h|--help] [-z|-0] [--] STR DELIM"
+        echo "usage: ${FUNCNAME[0]} [-h|--help] [-0|-z] [--] STR DELIM"
         return 1
     fi
 
