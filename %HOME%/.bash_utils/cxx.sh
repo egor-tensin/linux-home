@@ -7,52 +7,76 @@
 
 runc_flags=('-Wall' '-Wextra')
 
+_runc_usage() (
+    set -o errexit -o nounset -o pipefail
+
+    local msg
+    for msg; do
+        echo "${FUNCNAME[1]}: $msg"
+    done
+
+    echo "usage: ${FUNCNAME[1]} [-h|--help] [-c|--comp-arg ARG]... C_PATH... [-- [PROG_ARG]...]"
+)
+
 runc() (
     set -o errexit -o nounset -o pipefail
 
     local -a c_flags=(${runc_flags[@]+"${runc_flags[@]}"})
-    local -a src_files
+    local -a src_files=()
     local -a prog_args
 
     while [ "$#" -gt 0 ]; do
-        case "$1" in
+        local key="$1"
+        shift
+
+        case "$key" in
+            -h|--help)
+                _runc_usage
+                return 0
+                ;;
+
             -c|--comp-arg)
-                if [ "$#" -le 1 ]; then
-                    echo "${FUNCNAME[0]}: missing argument for parameter: $1" >&2
+                if [ "$#" -eq 0 ]; then
+                    _runc_usage "missing argument for parameter: $key" >&2
                     return 1
                 fi
-                shift
                 c_flags+=("$1")
                 shift
                 ;;
 
-            -h|--help)
-                echo "usage: ${FUNCNAME[0]} [-h|--help] [-c|--comp-arg ARG]... C_PATH... [-- [PROG_ARG]...]"
-                return 0
-                ;;
-
             --)
-                shift
                 break
                 ;;
 
             *)
-                src_files+=("$( realpath "$1" )")
-                shift
+                src_files+=("$key")
                 ;;
         esac
     done
 
     prog_args=("$@")
 
+    if [ "${#src_files[@]}" -eq 0 ]; then
+        _runc_usage 'requires at least one source file path' >&2
+        return 1
+    fi
+
+    local -a _src_files=(${src_files[@]+"${src_files[@]}"})
+    src_files=()
+
+    local src_file
+    while IFS= read -d '' -r src_file; do
+        src_files+=("$src_file")
+    done < <( readlink -z --canonicalize-missing -- ${_src_files[@]+"${_src_files[@]}"} )
+
     local build_dir
     build_dir="$( mktemp --directory )"
 
-    trap "$( printf 'popd > /dev/null && rm -rf %q' "$build_dir" )" 0
+    trap "$( printf 'popd > /dev/null && rm -rf -- %q' "$build_dir" )" 0
     pushd "$build_dir" > /dev/null
 
     local output_name
-    output_name="$( mktemp --tmpdir=. "${FUNCNAME[0]}XXX.exe" )"
+    output_name="$( mktemp --tmpdir=. -- "${FUNCNAME[0]}XXX.exe" )"
 
     gcc -o "$output_name" \
         ${c_flags[@]+"${c_flags[@]}"} \
@@ -63,52 +87,76 @@ runc() (
 
 runcxx_flags=('-Wall' '-Wextra' '-std=c++14')
 
+_runcxx_usage() (
+    set -o errexit -o nounset -o pipefail
+
+    local msg
+    for msg; do
+        echo "${FUNCNAME[1]}: $msg"
+    done
+
+    echo "usage: ${FUNCNAME[1]} [-h|--help] [-c|--comp-arg ARG]... CPP_PATH... [-- [PROG_ARG]...]"
+)
+
 runcxx() (
     set -o errexit -o nounset -o pipefail
 
     local -a cxx_flags=(${runcxx_flags[@]+"${runcxx_flags[@]}"})
-    local -a src_files
+    local -a src_files=()
     local -a prog_args
 
     while [ "$#" -gt 0 ]; do
-        case "$1" in
+        local key="$1"
+        shift
+
+        case "$key" in
+            -h|--help)
+                _runcxx_usage
+                return 0
+                ;;
+
             -c|--comp-arg)
                 if [ "$#" -le 1 ]; then
-                    echo "${FUNCNAME[0]}: missing argument for parameter: $1" >&2
+                    _runcxx_usage "missing argument for parameter: $key" >&2
                     return 1
                 fi
-                shift
                 cxx_flags+=("$1")
                 shift
                 ;;
 
-            -h|--help)
-                echo "usage: ${FUNCNAME[0]} [-h|--help] [-c|--comp-arg ARG]... CPP_PATH... [-- [PROG_ARG]...]"
-                return 0
-                ;;
-
             --)
-                shift
                 break
                 ;;
 
             *)
-                src_files+=("$( realpath "$1" )")
-                shift
+                src_files+=("$key")
                 ;;
         esac
     done
 
     prog_args=("$@")
 
+    if [ "${#src_files[@]}" -eq 0 ]; then
+        _runcxx_usage 'requires at least one source file path' >&2
+        return 1
+    fi
+
+    local -a _src_files=(${src_files[@]+"${src_files[@]}"})
+    src_files=()
+
+    local src_file
+    while IFS= read -d '' -r src_file; do
+        src_files+=("$src_file")
+    done < <( readlink -z --canonicalize-missing -- ${_src_files[@]+"${_src_files[@]}"} )
+
     local build_dir
     build_dir="$( mktemp --directory )"
 
-    trap "$( printf 'popd > /dev/null && rm -rf %q' "$build_dir" )" 0
+    trap "$( printf 'popd > /dev/null && rm -rf -- %q' "$build_dir" )" 0
     pushd "$build_dir" > /dev/null
 
     local output_name
-    output_name="$( mktemp --tmpdir=. "${FUNCNAME[0]}XXX.exe" )"
+    output_name="$( mktemp --tmpdir=. -- "${FUNCNAME[0]}XXX.exe" )"
 
     g++ -o "$output_name" \
         ${cxx_flags[@]+"${cxx_flags[@]}"} \

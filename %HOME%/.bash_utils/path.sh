@@ -12,12 +12,12 @@ add_missing_path() (
 
     [ "$#" -eq 0 ] && return 0
 
-    local -a new_paths
+    local -a new_list
     local path
 
     while IFS= read -d '' -r path; do
-        new_paths+=("$path")
-    done < <( readlink --zero --canonicalize-missing -- "$@" )
+        new_list+=("$path")
+    done < <( readlink -z --canonicalize-missing -- "$@" )
 
     for path; do
         if str_contains "$path" ':'; then
@@ -26,21 +26,23 @@ add_missing_path() (
         fi
     done
 
-    local -A old_paths_dict
-    local -a old_paths_list
+    local -A old_dict
+    local -a old_list
 
-    while IFS= read -d '' -r path; do
-        old_paths_dict[$path]=1
-        old_paths_list+=("$path")
-    done < <( str_split -z -- "${PATH-}" ':' | xargs -0 readlink --zero --canonicalize-missing -- )
+    if [ -n "${PATH-}" ]; then
+        while IFS= read -d '' -r path; do
+            old_dict[$path]=1
+            old_list+=("$path")
+        done < <( str_split -z -- "${PATH-}" ':' | xargs -0 -- readlink -z --canonicalize-missing -- )
+    fi
 
-    for path in ${new_paths[@]+"${new_paths[@]}"}; do
-        [ -n "${old_paths_dict[$path]+x}" ] && continue
-        old_paths_dict[$path]=1
-        old_paths_list+=("$path")
+    for path in ${new_list[@]+"${new_list[@]}"}; do
+        [ -n "${old_dict[$path]+x}" ] && continue
+        old_dict[$path]=1
+        old_list+=("$path")
     done
 
-    str_join ':' ${old_paths_list[@]+"${old_paths_list[@]}"}
+    str_join ':' ${old_list[@]+"${old_list[@]}"}
 )
 
 add_path() {

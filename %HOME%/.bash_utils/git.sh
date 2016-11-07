@@ -10,26 +10,27 @@ source "$HOME/.bash_utils/text.sh"
 list_repo_files() (
     set -o errexit -o nounset -o pipefail
 
-    local -a cmd=(git ls-files)
+    local -a cmd=(git ls-tree -r)
 
     while [ "$#" -gt 0 ]; do
-        case "$1" in
-            -0|-z)
-                cmd+=(-z)
-                shift
-                ;;
-
+        local key="$1"
+        shift
+        case "$key" in
             -h|--help)
                 echo "usage: ${FUNCNAME[0]} [-h|--help] [-0|-z]"
                 return 0
                 ;;
-
+            -0|-z)
+                cmd+=(-z)
+                ;;
             *)
-                echo "${FUNCNAME[0]}: unrecognized parameter: $1" >&2
+                echo "${FUNCNAME[0]}: unrecognized parameter: $key" >&2
                 return 1
                 ;;
         esac
     done
+
+    cmd+=(--name-only HEAD)
 
     eval ${cmd[@]+"${cmd[@]}"}
 )
@@ -37,22 +38,21 @@ list_repo_files() (
 list_repo_dirs() (
     set -o errexit -o nounset -o pipefail
 
-    local -a cmd=(git ls-tree -d -r)
+    local -a cmd=(git ls-tree -r -d)
 
     while [ "$#" -gt 0 ]; do
-        case "$1" in
-            -z|-0)
-                cmd+=(-z)
-                shift
-                ;;
-
+        local key="$1"
+        shift
+        case "$key" in
             -h|--help)
                 echo "usage: ${FUNCNAME[0]} [-h|--help] [-z|-0]"
                 return 0
                 ;;
-
+            -z|-0)
+                cmd+=(-z)
+                ;;
             *)
-                echo "${FUNCNAME[0]}: unrecognized parameter: $1" >&2
+                echo "${FUNCNAME[0]}: unrecognized parameter: $key" >&2
                 return 1
                 ;;
         esac
@@ -66,8 +66,8 @@ list_repo_dirs() (
 tighten_repo_security() (
     set -o errexit -o nounset -o pipefail
 
-    list_repo_files -z | xargs -0 chmod 0600
-    list_repo_dirs  -z | xargs -0 chmod 0700
+    list_repo_files -z | xargs -0 -- chmod 0600 --
+    list_repo_dirs  -z | xargs -0 -- chmod 0700 --
     chmod 0700 .git
 )
 
@@ -101,9 +101,9 @@ backup_repo() (
     set -o errexit -o nounset -o pipefail
 
     local repo_dir
-    repo_dir="$( realpath . )"
+    repo_dir="$( pwd )"
     local repo_name
-    repo_name="$( basename "$repo_dir" )"
+    repo_name="$( basename -- "$repo_dir" )"
     local backup_dir="$repo_dir"
 
     if [ $# -eq 1 ]; then

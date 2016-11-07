@@ -20,11 +20,9 @@ sums_list_paths() (
                 echo "usage: ${FUNCNAME[0]} [-h|--help] [-0|-z]"
                 return 0
                 ;;
-
             -0|-z)
                 fmt='%s\0'
                 ;;
-
             *)
                 echo "${FUNCNAME[0]}: unrecognized parameter: $key" >&2
                 return 1
@@ -34,28 +32,37 @@ sums_list_paths() (
 
     [ -f "$sums_path" ] || return 0
 
+    local -a paths=()
+
     local path
     while IFS= read -r path; do
-        printf "$fmt" "$path"
-    done < <( sed --binary 's/^\\\?[[:alnum:]]\+ [ *]//' "$sums_path" )
+        paths+=("$path")
+    done < <( sed --binary -- 's/^\\\?[[:alnum:]]\+ [ *]//' "$sums_path" )
+
+    [ "${#paths[@]}" -eq 0 ] && return 0
+
+    printf -- "$fmt" ${paths[@]+"${paths[@]}"}
 )
 
 sums_update() (
     set -o errexit -o nounset -o pipefail
 
+    local -A existing
+    local -a missing=()
+
     local path
 
-    local -A existing
     while IFS= read -d '' -r path; do
         existing[$path]=1
     done < <( sums_list_paths -z )
 
-    local -a missing
     for path in "$@"; do
         if [ -z "${existing[$path]+x}" ]; then
             missing+=("$path")
         fi
     done
+
+    [ "${#missing[@]}" -eq 0 ] && return 0
 
     sha1sum -- ${missing[@]+"${missing[@]}"} >> "$sums_path"
 )
