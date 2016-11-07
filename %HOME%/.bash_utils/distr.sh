@@ -30,7 +30,7 @@ sums_list_paths() (
         esac
     done
 
-    [ -f "$sums_path" ] || return 0
+    [ -e "$sums_path" ] || return 0
 
     local -a paths=()
 
