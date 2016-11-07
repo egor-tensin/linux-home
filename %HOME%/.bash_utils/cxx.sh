@@ -72,7 +72,7 @@ runc() (
     local build_dir
     build_dir="$( mktemp --directory )"
 
-    trap "$( printf 'popd > /dev/null && rm -rf -- %q' "$build_dir" )" 0
+    trap "$( printf -- 'popd > /dev/null && rm -rf -- %q' "$build_dir" )" 0
     pushd "$build_dir" > /dev/null
 
     local output_name
@@ -152,7 +152,7 @@ runcxx() (
     local build_dir
     build_dir="$( mktemp --directory )"
 
-    trap "$( printf 'popd > /dev/null && rm -rf -- %q' "$build_dir" )" 0
+    trap "$( printf -- 'popd > /dev/null && rm -rf -- %q' "$build_dir" )" 0
     pushd "$build_dir" > /dev/null
 
     local output_name

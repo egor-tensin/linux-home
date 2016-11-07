@@ -21,7 +21,7 @@ add_missing_path() (
 
     for path; do
         if str_contains "$path" ':'; then
-            echo "${FUNCNAME[0]}: mustn't contain colons: $path" >&2
+            echo "${FUNCNAME[0]}: mustn't contain colon (':') characters: $path" >&2
             return 1
         fi
     done

@@ -75,7 +75,7 @@ sums_update_distr() (
 
     while IFS= read -d '' -r path; do
         paths+=("$path")
-    done < <( find . -type f -\( -iname '*.exe' -o -iname '*.iso' -\) -printf '%P\0' )
+    done < <( find -type f -\( -iname '*.exe' -o -iname '*.iso' -\) -printf '%P\0' )
 
     sums_update ${paths[@]+"${paths[@]}"}
 )
