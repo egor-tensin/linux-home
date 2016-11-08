@@ -61,8 +61,8 @@ update_ruby_settings
 is_cygwin || complete -r
 
 if is_cygwin; then
-    alias 32gcc='i686-w64-mingw32-gcc'
-    alias 32g++='i686-w64-mingw32-g++'
-    alias 64gcc='x86_64-w64-mingw32-gcc'
-    alias 64g++='x86_64-w64-mingw32-g++'
+    alias mingcc32='i686-w64-mingw32-gcc'
+    alias ming++32='i686-w64-mingw32-g++'
+    alias mingcc='x86_64-w64-mingw32-gcc'
+    alias ming++='x86_64-w64-mingw32-g++'
 fi
