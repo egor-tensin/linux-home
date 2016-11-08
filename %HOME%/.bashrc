@@ -14,6 +14,12 @@ shopt -s histappend
 shopt -s nullglob
 shopt -s nocaseglob
 
+_os="$( uname -o )"
+
+is_cygwin() {
+    test "$_os" == 'Cygwin'
+}
+
 alias df='df --human-readable'
 alias du='du --human-readable'
 
@@ -27,7 +33,7 @@ alias dir='ls --format=vertical'
 alias less='less --RAW-CONTROL-CHARS'
 alias tree='tree -a'
 
-[ "$( uname -o )" == 'Cygwin' ] && alias list_packages='cygcheck -cd'
+is_cygwin && alias list_packages='cygcheck -cd'
 
 [ -r "$HOME/.bash_utils/cxx.sh"   ] && source "$HOME/.bash_utils/cxx.sh"
 [ -r "$HOME/.bash_utils/distr.sh" ] && source "$HOME/.bash_utils/distr.sh"
@@ -52,4 +58,11 @@ update_ruby_settings() {
 
 update_ruby_settings
 
-[ "$( uname -o )" != 'Cygwin' ] && complete -r
+is_cygwin || complete -r
+
+if is_cygwin; then
+    alias 32gcc='i686-w64-mingw32-gcc'
+    alias 32g++='i686-w64-mingw32-g++'
+    alias 64gcc='x86_64-w64-mingw32-gcc'
+    alias 64g++='x86_64-w64-mingw32-g++'
+fi
