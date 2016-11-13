@@ -80,7 +80,7 @@ str_contains() (
     set -o errexit -o nounset -o pipefail
 
     if [ "$#" -ne 2 ]; then
-        echo "usage: ${FUNCNAME[0]} STR SUB"
+        echo "usage: ${FUNCNAME[0]} STR SUB" >&2
         return 1
     fi
 
@@ -95,7 +95,7 @@ str_starts_with() (
     set -o errexit -o nounset -o pipefail
 
     if [ "$#" -ne 2 ]; then
-        echo "usage: ${FUNCNAME[0]} STR SUB"
+        echo "usage: ${FUNCNAME[0]} STR SUB" >&2
         return 1
     fi
 
@@ -117,10 +117,10 @@ str_split() (
         shift
         case "$key" in
             -h|--help)
-                echo "usage: ${FUNCNAME[0]} [-h|--help] [-0|-z] [--] STR DELIM"
+                echo "usage: ${FUNCNAME[0]} [-h|--help] [-0|-z|--zero] [--] STR DELIM"
                 return 0
                 ;;
-            -0|-z)
+            -0|-z|--zero)
                 fmt='%s\0'
                 ;;
             --)
@@ -139,7 +139,7 @@ str_split() (
     args+=("$@")
 
     if [ "${#args[@]}" -ne 2 ]; then
-        echo "usage: ${FUNCNAME[0]} [-h|--help] [-0|-z] [--] STR DELIM"
+        echo "usage: ${FUNCNAME[0]} [-h|--help] [-0|-z|--zero] [--] STR DELIM" >&2
         return 1
     fi
 
@@ -160,7 +160,7 @@ str_join() (
     set -o errexit -o nounset -o pipefail
 
     if [ "$#" -lt 1 ]; then
-        echo "usage: ${FUNCNAME[0]} DELIM [STR]..."
+        echo "usage: ${FUNCNAME[0]} DELIM [STR]..." >&2
         return 1
     fi
 
