@@ -30,7 +30,7 @@ alias grep='grep --color=auto'
 alias ls='ls --almost-all -l --human-readable --color=auto'
 alias dir='ls --format=vertical'
 
-alias less='less --RAW-CONTROL-CHARS'
+alias less='less --ignore-case --RAW-CONTROL-CHARS'
 alias tree='tree -a'
 
 is_cygwin && alias list_packages='cygcheck -cd'
