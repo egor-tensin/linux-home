@@ -5,7 +5,7 @@ esac
 
 PS1='\[\e[33m\]\W\[\e[0m\]: '
 
-set -o nounset
+#set -o nounset
 set -o pipefail
 
 shopt -s checkwinsize
@@ -19,6 +19,10 @@ _os="$( uname -o )"
 is_cygwin() {
     test "$_os" == 'Cygwin'
 }
+
+is_cygwin && set -o igncr
+
+export SHELLOPTS
 
 alias df='df --human-readable'
 alias du='du --human-readable'
