@@ -56,10 +56,8 @@ sums_update() (
         existing[$path]=1
     done < <( sums_list_paths -z )
 
-    for path in "$@"; do
-        if [ -z "${existing[$path]+x}" ]; then
-            missing+=("$path")
-        fi
+    for path; do
+        [ -z "${existing[$path]+x}" ] && missing+=("$path")
     done
 
     [ "${#missing[@]}" -eq 0 ] && return 0
@@ -75,7 +73,7 @@ sums_update_distr() (
 
     while IFS= read -d '' -r path; do
         paths+=("$path")
-    done < <( find -type f -\( -iname '*.exe' -o -iname '*.iso' -\) -printf '%P\0' )
+    done < <( find . -type f -\( -iname '*.exe' -o -iname '*.iso' -\) -printf '%P\0' )
 
     sums_update ${paths[@]+"${paths[@]}"}
 )
