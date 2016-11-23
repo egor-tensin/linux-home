@@ -31,7 +31,7 @@ alias egrep='egrep --color=auto'
 alias fgrep='fgrep --color=auto'
 alias grep='grep --color=auto'
 
-alias ls='ls --almost-all -l --human-readable --color=auto'
+alias ls='LC_COLLATE=C ls --almost-all -l --human-readable --color=auto'
 alias dir='ls --format=vertical'
 
 alias less='less --ignore-case --RAW-CONTROL-CHARS'
