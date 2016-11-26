@@ -73,7 +73,7 @@ sums_update_all() (
 
     while IFS= read -d '' -r path; do
         paths+=("$path")
-    done < <( find . -type f -printf '%P\0' )
+    done < <( find . -type f -\! -name "$sums_path" -printf '%P\0' )
 
     sums_update ${paths[@]+"${paths[@]}"}
 )
@@ -92,5 +92,5 @@ sums_update_distr() (
 )
 
 sums_verify() {
-    sha1sum --check -- "$sums_path"
+    sha1sum --check --quiet -- "$sums_path"
 }
