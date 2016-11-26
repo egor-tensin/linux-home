@@ -65,6 +65,19 @@ sums_update() (
     sha1sum -- ${missing[@]+"${missing[@]}"} >> "$sums_path"
 )
 
+sums_update_all() (
+    set -o errexit -o nounset -o pipefail
+
+    local -a paths
+    local path
+
+    while IFS= read -d '' -r path; do
+        paths+=("$path")
+    done < <( find . -type f -printf '%P\0' )
+
+    sums_update ${paths[@]+"${paths[@]}"}
+)
+
 sums_update_distr() (
     set -o errexit -o nounset -o pipefail
 
