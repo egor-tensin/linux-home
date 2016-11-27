@@ -73,7 +73,7 @@ sums_update_all() (
 
     while IFS= read -d '' -r path; do
         paths+=("$path")
-    done < <( find . -type f -\! -name "$sums_path" -printf '%P\0' )
+    done < <( find . -type f -\! -name "$( basename -- "$sums_path" )" -printf '%P\0' )
 
     sums_update ${paths[@]+"${paths[@]}"}
 )
