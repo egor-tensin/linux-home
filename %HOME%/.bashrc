@@ -37,6 +37,8 @@ alias dir='ls --format=vertical'
 alias less='less --ignore-case --RAW-CONTROL-CHARS'
 alias tree='tree -a'
 
+alias cls='echo -en "\ec"'
+
 is_cygwin && alias list_packages='cygcheck -cd'
 
 [ -r "$HOME/.bash_utils/cxx.sh"   ] && source "$HOME/.bash_utils/cxx.sh"
