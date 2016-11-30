@@ -14,10 +14,33 @@ shopt -s histappend
 shopt -s nullglob
 shopt -s nocaseglob
 
-_os="$( uname -o )"
+_os=''
+
+detect_os() {
+    command -v uname > /dev/null \
+        && [ "$( uname -o )" == 'Cygwin' ] \
+        && _os='Cygwin' \
+        && return 0
+
+    [ -r /etc/os-release ] \
+        && _os="$( . /etc/os-release && echo "$NAME" )" \
+        && return 0
+
+    return 1
+}
+
+detect_os
+
+os_detected() {
+    test -n "$_os"
+}
 
 is_cygwin() {
     test "$_os" == 'Cygwin'
+}
+
+is_ubuntu() {
+    test "$_os" == 'Ubuntu'
 }
 
 is_cygwin && set -o igncr
