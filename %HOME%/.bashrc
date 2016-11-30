@@ -62,7 +62,18 @@ alias tree='tree -a'
 
 alias cls='echo -en "\ec"'
 
-is_cygwin && alias list_packages='cygcheck -cd'
+list_packages() (
+    set -o errexit -o nounset -o pipefail
+
+    if is_cygwin; then
+        cygcheck --check-setup --dump-only
+    elif is_ubuntu; then
+        dpkg --get-selections \
+            | grep --invert-match -- 'deinstall$' \
+            | cut -f 1 \
+            | cut -d ':' -f 1
+    fi
+)
 
 [ -r "$HOME/.bash_utils/cxx.sh"   ] && source "$HOME/.bash_utils/cxx.sh"
 [ -r "$HOME/.bash_utils/distr.sh" ] && source "$HOME/.bash_utils/distr.sh"
