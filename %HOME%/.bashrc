@@ -66,7 +66,8 @@ list_packages() (
     set -o errexit -o nounset -o pipefail
 
     if is_cygwin; then
-        cygcheck --check-setup --dump-only
+        cygcheck --check-setup --dump-only \
+            | cut -d ' ' -f 1
     elif is_ubuntu; then
         dpkg --get-selections \
             | grep --invert-match -- 'deinstall$' \
