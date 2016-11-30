@@ -62,18 +62,31 @@ alias tree='tree -a'
 
 alias cls='echo -en "\ec"'
 
+list_packages_cygwin() (
+    set -o errexit -o nounset -o pipefail
+
+    cygcheck --check-setup --dump-only \
+        | cut -d ' ' -f 1
+)
+
+list_packages_ubuntu() (
+    set -o errexit -o nounset -o pipefail
+
+    dpkg --get-selections \
+        | grep --invert-match -- 'deinstall$' \
+        | cut -f 1 \
+        | cut -d ':' -f 1
+)
+
 list_packages() (
     set -o errexit -o nounset -o pipefail
 
     if is_cygwin; then
-        cygcheck --check-setup --dump-only \
-            | cut -d ' ' -f 1
+        list_packages_cygwin
     elif is_ubuntu; then
-        dpkg --get-selections \
-            | grep --invert-match -- 'deinstall$' \
-            | cut -f 1 \
-            | cut -d ':' -f 1
+        list_packages_ubuntu
     fi
+    return 1
 )
 
 [ -r "$HOME/.bash_utils/cxx.sh"   ] && source "$HOME/.bash_utils/cxx.sh"
