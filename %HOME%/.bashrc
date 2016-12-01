@@ -17,12 +17,12 @@ shopt -s nocaseglob
 _os=''
 
 detect_os() {
-    command -v uname > /dev/null \
+    command -v uname > /dev/null           \
         && [ "$( uname -o )" == 'Cygwin' ] \
-        && _os='Cygwin' \
+        && _os='Cygwin'                    \
         && return 0
 
-    [ -r /etc/os-release ] \
+    [ -r /etc/os-release ]                              \
         && _os="$( . /etc/os-release && echo "$NAME" )" \
         && return 0
 
@@ -72,9 +72,9 @@ list_packages_cygwin() (
 list_packages_ubuntu() (
     set -o errexit -o nounset -o pipefail
 
-    dpkg --get-selections \
+    dpkg --get-selections                     \
         | grep --invert-match -- 'deinstall$' \
-        | cut -f 1 \
+        | cut -f 1                            \
         | cut -d ':' -f 1
 )
 
