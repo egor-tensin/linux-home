@@ -3,6 +3,8 @@ source $VIMRUNTIME/vimrc_example.vim
 " Color scheme.
 color desert
 
+set nowrap " Don't wrap lines.
+
 " 4 spaces per indentation level, no tabs.
 set softtabstop=4
 set shiftwidth=4
