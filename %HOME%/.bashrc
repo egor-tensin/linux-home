@@ -62,6 +62,13 @@ alias tree='tree -a'
 
 alias cls='echo -en "\ec"'
 
+list_manually_installed_packages_ubuntu() (
+    set -o errexit -o nounset -o pipefail
+
+    comm -23 <( apt-mark showmanual | sort | uniq ) \
+        <( gzip --decompress --stdout -- /var/log/installer/initial-status.gz | sed --quiet 's/^Package: //p' | sort | uniq )
+)
+
 list_packages_cygwin() (
     set -o errexit -o nounset -o pipefail
 
