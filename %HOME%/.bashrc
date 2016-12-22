@@ -73,6 +73,7 @@ list_packages_cygwin() (
     set -o errexit -o nounset -o pipefail
 
     cygcheck --check-setup --dump-only \
+        | tail -n +3                   \
         | cut -d ' ' -f 1
 )
 
