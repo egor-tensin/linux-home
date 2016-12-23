@@ -3,7 +3,7 @@
 	email = Egor.Tensin@gmail.com
 [core]
 	editor = vim
-	autocrlf = true
+	autocrlf = input
 [push]
 	default = current
 [merge]
