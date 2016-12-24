@@ -14,39 +14,6 @@ shopt -s histappend
 shopt -s nullglob
 shopt -s nocaseglob
 
-_os=''
-
-detect_os() {
-    command -v uname > /dev/null           \
-        && [ "$( uname -o )" == 'Cygwin' ] \
-        && _os='Cygwin'                    \
-        && return 0
-
-    [ -r /etc/os-release ]                              \
-        && _os="$( . /etc/os-release && echo "$NAME" )" \
-        && return 0
-
-    return 1
-}
-
-detect_os
-
-os_detected() {
-    test -n "$_os"
-}
-
-is_cygwin() {
-    test "$_os" == 'Cygwin'
-}
-
-is_ubuntu() {
-    test "$_os" == 'Ubuntu'
-}
-
-is_cygwin && set -o igncr
-
-export SHELLOPTS
-
 alias df='df --human-readable'
 alias du='du --human-readable'
 
@@ -62,65 +29,21 @@ alias tree='tree -a'
 
 alias cls='echo -en "\ec"'
 
-list_manually_installed_packages_ubuntu() (
-    set -o errexit -o nounset -o pipefail
-
-    comm -23 <( apt-mark showmanual | sort | uniq ) \
-        <( gzip --decompress --stdout -- /var/log/installer/initial-status.gz | sed --quiet 's/^Package: //p' | sort | uniq )
-)
-
-list_packages_cygwin() (
-    set -o errexit -o nounset -o pipefail
-
-    cygcheck --check-setup --dump-only \
-        | tail -n +3                   \
-        | cut -d ' ' -f 1
-)
-
-list_packages_ubuntu() (
-    set -o errexit -o nounset -o pipefail
-
-    dpkg --get-selections                     \
-        | grep --invert-match -- 'deinstall$' \
-        | cut -f 1                            \
-        | cut -d ':' -f 1
-)
-
-list_packages() (
-    set -o errexit -o nounset -o pipefail
-
-    if is_cygwin; then
-        list_packages_cygwin
-    elif is_ubuntu; then
-        list_packages_ubuntu
-    fi
-    return 1
-)
-
 [ -r "$HOME/.bash_utils/cxx.sh"   ] && source "$HOME/.bash_utils/cxx.sh"
 [ -r "$HOME/.bash_utils/distr.sh" ] && source "$HOME/.bash_utils/distr.sh"
 [ -r "$HOME/.bash_utils/file.sh"  ] && source "$HOME/.bash_utils/file.sh"
 [ -r "$HOME/.bash_utils/git.sh"   ] && source "$HOME/.bash_utils/git.sh"
+[ -r "$HOME/.bash_utils/os.sh"    ] && source "$HOME/.bash_utils/os.sh"
 [ -r "$HOME/.bash_utils/path.sh"  ] && source "$HOME/.bash_utils/path.sh"
+[ -r "$HOME/.bash_utils/ruby.sh"  ] && source "$HOME/.bash_utils/ruby.sh"
 [ -r "$HOME/.bash_utils/text.sh"  ] && source "$HOME/.bash_utils/text.sh"
 
 export PYTHONSTARTUP="$HOME/.pythonrc"
 
-update_ruby_settings() {
-    local user_dir
-    local bin_dir
-
-    command -v ruby &> /dev/null                       \
-        && command -v gem &> /dev/null                 \
-        && user_dir="$( ruby -e 'puts Gem.user_dir' )" \
-        && export GEM_HOME="$user_dir"                 \
-        && bin_dir="$( ruby -e 'puts Gem.bindir' )"    \
-        && add_path "$bin_dir"
-}
-
-update_ruby_settings
-
+is_cygwin && set -o igncr
 is_cygwin || complete -r
+
+export SHELLOPTS
 
 if is_cygwin; then
     alias mingcc32='i686-w64-mingw32-gcc'
