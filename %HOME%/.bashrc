@@ -14,6 +14,8 @@ shopt -s histappend
 shopt -s nullglob
 shopt -s nocaseglob
 
+alias sudo='sudo '
+
 alias df='df --human-readable'
 alias du='du --human-readable'
 
