@@ -3,7 +3,7 @@ case "$-" in
       *) return ;;
 esac
 
-PS1='\[\e[33m\]\W\[\e[0m\]: '
+export PS1="\[\e[33m\]\h\[\e[m\] \[\e[31m\]\W\[\e[m\] # \[$(tput sgr0)\]"
 
 #set -o nounset
 set -o pipefail
