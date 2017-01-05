@@ -18,6 +18,7 @@ alias sudo='sudo '
 
 alias df='df --human-readable'
 alias du='du --human-readable'
+alias free='free --human'
 
 alias egrep='egrep --color=auto'
 alias fgrep='fgrep --color=auto'
