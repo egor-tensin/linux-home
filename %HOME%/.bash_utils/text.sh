@@ -85,9 +85,11 @@ str_contains() (
     fi
 
     local str="$1"
-    local sub
-    sub="$( printf -- '%q' "$2" )"
+    local sub="$2"
 
+    [ -z "$sub" ] && return 0
+
+    sub="$( printf -- '%q' "$2" )"
     test "$str" != "${str#*$sub}"
 )
 
@@ -100,10 +102,29 @@ str_starts_with() (
     fi
 
     local str="$1"
-    local sub
-    sub="$( printf -- '%q' "$2" )"
+    local sub="$2"
 
+    [ -z "$sub" ] && return 0
+
+    sub="$( printf -- '%q' "$sub" )"
     test "$str" != "${str#$sub}"
+)
+
+str_ends_with() (
+    set -o errexit -o nounset -o pipefail
+
+    if [ "$#" -ne 2 ]; then
+        echo "usage: ${FUNCNAME[0]} STR SUB" >&2
+        return 1
+    fi
+
+    local str="$1"
+    local sub="$2"
+
+    [ -z "$sub" ] && return 0
+
+    sub="$( printf -- '%q' "$sub" )"
+    test "$str" != "${str%$sub}"
 )
 
 str_split() (
