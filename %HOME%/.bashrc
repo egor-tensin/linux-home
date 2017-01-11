@@ -56,3 +56,9 @@ if is_cygwin; then
     alias mingcc='x86_64-w64-mingw32-gcc'
     alias ming++='x86_64-w64-mingw32-g++'
 fi
+
+if command -v vim > /dev/null 2>&1; then
+    export EDITOR=vim
+elif command -v nano > /dev/null 2>&1; then
+    export EDITOR=nano
+fi
