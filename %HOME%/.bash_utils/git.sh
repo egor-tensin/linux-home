@@ -22,28 +22,51 @@ is_repo_clean() (
 alias repo_clean_all='git clean -fdx'
 alias repo_clean_ignored='git clean -fdX'
 
-repo_line_endings_are_normalized() (
+branch_eol_normalized() (
     set -o errexit -o nounset -o pipefail
-
-    local -r prefix='i/'
 
     if is_repo_clean; then
         repo_clean_ignored
-        local eolinfo
-        while IFS= read -d '' -r eolinfo; do
-            if [ "${eolinfo#$prefix}" == "$eolinfo" ]; then
-                echo "${FUNCNAME[0]}: malformatted eolinfo: $eolinfo" >&2
-                return 1
-            fi
-            eolinfo="${eolinfo#$prefix}"
-            if [ "$eolinfo" == crlf ] || [ "$eolinfo" == mixed ]; then
-                echo "${FUNCNAME[0]}: detected invalid line endings" >&2
-            fi
-        done < <( git ls-files -z --eol | cut -z -d ' ' -f 1 )
     else
         echo "${FUNCNAME[0]}: repository isn't clean" >&2
         return 1
     fi
+
+    local line
+    while IFS= read -d '' -r line; do
+        local eolinfo
+        if ! eolinfo="$( expr "$line" : 'i/\([^ ]*\)' )"; then
+            echo "${FUNCNAME[0]}: couldn't extract eolinfo from: $line" >&2
+            return 1
+        fi
+
+        local path
+        if ! path="$( expr "$line" : $'.*\t\\(.*\\)' )"; then
+            echo "${FUNCNAME[0]}: couldn't extract file path from: $line" >&2
+            return 1
+        fi
+
+        if [ "$eolinfo" == crlf ] || [ "$eolinfo" == mixed ]; then
+            echo "${FUNCNAME[0]}: detected inconsistent line endings in file: $path" >&2
+        fi
+    done < <( git ls-files -z --eol )
+)
+
+repo_eol_normalized() (
+    set -o errexit -o nounset -o pipefail
+
+    if is_repo_clean; then
+        repo_clean_ignored
+    else
+        echo "${FUNCNAME[0]}: repository isn't clean" >&2
+        return 1
+    fi
+
+    local branch
+    while IFS= read -r branch; do
+        git checkout --quiet "$branch"
+        branch_eol_normalized "$branch"
+    done < <( list_repo_branches )
 )
 
 tighten_repo_security() (
