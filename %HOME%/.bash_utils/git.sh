@@ -10,6 +10,42 @@ source "$HOME/.bash_utils/text.sh"
 alias list_repo_files='git ls-tree -r --name-only HEAD'
 alias list_repo_dirs='git ls-tree -r --name-only HEAD -d'
 
+list_repo_branches() {
+    git for-each-ref --format='%(refname:short)' refs/heads/
+}
+
+is_repo_clean() (
+    set -o errexit -o nounset -o pipefail
+    test -z "$( git status --porcelain )"
+)
+
+alias repo_clean_all='git clean -fdx'
+alias repo_clean_ignored='git clean -fdX'
+
+repo_line_endings_are_normalized() (
+    set -o errexit -o nounset -o pipefail
+
+    local -r prefix='i/'
+
+    if is_repo_clean; then
+        repo_clean_ignored
+        local eolinfo
+        while IFS= read -d '' -r eolinfo; do
+            if [ "${eolinfo#$prefix}" == "$eolinfo" ]; then
+                echo "${FUNCNAME[0]}: malformatted eolinfo: $eolinfo" >&2
+                return 1
+            fi
+            eolinfo="${eolinfo#$prefix}"
+            if [ "$eolinfo" == crlf ] || [ "$eolinfo" == mixed ]; then
+                echo "${FUNCNAME[0]}: detected invalid line endings" >&2
+            fi
+        done < <( git ls-files -z --eol | cut -z -d ' ' -f 1 )
+    else
+        echo "${FUNCNAME[0]}: repository isn't clean" >&2
+        return 1
+    fi
+)
+
 tighten_repo_security() (
     set -o errexit -o nounset -o pipefail
 
