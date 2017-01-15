@@ -120,7 +120,7 @@ backup_repo() (
     fi
 
     local zip_name
-    zip_name="${repo_name}_$( date -u +'%Y%m%dT%H%M%S' ).zip"
+    zip_name="${repo_name}_$( date --utc -- '+%Y%m%dT%H%M%S' ).zip"
 
     git archive \
         --format=zip -9 \

@@ -29,7 +29,7 @@ swap_files() (
     local tmp_path
     tmp_path="$( mktemp -- "$( dirname -- "$path1" )/XXX" )"
 
-    mv "$path1" "$tmp_path"
-    mv "$path2" "$path1"
-    mv "$tmp_path" "$path2"
+    mv -- "$path1" "$tmp_path"
+    mv -- "$path2" "$path1"
+    mv -- "$tmp_path" "$path2"
 )
