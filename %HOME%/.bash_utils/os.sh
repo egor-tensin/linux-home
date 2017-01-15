@@ -43,7 +43,9 @@ list_packages_cygwin() (
 
 list_initial_packages_ubuntu() (
     set -o errexit -o nounset -o pipefail
+
     local -r initial_status='/var/log/installer/initial-status.gz'
+
     gzip --decompress --stdout -- "$initial_status" \
         | sed --quiet -- 's/^Package: //p' \
         | sort \
@@ -68,12 +70,15 @@ list_packages_ubuntu() (
 
 list_initial_packages_arch() (
     set -o errexit -o nounset -o pipefail
+
     local -ra groups=(base base-devel)
+
     pacman -Q --groups -q -- ${groups[@]+"${groups[@]}"} | sort
 )
 
 list_manually_installed_packages_arch() (
     set -o errexit -o nounset -o pipefail
+
     comm -23 <( pacman -Q --explicit -q | sort ) \
              <( list_initial_packages_arch )
 )
