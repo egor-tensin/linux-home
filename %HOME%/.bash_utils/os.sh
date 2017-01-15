@@ -29,6 +29,18 @@ is_ubuntu() {
     test "$_os" == 'Ubuntu'
 }
 
+is_arch() {
+    test "$_os" == 'Arch Linux'
+}
+
+list_packages_cygwin() (
+    set -o errexit -o nounset -o pipefail
+
+    cygcheck --check-setup --dump-only \
+        | tail -n +3                   \
+        | cut -d ' ' -f 1
+)
+
 list_initial_packages_ubuntu() (
     set -o errexit -o nounset -o pipefail
     local -r initial_status='/var/log/installer/initial-status.gz'
@@ -45,14 +57,6 @@ list_manually_installed_packages_ubuntu() (
              <( list_initial_packages_ubuntu )
 )
 
-list_packages_cygwin() (
-    set -o errexit -o nounset -o pipefail
-
-    cygcheck --check-setup --dump-only \
-        | tail -n +3                   \
-        | cut -d ' ' -f 1
-)
-
 list_packages_ubuntu() (
     set -o errexit -o nounset -o pipefail
 
@@ -62,6 +66,22 @@ list_packages_ubuntu() (
         | cut -d ':' -f 1
 )
 
+list_initial_packages_arch() (
+    set -o errexit -o nounset -o pipefail
+    local -ra groups=(base base-devel)
+    pacman -Q --groups -q -- ${groups[@]+"${groups[@]}"} | sort
+)
+
+list_manually_installed_packages_arch() (
+    set -o errexit -o nounset -o pipefail
+    comm -23 <( pacman -Q --explicit -q | sort ) \
+             <( list_initial_packages_arch )
+)
+
+list_packages_arch() {
+    pacman -Qq
+}
+
 list_packages() (
     set -o errexit -o nounset -o pipefail
 
@@ -69,6 +89,9 @@ list_packages() (
         list_packages_cygwin
     elif is_ubuntu; then
         list_packages_ubuntu
+    elif is_arch; then
+        list_packages_arch
+    else
+        return 1
     fi
-    return 1
 )
