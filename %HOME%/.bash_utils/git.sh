@@ -41,7 +41,7 @@ branch_eol_normalized() (
         fi
 
         local path
-        if ! path="$( expr "$line" : $'.*\t\\(.*\\)' )"; then
+        if ! path="$( expr "$line" : $'[^\t]*\t\\(.*\\)' )"; then
             echo "${FUNCNAME[0]}: couldn't extract file path from: $line" >&2
             return 1
         fi
