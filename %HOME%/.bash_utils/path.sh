@@ -7,7 +7,7 @@
 
 source "$HOME/.bash_utils/text.sh"
 
-add_missing_path() (
+path_add() (
     set -o errexit -o nounset -o pipefail
 
     [ "$#" -eq 0 ] && return 0
@@ -45,9 +45,9 @@ add_missing_path() (
     str_join ':' ${dest_list[@]+"${dest_list[@]}"}
 )
 
-add_path() {
+path_export() {
     local new_path
 
-    new_path="$( add_missing_path "$@" )" \
+    new_path="$( path_add "$@" )" \
         && export PATH="$new_path"
 }

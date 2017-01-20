@@ -1,8 +1,13 @@
 #!/usr/bin/env bash
 
+# Copyright (c) 2016 Egor Tensin <Egor.Tensin@gmail.com>
+# This file is part of the "Cygwin configuration files" project.
+# For details, see https://github.com/egor-tensin/cygwin-home.
+# Distributed under the MIT License.
+
 _os=''
 
-detect_os() {
+os_detect() {
     command -v uname > /dev/null           \
         && [ "$( uname -o )" == 'Cygwin' ] \
         && _os='Cygwin'                    \
@@ -15,25 +20,25 @@ detect_os() {
     return 1
 }
 
-detect_os
+os_detect
 
 os_detected() {
     test -n "$_os"
 }
 
-is_cygwin() {
+os_is_cygwin() {
     test "$_os" == 'Cygwin'
 }
 
-is_ubuntu() {
+os_is_ubuntu() {
     test "$_os" == 'Ubuntu'
 }
 
-is_arch() {
+os_is_arch() {
     test "$_os" == 'Arch Linux'
 }
 
-list_packages_cygwin() (
+packages_list_cygwin() (
     set -o errexit -o nounset -o pipefail
 
     cygcheck --check-setup --dump-only \
@@ -41,7 +46,7 @@ list_packages_cygwin() (
         | cut -d ' ' -f 1
 )
 
-list_initial_packages_ubuntu() (
+setup_packages_list_ubuntu() (
     set -o errexit -o nounset -o pipefail
 
     local -r initial_status='/var/log/installer/initial-status.gz'
@@ -52,14 +57,14 @@ list_initial_packages_ubuntu() (
         | uniq
 )
 
-list_manually_installed_packages_ubuntu() (
+user_packages_list_ubuntu() (
     set -o errexit -o nounset -o pipefail
 
     comm -23 <( apt-mark showmanual | sort | uniq ) \
-             <( list_initial_packages_ubuntu )
+             <( setup_packages_list_ubuntu )
 )
 
-list_packages_ubuntu() (
+packages_list_ubuntu() (
     set -o errexit -o nounset -o pipefail
 
     dpkg --get-selections                     \
@@ -68,7 +73,7 @@ list_packages_ubuntu() (
         | cut -d ':' -f 1
 )
 
-list_initial_packages_arch() (
+setup_packages_list_arch() (
     set -o errexit -o nounset -o pipefail
 
     local -ra groups=(base base-devel)
@@ -76,26 +81,26 @@ list_initial_packages_arch() (
     pacman -Q --groups -q -- ${groups[@]+"${groups[@]}"} | sort
 )
 
-list_manually_installed_packages_arch() (
+user_packages_list_arch() (
     set -o errexit -o nounset -o pipefail
 
     comm -23 <( pacman -Q --explicit -q | sort ) \
-             <( list_initial_packages_arch )
+             <( setup_packages_list_arch )
 )
 
-list_packages_arch() {
+packages_list_arch() {
     pacman -Qq
 }
 
-list_packages() (
+packages_list() (
     set -o errexit -o nounset -o pipefail
 
-    if is_cygwin; then
-        list_packages_cygwin
-    elif is_ubuntu; then
-        list_packages_ubuntu
-    elif is_arch; then
-        list_packages_arch
+    if os_is_cygwin; then
+        packages_list_cygwin
+    elif os_is_ubuntu; then
+        packages_list_ubuntu
+    elif os_is_arch; then
+        packages_list_arch
     else
         return 1
     fi

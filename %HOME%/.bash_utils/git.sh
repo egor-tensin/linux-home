@@ -7,14 +7,14 @@
 
 source "$HOME/.bash_utils/text.sh"
 
-alias list_repo_files='git ls-tree -r --name-only HEAD'
-alias list_repo_dirs='git ls-tree -r --name-only HEAD -d'
+alias repo_files='git ls-tree -r --name-only HEAD'
+alias repo_dirs='git ls-tree -r --name-only HEAD -d'
 
-list_repo_branches() {
+repo_branches() {
     git for-each-ref --format='%(refname:short)' refs/heads/
 }
 
-is_repo_clean() (
+repo_is_clean() (
     set -o errexit -o nounset -o pipefail
     test -z "$( git status --porcelain )"
 )
@@ -25,7 +25,7 @@ alias repo_clean_ignored='git clean -fdX'
 branch_eol_normalized() (
     set -o errexit -o nounset -o pipefail
 
-    if is_repo_clean; then
+    if repo_is_clean; then
         repo_clean_ignored
     else
         echo "${FUNCNAME[0]}: repository isn't clean" >&2
@@ -55,7 +55,7 @@ branch_eol_normalized() (
 repo_eol_normalized() (
     set -o errexit -o nounset -o pipefail
 
-    if is_repo_clean; then
+    if repo_is_clean; then
         repo_clean_ignored
     else
         echo "${FUNCNAME[0]}: repository isn't clean" >&2
@@ -66,18 +66,18 @@ repo_eol_normalized() (
     while IFS= read -r branch; do
         git checkout --quiet "$branch"
         branch_eol_normalized "$branch"
-    done < <( list_repo_branches )
+    done < <( repo_branches )
 )
 
-tighten_repo_security() (
+repo_tighten_permissions() (
     set -o errexit -o nounset -o pipefail
 
-    list_repo_files -z | xargs -0 -- chmod 0600 --
-    list_repo_dirs  -z | xargs -0 -- chmod 0700 --
+    repo_files -z | xargs -0 -- chmod 0600 --
+    repo_dirs  -z | xargs -0 -- chmod 0700 --
     chmod 0700 .git
 )
 
-doslint_repo() (
+repo_doslint() (
     set -o errexit -o nounset -o pipefail
 
     local -a paths
@@ -85,12 +85,12 @@ doslint_repo() (
 
     while IFS= read -d '' -r path; do
         paths+=("$path")
-    done < <( list_repo_files -z )
+    done < <( repo_files -z )
 
     doslint ${paths[@]+"${paths[@]}"}
 )
 
-lint_repo() (
+repo_lint() (
     set -o errexit -o nounset -o pipefail
 
     local -a paths
@@ -98,12 +98,12 @@ lint_repo() (
 
     while IFS= read -d '' -r path; do
         paths+=("$path")
-    done < <( list_repo_files -z )
+    done < <( repo_files -z )
 
     lint ${paths[@]+"${paths[@]}"}
 )
 
-backup_repo() (
+repo_backup() (
     set -o errexit -o nounset -o pipefail
 
     local repo_dir
@@ -129,8 +129,8 @@ backup_repo() (
         HEAD
 )
 
-backup_repo_dropbox() (
+repo_backup_dropbox() (
     set -o errexit -o nounset -o pipefail
 
-    backup_repo "$USERPROFILE/Dropbox/backups"
+    repo_backup "$USERPROFILE/Dropbox/backups"
 )

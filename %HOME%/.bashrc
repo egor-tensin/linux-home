@@ -45,12 +45,12 @@ alias cls='echo -en "\ec"'
 
 export PYTHONSTARTUP="$HOME/.pythonrc"
 
-is_cygwin && set -o igncr
-is_cygwin || complete -r
+os_is_cygwin && set -o igncr
+os_is_cygwin || complete -r
 
 export SHELLOPTS
 
-if is_cygwin; then
+if os_is_cygwin; then
     alias mingcc32='i686-w64-mingw32-gcc'
     alias ming++32='i686-w64-mingw32-g++'
     alias mingcc='x86_64-w64-mingw32-gcc'

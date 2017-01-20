@@ -1,6 +1,13 @@
 #!/usr/bin/env bash
 
-update_ruby_settings() {
+# Copyright (c) 2016 Egor Tensin <Egor.Tensin@gmail.com>
+# This file is part of the "Cygwin configuration files" project.
+# For details, see https://github.com/egor-tensin/cygwin-home.
+# Distributed under the MIT License.
+
+source "$HOME/.bash_utils/path.sh"
+
+ruby_setup() {
     local user_dir
     local bin_dir
 
@@ -9,7 +16,7 @@ update_ruby_settings() {
         && user_dir="$( ruby -e 'puts Gem.user_dir' )" \
         && export GEM_HOME="$user_dir"                 \
         && bin_dir="$( ruby -e 'puts Gem.bindir' )"    \
-        && add_path "$bin_dir"
+        && path_export "$bin_dir"
 }
 
-update_ruby_settings
+ruby_setup
