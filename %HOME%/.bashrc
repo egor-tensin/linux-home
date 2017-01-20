@@ -30,6 +30,8 @@ alias dir='ls --format=vertical'
 alias less='less --ignore-case --RAW-CONTROL-CHARS'
 alias tree='tree -a'
 
+alias sed='sed --follow-symlinks'
+
 alias ssh-copy-id='ssh-copy-id -i'
 
 alias cls='echo -en "\ec"'
