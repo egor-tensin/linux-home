@@ -205,21 +205,3 @@ str_join() (
             ;;
     esac
 )
-
-str_invert_match() (
-    set -o errexit -o nounset -o pipefail
-
-    local -a pattern_list=()
-
-    local pattern
-    for pattern; do
-        pattern_list+=('-e' "$pattern")
-    done
-
-    if [ "${#pattern_list[@]}" -eq 0 ]; then
-        cat
-    else
-        grep --fixed-strings --invert-match \
-            ${pattern_list[@]+"${pattern_list[@]}"}
-    fi
-)
