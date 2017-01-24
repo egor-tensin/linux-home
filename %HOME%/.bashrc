@@ -30,7 +30,10 @@ alias dir='ls --format=vertical'
 alias less='less --ignore-case --RAW-CONTROL-CHARS'
 alias tree='tree -a'
 
-alias sed='sed --follow-symlinks'
+# alias sed='sed --follow-symlinks'
+# The alias above doesn't actually work with stdin in sed 4.2.2, it's a bug
+# fixed in sed 4.3.
+# Don't forget to uncomment once sed 4.3 becomes common.
 
 alias ssh-copy-id='ssh-copy-id -i'
 
