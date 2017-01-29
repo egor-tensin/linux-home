@@ -54,6 +54,7 @@ os_is_cygwin && set -o igncr
 os_is_cygwin || complete -r
 
 export SHELLOPTS
+export BASHOPTS
 
 if os_is_cygwin; then
     alias mingcc32='i686-w64-mingw32-gcc'
