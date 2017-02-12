@@ -6,6 +6,10 @@
 # Distributed under the MIT License.
 
 runc_flags=('-Wall' '-Wextra')
+runcxx_flags=('-Wall' '-Wextra' '-std=c++14')
+
+runc_compiler=gcc
+runcxx_compiler=g++
 
 _runc_usage() (
     set -o errexit -o nounset -o pipefail
@@ -78,14 +82,12 @@ runc() (
     local output_name
     output_name="$( mktemp --tmpdir=. -- "${FUNCNAME[0]}XXX.exe" )"
 
-    gcc -o "$output_name" \
+    "${runc_compiler:-gcc}" -o "$output_name" \
         ${c_flags[@]+"${c_flags[@]}"} \
         ${src_files[@]+"${src_files[@]}"}
 
     "$output_name" ${prog_args[@]+"${prog_args[@]}"}
 )
-
-runcxx_flags=('-Wall' '-Wextra' '-std=c++14')
 
 _runcxx_usage() (
     set -o errexit -o nounset -o pipefail
@@ -158,7 +160,7 @@ runcxx() (
     local output_name
     output_name="$( mktemp --tmpdir=. -- "${FUNCNAME[0]}XXX.exe" )"
 
-    g++ -o "$output_name" \
+    "${runcxx_compiler:-g++}" -o "$output_name" \
         ${cxx_flags[@]+"${cxx_flags[@]}"} \
         ${src_files[@]+"${src_files[@]}"}
 
