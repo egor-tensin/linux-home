@@ -61,7 +61,7 @@ runc() (
     prog_args=("$@")
 
     if [ "${#src_files[@]}" -eq 0 ]; then
-        _runc_usage 'requires at least one source file path' >&2
+        _runc_usage 'at least one source file is required' >&2
         return 1
     fi
 
@@ -80,7 +80,7 @@ runc() (
     pushd "$build_dir" > /dev/null
 
     local output_name
-    output_name="$( mktemp --tmpdir=. -- "${FUNCNAME[0]}XXX.exe" )"
+    output_name="$( mktemp --tmpdir=. -- "${FUNCNAME[0]}XXX" )"
 
     "${runc_compiler:-gcc}" -o "$output_name" \
         ${c_flags[@]+"${c_flags[@]}"} \
@@ -139,7 +139,7 @@ runcxx() (
     prog_args=("$@")
 
     if [ "${#src_files[@]}" -eq 0 ]; then
-        _runcxx_usage 'requires at least one source file path' >&2
+        _runcxx_usage 'at least one source file is required' >&2
         return 1
     fi
 
@@ -158,7 +158,7 @@ runcxx() (
     pushd "$build_dir" > /dev/null
 
     local output_name
-    output_name="$( mktemp --tmpdir=. -- "${FUNCNAME[0]}XXX.exe" )"
+    output_name="$( mktemp --tmpdir=. -- "${FUNCNAME[0]}XXX" )"
 
     "${runcxx_compiler:-g++}" -o "$output_name" \
         ${cxx_flags[@]+"${cxx_flags[@]}"} \
