@@ -5,6 +5,17 @@
 # For details, see https://github.com/egor-tensin/cygwin-home.
 # Distributed under the MIT License.
 
+_runc_is_cygwin() (
+    set -o errexit -o nounset -o pipefail
+    local os
+    os="$( uname -o )"
+    test 'Cygwin' = "$os"
+)
+
+if _runc_is_cygwin; then
+    _runc_exe_ext='.exe'
+fi
+
 runc_flags=('-Wall' '-Wextra')
 runcxx_flags=('-Wall' '-Wextra' '-std=c++14')
 
@@ -80,7 +91,7 @@ runc() (
     pushd "$build_dir" > /dev/null
 
     local output_name
-    output_name="$( mktemp --tmpdir=. -- "${FUNCNAME[0]}XXX" )"
+    output_name="$( mktemp --tmpdir=. -- "${FUNCNAME[0]}XXX${_runc_exe_ext-}" )"
 
     "${runc_compiler:-gcc}" -o "$output_name" \
         ${c_flags[@]+"${c_flags[@]}"} \
@@ -158,7 +169,7 @@ runcxx() (
     pushd "$build_dir" > /dev/null
 
     local output_name
-    output_name="$( mktemp --tmpdir=. -- "${FUNCNAME[0]}XXX" )"
+    output_name="$( mktemp --tmpdir=. -- "${FUNCNAME[0]}XXX${_runc_exe_ext-}" )"
 
     "${runcxx_compiler:-g++}" -o "$output_name" \
         ${cxx_flags[@]+"${cxx_flags[@]}"} \
