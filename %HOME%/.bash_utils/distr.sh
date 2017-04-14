@@ -101,5 +101,5 @@ sums_add_distr() (
 )
 
 sums_verify() {
-    sha1sum --check --quiet -- "$sums_path"
+    sha1sum --check --strict --quiet -- "$sums_path"
 }
