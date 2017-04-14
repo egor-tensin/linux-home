@@ -53,7 +53,7 @@ sums_list_paths() (
     [ "${#paths[@]}" -gt 0 ] && printf -- "$fmt" ${paths[@]+"${paths[@]}"}
 )
 
-sums_update() (
+sums_add() (
     set -o errexit -o nounset -o pipefail
 
     local -A existing
@@ -74,7 +74,7 @@ sums_update() (
     sha1sum -- ${missing[@]+"${missing[@]}"} >> "$sums_path"
 )
 
-sums_update_all() (
+sums_add_all() (
     set -o errexit -o nounset -o pipefail
 
     local -a paths
@@ -84,10 +84,10 @@ sums_update_all() (
         paths+=("$path")
     done < <( find . -type f -\! -name "$( basename -- "$sums_path" )" -printf '%P\0' )
 
-    sums_update ${paths[@]+"${paths[@]}"}
+    sums_add ${paths[@]+"${paths[@]}"}
 )
 
-sums_update_distr() (
+sums_add_distr() (
     set -o errexit -o nounset -o pipefail
 
     local -a paths
@@ -97,7 +97,7 @@ sums_update_distr() (
         paths+=("$path")
     done < <( find . -type f -\( -iname '*.exe' -o -iname '*.iso' -o -iname '*.tar.gz' -o -iname '*.tar.bz2' -o -iname '*.zip' -\) -printf '%P\0' )
 
-    sums_update ${paths[@]+"${paths[@]}"}
+    sums_add ${paths[@]+"${paths[@]}"}
 )
 
 sums_verify() {
