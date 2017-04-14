@@ -17,10 +17,10 @@ sums_list_paths() (
         shift
         case "$key" in
             -h|--help)
-                echo "usage: ${FUNCNAME[0]} [-h|--help] [-0|-z]"
+                echo "usage: ${FUNCNAME[0]} [-h|--help] [-0|--null|-z|--zero]"
                 return 0
                 ;;
-            -0|-z)
+            -0|-null|-z|--zero)
                 fmt='%s\0'
                 ;;
             *)
@@ -33,15 +33,24 @@ sums_list_paths() (
     [ -e "$sums_path" ] || return 0
 
     local -a paths=()
+    local sum path
 
-    local path
-    while IFS= read -r path; do
+    while IFS= read -d ' ' -r sum; do
+        local escaped=
+        if [ "${sum#'\'}" != "$sum" ]; then
+            escaped=1
+            sum="${sum:1}"
+        fi
+        IFS= read -r path
+        path="${path#'*'}"
+        if [ -n "$escaped" ]; then
+            path="${path//'\\'/$'\\'}"
+            path="${path//'\n'/$'\n'}"
+        fi
         paths+=("$path")
-    done < <( sed --binary -- 's/^\\\?[[:alnum:]]\+ [ *]//' "$sums_path" )
+    done < "$sums_path"
 
-    [ "${#paths[@]}" -eq 0 ] && return 0
-
-    printf -- "$fmt" ${paths[@]+"${paths[@]}"}
+    [ "${#paths[@]}" -gt 0 ] && printf -- "$fmt" ${paths[@]+"${paths[@]}"}
 )
 
 sums_update() (
