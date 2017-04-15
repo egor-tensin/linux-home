@@ -26,6 +26,39 @@ doslint() {
     trim "$@" && trimdoseol "$@" && doseol "$@"
 }
 
+escape_pattern_sed() (
+    set -o errexit -o nounset -o pipefail
+
+    # Only $^*./\[] need to be escaped according to this:
+    # https://unix.stackexchange.com/a/33005/60124
+    local pattern
+    for pattern; do
+        pattern="${pattern//'\'/'\\'}"
+        pattern="${pattern//'/'/'\/'}"
+        pattern="${pattern//'$'/'\$'}"
+        pattern="${pattern//'^'/'\^'}"
+        pattern="${pattern//'*'/'\*'}"
+        pattern="${pattern//'.'/'\.'}"
+        pattern="${pattern//'['/'\['}"
+        pattern="${pattern//']'/'\]'}"
+        pattern="${pattern//$'\n'/'\n'}"
+        echo "$pattern"
+    done
+)
+
+escape_substitution_sed() (
+    set -o errexit -o nounset -o pipefail
+
+    local pattern
+    for pattern; do
+        pattern="${pattern//'\'/'\\'}"
+        pattern="${pattern//'/'/'\/'}"
+        pattern="${pattern//'&'/'\&'}"
+        pattern="${pattern//$'\n'/'\n'}"
+        echo "$pattern"
+    done
+)
+
 str_replace() (
     set -o errexit -o nounset -o pipefail
 
@@ -35,8 +68,10 @@ str_replace() (
     fi
 
     local old="$1"
+    old="$( escape_pattern_sed "$old" )"
     shift
     local new="$1"
+    new="$( escape_substitution_sed "$new" )"
     shift
 
     sed --binary --in-place -- "s/$old/$new/g" "$@"
@@ -51,8 +86,10 @@ str_replace_word() (
     fi
 
     local old="$1"
+    old="$( escape_pattern_sed "$old" )"
     shift
     local new="$1"
+    new="$( escape_substitution_sed "$new" )"
     shift
 
     sed --binary --in-place -- "s/\\b$old\\b/$new/g" "$@"
@@ -63,7 +100,7 @@ str_tolower() (
 
     local s
     for s; do
-        echo "${s,,}" # | tr '[:upper:]' '[:lower:]'
+        echo "${s,,}"
     done
 )
 
@@ -72,13 +109,15 @@ str_toupper() (
 
     local s
     for s; do
-        echo "${s^^}" # | tr '[:lower:]' '[:upper:]'
+        echo "${s^^}"
     done
 )
 
-escape_pattern() {
+escape_pattern_bash() (
     set -o errexit -o nounset -o pipefail
 
+    # Only *?\[] need to be escaped according to:
+    # http://wiki.bash-hackers.org/syntax/pattern#normal_pattern_language
     local pattern
     for pattern; do
         pattern="${pattern//'\'/'\\'}"
@@ -88,7 +127,7 @@ escape_pattern() {
         pattern="${pattern//']'/'\]'}"
         echo "$pattern"
     done
-}
+)
 
 str_contains() (
     set -o errexit -o nounset -o pipefail
@@ -102,7 +141,7 @@ str_contains() (
     local sub="$2"
 
     [ -z "$sub" ] && return 0
-    sub="$( escape_pattern "$sub" )"
+    sub="$( escape_pattern_bash "$sub" )"
 
     test "$str" != "${str#*$sub}"
 )
@@ -119,7 +158,7 @@ str_starts_with() (
     local sub="$2"
 
     [ -z "$sub" ] && return 0
-    sub="$( escape_pattern "$sub" )"
+    sub="$( escape_pattern_bash "$sub" )"
 
     test "$str" != "${str#$sub}"
 )
@@ -136,7 +175,7 @@ str_ends_with() (
     local sub="$2"
 
     [ -z "$sub" ] && return 0
-    sub="$( escape_pattern "$sub" )"
+    sub="$( escape_pattern_bash "$sub" )"
 
     test "$str" != "${str%$sub}"
 )
