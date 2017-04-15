@@ -6,6 +6,18 @@
 # Distributed under the MIT License.
 
 sums_path='sha1sums.txt'
+sums_name="$( basename -- "$sums_path" )"
+
+sums_unescape_path() {
+    if [ "$#" -ne 1 ]; then
+        echo "usage: ${FUNCNAME[0]} PATH" >&2
+        return 1
+    fi
+    local path="$1"
+    path="${path//'\\'/$'\\'}"
+    path="${path//'\n'/$'\n'}"
+    echo "$path"
+}
 
 sums_list_paths() (
     set -o errexit -o nounset -o pipefail
@@ -43,10 +55,7 @@ sums_list_paths() (
         fi
         IFS= read -r path
         path="${path#'*'}"
-        if [ -n "$escaped" ]; then
-            path="${path//'\\'/$'\\'}"
-            path="${path//'\n'/$'\n'}"
-        fi
+        [ -n "$escaped" ] && path="$( sums_unescape_path "$path" )"
         paths+=("$path")
     done < "$sums_path"
 
@@ -82,7 +91,7 @@ sums_add_all() (
 
     while IFS= read -d '' -r path; do
         paths+=("$path")
-    done < <( find . -type f -\! -name "$( basename -- "$sums_path" )" -printf '%P\0' )
+    done < <( find . -type f -\! -iname "$sums_name" -printf '%P\0' )
 
     sums_add ${paths[@]+"${paths[@]}"}
 )
