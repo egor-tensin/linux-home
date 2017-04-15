@@ -76,6 +76,20 @@ str_toupper() (
     done
 )
 
+escape_pattern() {
+    set -o errexit -o nounset -o pipefail
+
+    local pattern
+    for pattern; do
+        pattern="${pattern//'\'/'\\'}"
+        pattern="${pattern//'*'/'\*'}"
+        pattern="${pattern//'?'/'\?'}"
+        pattern="${pattern//'['/'\['}"
+        pattern="${pattern//']'/'\]'}"
+        echo "$pattern"
+    done
+}
+
 str_contains() (
     set -o errexit -o nounset -o pipefail
 
@@ -88,8 +102,8 @@ str_contains() (
     local sub="$2"
 
     [ -z "$sub" ] && return 0
+    sub="$( escape_pattern "$sub" )"
 
-    sub="$( printf -- '%q' "$2" )"
     test "$str" != "${str#*$sub}"
 )
 
@@ -105,8 +119,8 @@ str_starts_with() (
     local sub="$2"
 
     [ -z "$sub" ] && return 0
+    sub="$( escape_pattern "$sub" )"
 
-    sub="$( printf -- '%q' "$sub" )"
     test "$str" != "${str#$sub}"
 )
 
@@ -122,8 +136,8 @@ str_ends_with() (
     local sub="$2"
 
     [ -z "$sub" ] && return 0
+    sub="$( escape_pattern "$sub" )"
 
-    sub="$( printf -- '%q' "$sub" )"
     test "$str" != "${str%$sub}"
 )
 
