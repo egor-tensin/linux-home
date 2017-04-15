@@ -9,10 +9,13 @@ sums_path='sha1sums.txt'
 sums_name="$( basename -- "$sums_path" )"
 
 sums_unescape_path() {
+    set -o errexit -o nounset -o pipefail
+
     if [ "$#" -ne 1 ]; then
         echo "usage: ${FUNCNAME[0]} PATH" >&2
         return 1
     fi
+
     local path="$1"
     path="${path//'\\'/$'\\'}"
     path="${path//'\n'/$'\n'}"

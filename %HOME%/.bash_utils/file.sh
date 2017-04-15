@@ -17,12 +17,12 @@ swap_files() (
     local path2="$2"
 
     if [ ! -r "$path1" ] || [ ! -w "$path1" ]; then
-        echo "${FUNCNAME[0]}: must be a regular file: $path1" >&2
+        echo "${FUNCNAME[0]}: must be readable and writable: $path1" >&2
         return 1
     fi
 
     if [ ! -r "$path2" ] || [ ! -w "$path2" ]; then
-        echo "${FUNCNAME[0]}: must be a regular file: $path2" >&2
+        echo "${FUNCNAME[0]}: must be readable and writable: $path2" >&2
         return 1
     fi
 

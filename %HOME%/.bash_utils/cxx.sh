@@ -25,12 +25,15 @@ runcxx_compiler=g++
 _runc_usage() (
     set -o errexit -o nounset -o pipefail
 
+    local prefix="${FUNCNAME[0]}"
+    [ "${#FUNCNAME[@]}" -gt 1 ] && prefix="${FUNCNAME[1]}"
+
     local msg
     for msg; do
-        echo "${FUNCNAME[1]}: $msg"
+        echo "$prefix: $msg"
     done
 
-    echo "usage: ${FUNCNAME[1]} [-h|--help] [-c|--comp-arg ARG]... C_PATH... [-- [PROG_ARG]...]"
+    echo "usage: $prefix [-h|--help] [-c|--comp-arg ARG]... C_PATH... [-- [PROG_ARG]...]"
 )
 
 runc() (
@@ -103,12 +106,15 @@ runc() (
 _runcxx_usage() (
     set -o errexit -o nounset -o pipefail
 
+    local prefix="${FUNCNAME[0]}"
+    [ "${#FUNCNAME[@]}" -gt 1 ] && prefix="${FUNCNAME[1]}"
+
     local msg
     for msg; do
-        echo "${FUNCNAME[1]}: $msg"
+        echo "$prefix: $msg"
     done
 
-    echo "usage: ${FUNCNAME[1]} [-h|--help] [-c|--comp-arg ARG]... CPP_PATH... [-- [PROG_ARG]...]"
+    echo "usage: $prefix [-h|--help] [-c|--comp-arg ARG]... CPP_PATH... [-- [PROG_ARG]...]"
 )
 
 runcxx() (

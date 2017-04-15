@@ -26,37 +26,43 @@ doslint() {
     trim "$@" && trimdoseol "$@" && doseol "$@"
 }
 
-escape_pattern_sed() (
+_sed_escape_pattern() (
     set -o errexit -o nounset -o pipefail
+
+    if [ "$#" -ne 1 ]; then
+        echo "usage: ${FUNCNAME[0]} STR" >&2
+        return 1
+    fi
 
     # Only $^*./\[] need to be escaped according to this:
     # https://unix.stackexchange.com/a/33005/60124
-    local pattern
-    for pattern; do
-        pattern="${pattern//'\'/'\\'}"
-        pattern="${pattern//'/'/'\/'}"
-        pattern="${pattern//'$'/'\$'}"
-        pattern="${pattern//'^'/'\^'}"
-        pattern="${pattern//'*'/'\*'}"
-        pattern="${pattern//'.'/'\.'}"
-        pattern="${pattern//'['/'\['}"
-        pattern="${pattern//']'/'\]'}"
-        pattern="${pattern//$'\n'/'\n'}"
-        echo "$pattern"
-    done
+    local s="$1"
+    s="${s//'\'/'\\'}"
+    s="${s//'/'/'\/'}"
+    s="${s//'$'/'\$'}"
+    s="${s//'^'/'\^'}"
+    s="${s//'*'/'\*'}"
+    s="${s//'.'/'\.'}"
+    s="${s//'['/'\['}"
+    s="${s//']'/'\]'}"
+    s="${s//$'\n'/'\n'}"
+    echo "$s"
 )
 
-escape_substitution_sed() (
+_sed_escape_substitution() (
     set -o errexit -o nounset -o pipefail
 
-    local pattern
-    for pattern; do
-        pattern="${pattern//'\'/'\\'}"
-        pattern="${pattern//'/'/'\/'}"
-        pattern="${pattern//'&'/'\&'}"
-        pattern="${pattern//$'\n'/'\n'}"
-        echo "$pattern"
-    done
+    if [ "$#" -ne 1 ]; then
+        echo "usage: ${FUNCNAME[0]} STR" >&2
+        return 1
+    fi
+
+    local s="$1"
+    s="${s//'\'/'\\'}"
+    s="${s//'/'/'\/'}"
+    s="${s//'&'/'\&'}"
+    s="${s//$'\n'/'\n'}"
+    echo "$s"
 )
 
 str_replace() (
@@ -68,10 +74,10 @@ str_replace() (
     fi
 
     local old="$1"
-    old="$( escape_pattern_sed "$old" )"
+    old="$( _sed_escape_pattern "$old" )"
     shift
     local new="$1"
-    new="$( escape_substitution_sed "$new" )"
+    new="$( _sed_escape_substitution "$new" )"
     shift
 
     sed --binary --in-place -- "s/$old/$new/g" "$@"
@@ -86,10 +92,10 @@ str_replace_word() (
     fi
 
     local old="$1"
-    old="$( escape_pattern_sed "$old" )"
+    old="$( _sed_escape_pattern "$old" )"
     shift
     local new="$1"
-    new="$( escape_substitution_sed "$new" )"
+    new="$( _sed_escape_substitution "$new" )"
     shift
 
     sed --binary --in-place -- "s/\\b$old\\b/$new/g" "$@"
@@ -113,20 +119,23 @@ str_toupper() (
     done
 )
 
-escape_pattern_bash() (
+_bash_escape_pattern() (
     set -o errexit -o nounset -o pipefail
+
+    if [ "$#" -ne 1 ]; then
+        echo "usage: ${FUNCNAME[0]} STR" >&2
+        return 1
+    fi
 
     # Only *?\[] need to be escaped according to:
     # http://wiki.bash-hackers.org/syntax/pattern#normal_pattern_language
-    local pattern
-    for pattern; do
-        pattern="${pattern//'\'/'\\'}"
-        pattern="${pattern//'*'/'\*'}"
-        pattern="${pattern//'?'/'\?'}"
-        pattern="${pattern//'['/'\['}"
-        pattern="${pattern//']'/'\]'}"
-        echo "$pattern"
-    done
+    local s="$1"
+    s="${s//'\'/'\\'}"
+    s="${s//'*'/'\*'}"
+    s="${s//'?'/'\?'}"
+    s="${s//'['/'\['}"
+    s="${s//']'/'\]'}"
+    echo "$s"
 )
 
 str_contains() (
@@ -141,7 +150,7 @@ str_contains() (
     local sub="$2"
 
     [ -z "$sub" ] && return 0
-    sub="$( escape_pattern_bash "$sub" )"
+    sub="$( _bash_escape_pattern "$sub" )"
 
     test "$str" != "${str#*$sub}"
 )
@@ -158,7 +167,7 @@ str_starts_with() (
     local sub="$2"
 
     [ -z "$sub" ] && return 0
-    sub="$( escape_pattern_bash "$sub" )"
+    sub="$( _bash_escape_pattern "$sub" )"
 
     test "$str" != "${str#$sub}"
 )
@@ -175,7 +184,7 @@ str_ends_with() (
     local sub="$2"
 
     [ -z "$sub" ] && return 0
-    sub="$( escape_pattern_bash "$sub" )"
+    sub="$( _bash_escape_pattern "$sub" )"
 
     test "$str" != "${str%$sub}"
 )

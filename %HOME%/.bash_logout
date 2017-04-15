@@ -1,1 +1,1 @@
-type cls > /dev/null 2>&1 && cls
+type cls &> /dev/null && cls
