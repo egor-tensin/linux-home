@@ -38,7 +38,7 @@ os_is_arch() {
     test "$_os" == 'Arch Linux'
 }
 
-packages_list_cygwin() (
+pkg_list_cygwin() (
     set -o errexit -o nounset -o pipefail
 
     cygcheck --check-setup --dump-only \
@@ -46,25 +46,25 @@ packages_list_cygwin() (
         | cut -d ' ' -f 1
 )
 
-setup_packages_list_ubuntu() (
+setup_pkg_list_ubuntu() (
     set -o errexit -o nounset -o pipefail
 
     local -r initial_status='/var/log/installer/initial-status.gz'
 
     gzip --decompress --stdout -- "$initial_status" \
-        | sed --quiet -- 's/^Package: //p' \
-        | sort \
+        | sed --quiet -- 's/^Package: //p'          \
+        | sort                                      \
         | uniq
 )
 
-user_packages_list_ubuntu() (
+user_pkg_list_ubuntu() (
     set -o errexit -o nounset -o pipefail
 
     comm -23 <( apt-mark showmanual | sort | uniq ) \
-             <( setup_packages_list_ubuntu )
+             <( setup_pkg_list_ubuntu )
 )
 
-packages_list_ubuntu() (
+pkg_list_ubuntu() (
     set -o errexit -o nounset -o pipefail
 
     dpkg --get-selections                     \
@@ -73,7 +73,7 @@ packages_list_ubuntu() (
         | cut -d ':' -f 1
 )
 
-setup_packages_list_arch() (
+setup_pkg_list_arch() (
     set -o errexit -o nounset -o pipefail
 
     local -ra groups=(base base-devel)
@@ -81,26 +81,26 @@ setup_packages_list_arch() (
     pacman -Q --groups -q -- ${groups[@]+"${groups[@]}"} | sort
 )
 
-user_packages_list_arch() (
+user_pkg_list_arch() (
     set -o errexit -o nounset -o pipefail
 
     comm -23 <( pacman -Q --explicit -q | sort ) \
-             <( setup_packages_list_arch )
+             <( setup_pkg_list_arch )
 )
 
-packages_list_arch() {
+pkg_list_arch() {
     pacman -Qq
 }
 
-packages_list() (
+pkg_list() (
     set -o errexit -o nounset -o pipefail
 
     if os_is_cygwin; then
-        packages_list_cygwin
+        pkg_list_cygwin
     elif os_is_ubuntu; then
-        packages_list_ubuntu
+        pkg_list_ubuntu
     elif os_is_arch; then
-        packages_list_arch
+        pkg_list_arch
     else
         return 1
     fi
