@@ -16,18 +16,21 @@ swap_files() (
     local path1="$1"
     local path2="$2"
 
-    if [ ! -f "$path1" ]; then
+    if [ ! -r "$path1" ] || [ ! -w "$path1" ]; then
         echo "${FUNCNAME[0]}: must be a regular file: $path1" >&2
         return 1
     fi
 
-    if [ ! -f "$path2" ]; then
+    if [ ! -r "$path2" ] || [ ! -w "$path2" ]; then
         echo "${FUNCNAME[0]}: must be a regular file: $path2" >&2
         return 1
     fi
 
+    local path1_dir
+    path1_dir="$( dirname -- "$path1" )"
+
     local tmp_path
-    tmp_path="$( mktemp -- "$( dirname -- "$path1" )/XXX" )"
+    tmp_path="$( mktemp -- "$path1_dir/XXX" )"
 
     mv -- "$path1" "$tmp_path"
     mv -- "$path2" "$path1"
