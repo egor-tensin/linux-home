@@ -254,20 +254,14 @@ str_join() (
     local delim="$1"
     shift
 
-    case "$#" in
-        0)
-            ;;
-        1)
-            echo "$@"
-            ;;
-        *)
-            local s="$1"
-            shift
-            printf -- '%s' "$s"
+    [ "$#" -eq 0 ] && return 0
 
-            for s; do
-                printf -- '%s%s' "$delim" "$s"
-            done
-            ;;
-    esac
+    local str="$1"
+    shift
+
+    echo -n "$str"
+    for str; do
+        echo -n "$delim$str"
+    done
+    echo
 )
