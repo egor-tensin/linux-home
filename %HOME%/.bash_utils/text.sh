@@ -227,16 +227,20 @@ str_split() (
     fi
 
     local str="${args[0]}"
-    local old_delim="${args[1]}"
+    local delim="${args[1]}"
 
-    local -a xs
-    local x
+    if [ "${#delim}" -ne 1 ]; then
+        echo "${FUNCNAME[0]}: delimiter must be exactly 1 character long" >&2
+        return 1
+    fi
 
-    IFS="$old_delim" read -a xs -r <<< "$str"
+    local -a xs=()
 
-    for x in ${xs[@]+"${xs[@]}"}; do
-        printf -- "$fmt" "$x"
-    done
+    # Thanks to this guy for this trick:
+    # http://stackoverflow.com/a/24426608/514684
+    IFS="$delim" read -a xs -d '' -r < <( printf -- "%s$delim\\0" "$str" )
+
+    [ "${#xs[@]}" -gt 0 ] && printf -- "$fmt" ${xs[@]+"${xs[@]}"}
 )
 
 str_join() (
