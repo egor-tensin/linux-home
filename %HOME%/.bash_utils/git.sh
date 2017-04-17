@@ -32,6 +32,8 @@ branch_eol_normalized() (
         return 1
     fi
 
+    local normalized=0
+
     local line
     while IFS= read -d '' -r line; do
         local eolinfo
@@ -46,10 +48,18 @@ branch_eol_normalized() (
             return 1
         fi
 
-        if [ "$eolinfo" == crlf ] || [ "$eolinfo" == mixed ]; then
-            echo "${FUNCNAME[0]}: detected inconsistent line endings in file: $path" >&2
+        if [ "$eolinfo" == crlf ]; then
+            echo "${FUNCNAME[0]}: CRLF line endings in file: $path" >&2
+        elif [ "$eolinfo" == mixed ]; then
+            echo "${FUNCNAME[0]}: mixed line endings in file: $path" >&2
+        else
+            continue
         fi
+
+        normalized=1
     done < <( git ls-files -z --eol )
+
+    return "$normalized"
 )
 
 repo_eol_normalized() (
