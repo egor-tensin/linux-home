@@ -8,7 +8,7 @@
 sums_path='sha1sums.txt'
 sums_name="$( basename -- "$sums_path" )"
 
-sums_unescape_path() {
+_sums_unescape_path() {
     set -o errexit -o nounset -o pipefail
 
     if [ "$#" -ne 1 ]; then
@@ -58,7 +58,7 @@ sums_list_paths() (
         fi
         IFS= read -r path
         path="${path#'*'}"
-        [ -n "$escaped" ] && path="$( sums_unescape_path "$path" )"
+        [ -n "$escaped" ] && path="$( _sums_unescape_path "$path" )"
         paths+=("$path")
     done < "$sums_path"
 
