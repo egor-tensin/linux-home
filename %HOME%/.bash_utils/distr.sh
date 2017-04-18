@@ -8,7 +8,7 @@
 sums_path='sha1sums.txt'
 sums_name="$( basename -- "$sums_path" )"
 
-_sums_unescape_path() {
+_sums_unescape_path() (
     set -o errexit -o nounset -o pipefail
 
     if [ "$#" -ne 1 ]; then
@@ -20,7 +20,7 @@ _sums_unescape_path() {
     path="${path//'\\'/$'\\'}"
     path="${path//'\n'/$'\n'}"
     echo "$path"
-}
+)
 
 sums_list_paths() (
     set -o errexit -o nounset -o pipefail
@@ -118,6 +118,8 @@ sums_add_distr() (
     sums_add ${paths[@]+"${paths[@]}"}
 )
 
-sums_verify() {
+sums_verify() (
+    set -o errexit -o nounset -o pipefail
+
     sha1sum --check --strict --quiet -- "$sums_path"
-}
+)
