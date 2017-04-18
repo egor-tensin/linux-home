@@ -25,18 +25,26 @@ _sums_unescape_path() (
 sums_list_paths() (
     set -o errexit -o nounset -o pipefail
 
-    local fmt='%s\n'
+    local print_lines=
+    local print_sums=
+    local zero_terminated=
 
     while [ "$#" -gt 0 ]; do
         local key="$1"
         shift
         case "$key" in
             -h|--help)
-                echo "usage: ${FUNCNAME[0]} [-h|--help] [-0|--null|-z|--zero]"
+                echo "usage: ${FUNCNAME[0]} [-h|--help] [-0|--null|-z|--zero] [-l|--lines] [-s|--sums]"
                 return 0
                 ;;
             -0|-null|-z|--zero)
-                fmt='%s\0'
+                zero_terminated=1
+                ;;
+            -l|--lines)
+                print_lines=1
+                ;;
+            -s|--sums)
+                print_sums=1
                 ;;
             *)
                 echo "${FUNCNAME[0]}: unrecognized parameter: $key" >&2
@@ -45,24 +53,41 @@ sums_list_paths() (
         esac
     done
 
+    local fmt_line='%s\n'
+    [ -n "$zero_terminated" ] && fmt_line='%s\0'
+
+    local fmt_output="$fmt_line"
+
+    [ -n "$print_lines" ] && fmt_output="$fmt_line$fmt_output"
+    [ -n "$print_sums"  ] && fmt_output="$fmt_output$fmt_line"
+
     [ -e "$sums_path" ] || return 0
 
-    local -a paths=()
-    local sum path
+    local -a output=()
+    local line
 
-    while IFS= read -d ' ' -r sum; do
-        local escaped=
-        if [ "${sum#'\'}" != "$sum" ]; then
-            escaped=1
-            sum="${sum:1}"
-        fi
-        IFS= read -r path
-        path="${path#'*'}"
-        [ -n "$escaped" ] && path="$( _sums_unescape_path "$path" )"
-        paths+=("$path")
+    while IFS= read -r line; do
+        {
+            local path sum
+
+            IFS= read -d ' ' -r sum
+            local escaped=
+            if [ "${sum#'\'}" != "$sum" ]; then
+                escaped=1
+                sum="${sum:1}"
+            fi
+
+            IFS= read -r path
+            path="${path#'*'}"
+            [ -n "$escaped" ] && path="$( _sums_unescape_path "$path" )"
+
+            [ -n "$print_lines" ] && output+=("$line")
+            output+=("$path")
+            [ -n "$print_sums"  ] && output+=("$sum")
+        } <<< "$line"
     done < "$sums_path"
 
-    [ "${#paths[@]}" -gt 0 ] && printf -- "$fmt" ${paths[@]+"${paths[@]}"}
+    [ "${#output[@]}" -gt 0 ] && printf -- "$fmt_output" ${output[@]+"${output[@]}"}
 )
 
 sums_add() (
@@ -122,4 +147,55 @@ sums_verify() (
     set -o errexit -o nounset -o pipefail
 
     sha1sum --check --strict --quiet -- "$sums_path"
+)
+
+sums_remove_missing() (
+    set -o errexit -o nounset -o pipefail
+
+    local dry_run=
+
+    while [ "$#" -gt 0 ]; do
+        local key="$1"
+        shift
+        case "$key" in
+            -h|--help)
+                echo "usage: ${FUNCNAME[0]} [-h|--help] [-n|--dry-run]"
+                return 0
+                ;;
+            -n|--dry-run)
+                dry_run=1
+                ;;
+            *)
+                echo "${FUNCNAME[0]}: unrecognized parameter: $key" >&2
+                return 1
+                ;;
+        esac
+    done
+
+    local -a input=()
+    local -a paths=()
+    local line path
+
+    while IFS= read -d '' -r line; do
+        IFS= read -d '' -r path
+        input+=("$line")
+        paths+=("$path")
+    done < <( sums_list_paths -z --lines )
+
+    local -a output=()
+
+    local i
+    for i in "${!paths[@]}"; do
+        if [ ! -e "${paths[$i]}" ]; then
+            echo "${FUNCNAME[0]}: doesn't exist: ${paths[$i]}"
+        else
+            output+=("${input[$i]}")
+        fi
+    done
+
+    [ -n "$dry_run" ] && return 0
+
+    for line in ${output[@]+"${output[@]}"}; do
+        echo "$line"
+    done > "$sums_path"
 )
