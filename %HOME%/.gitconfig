@@ -9,14 +9,12 @@
 [merge]
 	tool = kdiff3
 [mergetool "kdiff3"]
-	trustExitCode = false
-[mergetool]
 	keepBackup = false
+	trustExitCode = false
 [diff]
 	tool = kdiff3
-[difftool]
-	keepBackup = false
 [difftool "kdiff3"]
+	keepBackup = false
 	trustExitCode = false
 [pull]
 	ff = only
