@@ -30,3 +30,5 @@
 	xx = update-index --add --chmod=+x
 [fetch]
 	prune = true
+[log]
+	follow = true
