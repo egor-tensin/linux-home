@@ -7,26 +7,26 @@
 
 source "$HOME/.bash_utils/text.sh"
 
-alias repo_files='git ls-tree -r --name-only HEAD'
-alias repo_dirs='git ls-tree -r --name-only HEAD -d'
+alias branch_files='git ls-tree -r --name-only HEAD'
+alias branch_dirs='git ls-tree -r --name-only HEAD -d'
 
 repo_branches() {
     git for-each-ref --format='%(refname:short)' refs/heads/
 }
 
-repo_is_clean() (
+workdir_is_clean() (
     set -o errexit -o nounset -o pipefail
     test -z "$( git status --porcelain )"
 )
 
-alias repo_clean_all='git clean -fdx'
-alias repo_clean_ignored='git clean -fdX'
+alias workdir_clean_all='git clean -fdx'
+alias workdir_clean_ignored='git clean -fdX'
 
 branch_eol_normalized() (
     set -o errexit -o nounset -o pipefail
 
-    if repo_is_clean; then
-        repo_clean_ignored
+    if workdir_is_clean; then
+        workdir_clean_ignored
     else
         echo "${FUNCNAME[0]}: repository isn't clean" >&2
         return 1
@@ -65,8 +65,8 @@ branch_eol_normalized() (
 repo_eol_normalized() (
     set -o errexit -o nounset -o pipefail
 
-    if repo_is_clean; then
-        repo_clean_ignored
+    if workdir_is_clean; then
+        workdir_clean_ignored
     else
         echo "${FUNCNAME[0]}: repository isn't clean" >&2
         return 1
@@ -79,15 +79,15 @@ repo_eol_normalized() (
     done < <( repo_branches )
 )
 
-repo_tighten_permissions() (
+workdir_tighten_permissions() (
     set -o errexit -o nounset -o pipefail
 
-    repo_files -z | xargs -0 -- chmod 0600 --
-    repo_dirs  -z | xargs -0 -- chmod 0700 --
+    branch_files -z | xargs -0 -- chmod 0600 --
+    branch_dirs  -z | xargs -0 -- chmod 0700 --
     chmod 0700 .git
 )
 
-repo_doslint() (
+branch_doslint() (
     set -o errexit -o nounset -o pipefail
 
     local -a paths
@@ -95,12 +95,12 @@ repo_doslint() (
 
     while IFS= read -d '' -r path; do
         paths+=("$path")
-    done < <( repo_files -z )
+    done < <( branch_files -z )
 
     doslint ${paths[@]+"${paths[@]}"}
 )
 
-repo_lint() (
+branch_lint() (
     set -o errexit -o nounset -o pipefail
 
     local -a paths
@@ -108,12 +108,12 @@ repo_lint() (
 
     while IFS= read -d '' -r path; do
         paths+=("$path")
-    done < <( repo_files -z )
+    done < <( branch_files -z )
 
     lint ${paths[@]+"${paths[@]}"}
 )
 
-repo_backup() (
+branch_backup() (
     set -o errexit -o nounset -o pipefail
 
     local repo_dir
@@ -139,8 +139,8 @@ repo_backup() (
         HEAD
 )
 
-repo_backup_dropbox() (
+branch_backup_dropbox() (
     set -o errexit -o nounset -o pipefail
 
-    repo_backup "$USERPROFILE/Dropbox/backups"
+    branch_backup "$USERPROFILE/Dropbox/backups"
 )
