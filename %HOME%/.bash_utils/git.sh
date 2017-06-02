@@ -147,5 +147,5 @@ branch_backup_dropbox() (
 
 branch_fixup_committer_dates() (
     set -o errexit
-    git filter-branch --env-filter 'export GIT_COMMITTER_DATE="$GIT_AUTHOR_DATE"'
+    git filter-branch --force --env-filter 'export GIT_COMMITTER_DATE="$GIT_AUTHOR_DATE"'
 )
