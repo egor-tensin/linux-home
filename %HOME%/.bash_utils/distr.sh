@@ -134,7 +134,9 @@ sums_add_distr() (
         paths+=("$path")
     done < <( find . -type f -\( \
         -iname '*.exe'           \
+        -o -iname '*.img'        \
         -o -iname '*.iso'        \
+        -o -iname '*.tar'        \
         -o -iname '*.tar.gz'     \
         -o -iname '*.tar.bz2'    \
         -o -iname '*.zip'        \
