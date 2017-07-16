@@ -137,8 +137,8 @@ sums_add_distr() (
         -o -iname '*.img'        \
         -o -iname '*.iso'        \
         -o -iname '*.tar'        \
-        -o -iname '*.tar.gz'     \
         -o -iname '*.tar.bz2'    \
+        -o -iname '*.tar.gz'     \
         -o -iname '*.zip'        \
         -\) -printf '%P\0' )
 
