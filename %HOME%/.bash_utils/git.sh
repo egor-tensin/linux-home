@@ -25,9 +25,7 @@ alias workdir_clean_ignored='git clean -fdX'
 branch_eol_normalized() (
     set -o errexit -o nounset -o pipefail
 
-    if workdir_is_clean; then
-        workdir_clean_ignored
-    else
+    if ! workdir_is_clean; then
         echo "${FUNCNAME[0]}: repository isn't clean" >&2
         return 1
     fi
@@ -65,9 +63,7 @@ branch_eol_normalized() (
 repo_eol_normalized() (
     set -o errexit -o nounset -o pipefail
 
-    if workdir_is_clean; then
-        workdir_clean_ignored
-    else
+    if ! workdir_is_clean; then
         echo "${FUNCNAME[0]}: repository isn't clean" >&2
         return 1
     fi
@@ -141,7 +137,6 @@ branch_backup() (
 
 branch_backup_dropbox() (
     set -o errexit -o nounset -o pipefail
-
     branch_backup "$USERPROFILE/Dropbox/backups"
 )
 
