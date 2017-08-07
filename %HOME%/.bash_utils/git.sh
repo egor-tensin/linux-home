@@ -10,13 +10,13 @@ source "$HOME/.bash_utils/text.sh"
 alias branch_files='git ls-tree -r --name-only HEAD'
 alias branch_dirs='git ls-tree -r --name-only HEAD -d'
 
-repo_branches() {
-    git for-each-ref --format='%(refname:short)' refs/heads/
-}
+alias repo_branches='git for-each-ref '"'"'--format=%(refname:short)'"'"' refs/heads/'
 
 workdir_is_clean() (
     set -o errexit -o nounset -o pipefail
-    test -z "$( git status --porcelain )"
+    local status
+    status="$( git status --porcelain )"
+    test -z "$status"
 )
 
 alias workdir_clean_all='git clean -fdx'
