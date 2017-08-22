@@ -1,0 +1,2 @@
+# Make scrollbars work on Linux Mint (among others):
+termcapinfo xterm* ti@:te@
