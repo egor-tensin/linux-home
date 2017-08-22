@@ -38,6 +38,7 @@ alias tree='tree -a'
 alias ssh-copy-id='ssh-copy-id -i'
 
 alias cls='echo -en "\ec"'
+alias copy='xclip -sel clip'
 
 [ -r "$HOME/.bash_utils/cxx.sh"   ] && source "$HOME/.bash_utils/cxx.sh"
 [ -r "$HOME/.bash_utils/distr.sh" ] && source "$HOME/.bash_utils/distr.sh"
