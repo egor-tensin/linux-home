@@ -6,16 +6,8 @@
 	autocrlf = false
 [push]
 	default = current
-[merge]
-	tool = kdiff3
-[mergetool "kdiff3"]
+[mergetool]
 	keepBackup = false
-	trustExitCode = false
-[diff]
-	tool = kdiff3
-[difftool "kdiff3"]
-	keepBackup = false
-	trustExitCode = false
 [pull]
 	ff = only
 [alias]
