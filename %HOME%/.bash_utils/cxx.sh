@@ -22,6 +22,10 @@ runcxx_flags=('-Wall' '-Wextra' '-std=c++14')
 runc_compiler=gcc
 runcxx_compiler=g++
 
+_get_absolute_path() {
+    readlink -z --canonicalize-missing -- "$@"
+}
+
 _runc_usage() (
     set -o errexit -o nounset -o pipefail
 
@@ -33,7 +37,7 @@ _runc_usage() (
         echo "$prefix: $msg"
     done
 
-    echo "usage: $prefix [-h|--help] [-c|--comp-arg ARG]... C_PATH... [-- [PROG_ARG]...]"
+    echo "usage: $prefix [-h|--help] [-c|--comp-arg ARG]... [-I DIR]... C_PATH... [-- [PROG_ARG]...]"
 )
 
 runc() (
@@ -41,6 +45,7 @@ runc() (
 
     local -a c_flags=(${runc_flags[@]+"${runc_flags[@]}"})
     local -a src_files=()
+    local -a include_dirs=()
     local -a prog_args
 
     while [ "$#" -gt 0 ]; do
@@ -59,6 +64,15 @@ runc() (
                     return 1
                 fi
                 c_flags+=("$1")
+                shift
+                ;;
+
+            -I)
+                if [ "$#" -eq 0 ]; then
+                    _runc_usage "missing argument for parameter: $key" >&2
+                    return 1
+                fi
+                include_dirs+=("$1")
                 shift
                 ;;
 
@@ -85,7 +99,14 @@ runc() (
     local src_file
     while IFS= read -d '' -r src_file; do
         src_files+=("$src_file")
-    done < <( readlink -z --canonicalize-missing -- ${_src_files[@]+"${_src_files[@]}"} )
+    done < <( _get_absolute_path ${_src_files[@]+"${_src_files[@]}"} )
+
+    if [ "${#include_dirs[@]}" -gt 0 ]; then
+        local include_dir
+        while IFS= read -d '' -r include_dir; do
+            c_flags+=("-I$include_dir")
+        done < <( _get_absolute_path ${include_dirs[@]+"${include_dirs[@]}"} )
+    fi
 
     local build_dir
     build_dir="$( mktemp --directory )"
@@ -114,7 +135,7 @@ _runcxx_usage() (
         echo "$prefix: $msg"
     done
 
-    echo "usage: $prefix [-h|--help] [-c|--comp-arg ARG]... CPP_PATH... [-- [PROG_ARG]...]"
+    echo "usage: $prefix [-h|--help] [-c|--comp-arg ARG]... [-I DIR]... CPP_PATH... [-- [PROG_ARG]...]"
 )
 
 runcxx() (
@@ -122,6 +143,7 @@ runcxx() (
 
     local -a cxx_flags=(${runcxx_flags[@]+"${runcxx_flags[@]}"})
     local -a src_files=()
+    local -a include_dirs=()
     local -a prog_args
 
     while [ "$#" -gt 0 ]; do
@@ -135,11 +157,20 @@ runcxx() (
                 ;;
 
             -c|--comp-arg)
-                if [ "$#" -le 1 ]; then
+                if [ "$#" -eq 0 ]; then
                     _runcxx_usage "missing argument for parameter: $key" >&2
                     return 1
                 fi
                 cxx_flags+=("$1")
+                shift
+                ;;
+
+            -I)
+                if [ "$#" -eq 0 ]; then
+                    _runc_usage "missing argument for parameter: $key" >&2
+                    return 1
+                fi
+                include_dirs+=("$1")
                 shift
                 ;;
 
@@ -166,7 +197,14 @@ runcxx() (
     local src_file
     while IFS= read -d '' -r src_file; do
         src_files+=("$src_file")
-    done < <( readlink -z --canonicalize-missing -- ${_src_files[@]+"${_src_files[@]}"} )
+    done < <( _get_absolute_path ${_src_files[@]+"${_src_files[@]}"} )
+
+    if [ "${#include_dirs[@]}" -gt 0 ]; then
+        local include_dir
+        while IFS= read -d '' -r include_dir; do
+            cxx_flags+=("-I$include_dir")
+        done < <( _get_absolute_path ${include_dirs[@]+"${include_dirs[@]}"} )
+    fi
 
     local build_dir
     build_dir="$( mktemp --directory )"
