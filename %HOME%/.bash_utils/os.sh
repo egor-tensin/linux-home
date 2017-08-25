@@ -34,6 +34,10 @@ os_is_ubuntu() {
     test "$_os" == 'Ubuntu'
 }
 
+os_is_linux_mint() {
+    test "$_os" == 'Linux Mint'
+}
+
 os_is_arch() {
     test "$_os" == 'Arch Linux'
 }
@@ -97,7 +101,7 @@ pkg_list() (
 
     if os_is_cygwin; then
         pkg_list_cygwin
-    elif os_is_ubuntu; then
+    elif os_is_ubuntu || os_is_linux_mint; then
         pkg_list_ubuntu
     elif os_is_arch; then
         pkg_list_arch
