@@ -69,3 +69,9 @@ if command -v vim > /dev/null 2>&1; then
 elif command -v nano > /dev/null 2>&1; then
     export EDITOR=nano
 fi
+
+# I've bumped into this on Linux Mint: Ctrl+S causes my terminal to freeze
+# completely (Ctrl+Q is a temporary escape, stty is the cure).
+os_is_cygwin \
+    || command -v stty > /dev/null 2>&1 \
+    && stty -ixon
