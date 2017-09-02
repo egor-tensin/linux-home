@@ -1,0 +1,9 @@
+:set prompt "> "
+:set prompt2 ""
+
+:seti -w
+
+:def hoogle \x -> return $ ":!hoogle \"" ++ x ++ "\""
+
+:set -XOverloadedStrings
+:set -XTupleSections
