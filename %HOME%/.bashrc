@@ -6,9 +6,9 @@ esac
 export PS1="\[\e[1;32m\]\h\[\e[m\] \[\e[1;34m\]\W\[\e[m\] # \[$(tput sgr0)\]"
 
 set +o histexpand
-# `echo "!)"` doesn't work otherwise (inc. third-party scripts).
+# `echo "!)"` doesn't work otherwise (namely, in third-party scripts).
 #set -o nounset
-# Too many scripts stop working w/ nounset enabled :-(
+# Too many third-party scripts stop working w/ nounset enabled :-(
 set -o pipefail
 
 shopt -s checkwinsize
@@ -57,8 +57,10 @@ export PYTHONSTARTUP="$HOME/.pythonrc"
 os_is_cygwin && set -o igncr
 os_is_cygwin || complete -r
 
-export SHELLOPTS
-export BASHOPTS
+# I'm sick and tired of third-party scripts breaking b/c of a random shell
+# option I use (configure scripts in particular), so I'm commenting this out.
+#export SHELLOPTS
+#export BASHOPTS
 
 if os_is_cygwin; then
     alias mingcc32='i686-w64-mingw32-gcc'
