@@ -37,7 +37,7 @@ _runc_usage() (
         echo "$prefix: $msg"
     done
 
-    echo "usage: $prefix [-h|--help] [-c|--comp-arg ARG]... [-I DIR]... [-L DIR]... C_PATH... [-- [PROG_ARG]...]"
+    echo "usage: $prefix [-h|--help] [-c|--comp-arg ARG]... [-I DIR]... [-L DIR]... PATH... [-- [PROG_ARG]...]"
 )
 
 runc() (
@@ -130,106 +130,10 @@ runc() (
     "$output_name" ${prog_args[@]+"${prog_args[@]}"}
 )
 
-_runcxx_usage() (
-    set -o errexit -o nounset -o pipefail
-
-    local prefix="${FUNCNAME[0]}"
-    [ "${#FUNCNAME[@]}" -gt 1 ] && prefix="${FUNCNAME[1]}"
-
-    local msg
-    for msg; do
-        echo "$prefix: $msg"
-    done
-
-    echo "usage: $prefix [-h|--help] [-c|--comp-arg ARG]... [-I DIR]... [-L DIR]... CPP_PATH... [-- [PROG_ARG]...]"
-)
-
 runcxx() (
     set -o errexit -o nounset -o pipefail
-
-    local -a cxx_flags=(${runcxx_flags[@]+"${runcxx_flags[@]}"})
-    local -a src_files=()
-    local -a include_dirs=()
-    local -a lib_dirs=()
-    local -a prog_args
-
-    while [ "$#" -gt 0 ]; do
-        local key="$1"
-        shift
-
-        case "$key" in
-            -h|--help)
-                _runcxx_usage
-                return 0
-                ;;
-            -c|--comp-arg|-I|-L)
-                if [ "$#" -eq 0 ]; then
-                    _runcxx_usage "missing argument for parameter: $key" >&2
-                    return 1
-                fi
-                ;;&
-            -c|--comp-arg)
-                cxx_flags+=("$1")
-                shift
-                ;;
-            -I)
-                include_dirs+=("$1")
-                shift
-                ;;
-            -L)
-                lib_dirs+=("$1")
-                shift
-                ;;
-            --)
-                break
-                ;;
-            *)
-                src_files+=("$key")
-                ;;
-        esac
-    done
-
-    prog_args=("$@")
-
-    if [ "${#src_files[@]}" -eq 0 ]; then
-        _runcxx_usage 'at least one source file is required' >&2
-        return 1
-    fi
-
-    local -a _src_files=(${src_files[@]+"${src_files[@]}"})
-    src_files=()
-
-    local src_file
-    while IFS= read -d '' -r src_file; do
-        src_files+=("$src_file")
-    done < <( _get_absolute_path ${_src_files[@]+"${_src_files[@]}"} )
-
-    if [ "${#include_dirs[@]}" -gt 0 ]; then
-        local include_dir
-        while IFS= read -d '' -r include_dir; do
-            cxx_flags+=("-I$include_dir")
-        done < <( _get_absolute_path ${include_dirs[@]+"${include_dirs[@]}"} )
-    fi
-
-    if [ "${#lib_dirs[@]}" -gt 0 ]; then
-        local lib_dir
-        while IFS= read -d '' -r lib_dir; do
-            cxx_flags+=("-L$lib_dir")
-        done < <( _get_absolute_path ${lib_dirs[@]+"${lib_dirs[@]}"} )
-    fi
-
-    local build_dir
-    build_dir="$( mktemp --directory )"
-
-    trap "$( printf -- 'popd > /dev/null && rm -rf -- %q' "$build_dir" )" 0
-    pushd "$build_dir" > /dev/null
-
-    local output_name
-    output_name="$( mktemp --tmpdir=. -- "${FUNCNAME[0]}XXX${_runc_exe_ext-}" )"
-
-    "${runcxx_compiler:-g++}" -o "$output_name" \
-        ${src_files[@]+"${src_files[@]}"} \
-        ${cxx_flags[@]+"${cxx_flags[@]}"}
-
-    "$output_name" ${prog_args[@]+"${prog_args[@]}"}
+    local -a runc_flags=(${runcxx_flags[@]+"${runcxx_flags[@]}"})
+    BASH_ENV=<( declare -p runc_flags ) \
+        runc_compiler="${runcxx_compiler:-g++}" \
+        runc "$@"
 )
