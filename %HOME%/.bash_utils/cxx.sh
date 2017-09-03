@@ -124,8 +124,8 @@ runc() (
     output_name="$( mktemp --tmpdir=. -- "${FUNCNAME[0]}XXX${_runc_exe_ext-}" )"
 
     "${runc_compiler:-gcc}" -o "$output_name" \
-        ${c_flags[@]+"${c_flags[@]}"} \
-        ${src_files[@]+"${src_files[@]}"}
+        ${src_files[@]+"${src_files[@]}"} \
+        ${c_flags[@]+"${c_flags[@]}"}
 
     "$output_name" ${prog_args[@]+"${prog_args[@]}"}
 )
@@ -228,8 +228,8 @@ runcxx() (
     output_name="$( mktemp --tmpdir=. -- "${FUNCNAME[0]}XXX${_runc_exe_ext-}" )"
 
     "${runcxx_compiler:-g++}" -o "$output_name" \
-        ${cxx_flags[@]+"${cxx_flags[@]}"} \
-        ${src_files[@]+"${src_files[@]}"}
+        ${src_files[@]+"${src_files[@]}"} \
+        ${cxx_flags[@]+"${cxx_flags[@]}"}
 
     "$output_name" ${prog_args[@]+"${prog_args[@]}"}
 )
