@@ -37,7 +37,7 @@ _runc_usage() (
         echo "$prefix: $msg"
     done
 
-    echo "usage: $prefix [-h|--help] [-c|--comp-arg ARG]... [-I DIR]... C_PATH... [-- [PROG_ARG]...]"
+    echo "usage: $prefix [-h|--help] [-c|--comp-arg ARG]... [-I DIR]... [-L DIR]... C_PATH... [-- [PROG_ARG]...]"
 )
 
 runc() (
@@ -46,6 +46,7 @@ runc() (
     local -a c_flags=(${runc_flags[@]+"${runc_flags[@]}"})
     local -a src_files=()
     local -a include_dirs=()
+    local -a lib_dirs=()
     local -a prog_args
 
     while [ "$#" -gt 0 ]; do
@@ -57,29 +58,27 @@ runc() (
                 _runc_usage
                 return 0
                 ;;
-
-            -c|--comp-arg)
+            -c|--comp-arg|-I|-L)
                 if [ "$#" -eq 0 ]; then
                     _runc_usage "missing argument for parameter: $key" >&2
                     return 1
                 fi
+                ;;&
+            -c|--comp-arg)
                 c_flags+=("$1")
                 shift
                 ;;
-
             -I)
-                if [ "$#" -eq 0 ]; then
-                    _runc_usage "missing argument for parameter: $key" >&2
-                    return 1
-                fi
                 include_dirs+=("$1")
                 shift
                 ;;
-
+            -L)
+                lib_dirs+=("$1")
+                shift
+                ;;
             --)
                 break
                 ;;
-
             *)
                 src_files+=("$key")
                 ;;
@@ -106,6 +105,13 @@ runc() (
         while IFS= read -d '' -r include_dir; do
             c_flags+=("-I$include_dir")
         done < <( _get_absolute_path ${include_dirs[@]+"${include_dirs[@]}"} )
+    fi
+
+    if [ "${#lib_dirs[@]}" -gt 0 ]; then
+        local lib_dir
+        while IFS= read -d '' -r lib_dir; do
+            c_flags+=("-L$lib_dir")
+        done < <( _get_absolute_path ${lib_dirs[@]+"${lib_dirs[@]}"} )
     fi
 
     local build_dir
@@ -135,7 +141,7 @@ _runcxx_usage() (
         echo "$prefix: $msg"
     done
 
-    echo "usage: $prefix [-h|--help] [-c|--comp-arg ARG]... [-I DIR]... CPP_PATH... [-- [PROG_ARG]...]"
+    echo "usage: $prefix [-h|--help] [-c|--comp-arg ARG]... [-I DIR]... [-L DIR]... CPP_PATH... [-- [PROG_ARG]...]"
 )
 
 runcxx() (
@@ -144,6 +150,7 @@ runcxx() (
     local -a cxx_flags=(${runcxx_flags[@]+"${runcxx_flags[@]}"})
     local -a src_files=()
     local -a include_dirs=()
+    local -a lib_dirs=()
     local -a prog_args
 
     while [ "$#" -gt 0 ]; do
@@ -155,29 +162,27 @@ runcxx() (
                 _runcxx_usage
                 return 0
                 ;;
-
-            -c|--comp-arg)
+            -c|--comp-arg|-I|-L)
                 if [ "$#" -eq 0 ]; then
                     _runcxx_usage "missing argument for parameter: $key" >&2
                     return 1
                 fi
+                ;;&
+            -c|--comp-arg)
                 cxx_flags+=("$1")
                 shift
                 ;;
-
             -I)
-                if [ "$#" -eq 0 ]; then
-                    _runc_usage "missing argument for parameter: $key" >&2
-                    return 1
-                fi
                 include_dirs+=("$1")
                 shift
                 ;;
-
+            -L)
+                lib_dirs+=("$1")
+                shift
+                ;;
             --)
                 break
                 ;;
-
             *)
                 src_files+=("$key")
                 ;;
@@ -204,6 +209,13 @@ runcxx() (
         while IFS= read -d '' -r include_dir; do
             cxx_flags+=("-I$include_dir")
         done < <( _get_absolute_path ${include_dirs[@]+"${include_dirs[@]}"} )
+    fi
+
+    if [ "${#lib_dirs[@]}" -gt 0 ]; then
+        local lib_dir
+        while IFS= read -d '' -r lib_dir; do
+            cxx_flags+=("-L$lib_dir")
+        done < <( _get_absolute_path ${lib_dirs[@]+"${lib_dirs[@]}"} )
     fi
 
     local build_dir
