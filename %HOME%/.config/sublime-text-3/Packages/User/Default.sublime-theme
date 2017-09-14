@@ -2,10 +2,10 @@
     {
         "class": "sidebar_label",
         "font.bold": false,
-        "font.size": 12
+        "font.size": 13,
     },
     {
         "class": "tab_label",
-        "font.size": 12, 
+        "font.size": 13,
     },
 ]
