@@ -1,10 +1,12 @@
 {
     "always_show_minimap_viewport": true,
     "auto_complete_commit_on_tab": true,
+    "auto_match_enabled": false,
     "color_scheme": "Packages/Color Scheme - Default/Dawn.tmTheme",
     "detect_indentation": false,
     "draw_indent_guides": false,
     "draw_minimap_border": true,
+    "ensure_newline_at_eof_on_save": true,
     "fallback_encoding": "Cyrillic (Windows 1251)",
     "folder_exclude_patterns":
     [
@@ -13,8 +15,8 @@
     ],
     "font_options":
     [
-        "no_italic",
-        "no_bold"
+        "no_bold",
+        "no_italic"
     ],
     "font_size": 11,
     "highlight_line": true,
