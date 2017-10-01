@@ -8,7 +8,7 @@
 # This is a half-assed way to automatically add your user's pip binary
 # directory to $PATH.
 
-source "$HOME/.bash_utils/path.sh" 
+source "$HOME/.bash_utils/path.sh"
 
 python_setup_() (
     set -o errexit -o nounset -o pipefail
@@ -41,3 +41,5 @@ python_setup() {
 }
 
 python_setup
+
+[ -r "$HOME/.pythonrc" ] && export PYTHONSTARTUP="$HOME/.pythonrc"
