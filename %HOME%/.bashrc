@@ -43,14 +43,15 @@ alias ssh-copy-id='ssh-copy-id -i'
 alias cls='echo -en "\ec"'
 alias copy='xclip -sel clip'
 
-[ -r "$HOME/.bash_utils/cxx.sh"   ] && source "$HOME/.bash_utils/cxx.sh"
-[ -r "$HOME/.bash_utils/distr.sh" ] && source "$HOME/.bash_utils/distr.sh"
-[ -r "$HOME/.bash_utils/file.sh"  ] && source "$HOME/.bash_utils/file.sh"
-[ -r "$HOME/.bash_utils/git.sh"   ] && source "$HOME/.bash_utils/git.sh"
-[ -r "$HOME/.bash_utils/os.sh"    ] && source "$HOME/.bash_utils/os.sh"
-[ -r "$HOME/.bash_utils/path.sh"  ] && source "$HOME/.bash_utils/path.sh"
-[ -r "$HOME/.bash_utils/ruby.sh"  ] && source "$HOME/.bash_utils/ruby.sh"
-[ -r "$HOME/.bash_utils/text.sh"  ] && source "$HOME/.bash_utils/text.sh"
+[ -r "$HOME/.bash_utils/cxx.sh"    ] && source "$HOME/.bash_utils/cxx.sh"
+[ -r "$HOME/.bash_utils/distr.sh"  ] && source "$HOME/.bash_utils/distr.sh"
+[ -r "$HOME/.bash_utils/file.sh"   ] && source "$HOME/.bash_utils/file.sh"
+[ -r "$HOME/.bash_utils/git.sh"    ] && source "$HOME/.bash_utils/git.sh"
+[ -r "$HOME/.bash_utils/os.sh"     ] && source "$HOME/.bash_utils/os.sh"
+[ -r "$HOME/.bash_utils/path.sh"   ] && source "$HOME/.bash_utils/path.sh"
+[ -r "$HOME/.bash_utils/python.sh" ] && source "$HOME/.bash_utils/python.sh"
+[ -r "$HOME/.bash_utils/ruby.sh"   ] && source "$HOME/.bash_utils/ruby.sh"
+[ -r "$HOME/.bash_utils/text.sh"   ] && source "$HOME/.bash_utils/text.sh"
 
 export PYTHONSTARTUP="$HOME/.pythonrc"
 
