@@ -29,18 +29,19 @@ path_add() (
     local -A dest_dict
     local -a dest_list
 
-    if [ -n "${PATH-}" ]; then
-        while IFS= read -d '' -r path; do
-            dest_dict[$path]=1
-            dest_list+=("$path")
-        done < <( str_split -z -- "${PATH-}" ':' | xargs -0 -- readlink -z --canonicalize-missing -- )
-    fi
-
     for path in ${src_list[@]+"${src_list[@]}"}; do
         [ -n "${dest_dict[$path]+x}" ] && continue
         dest_dict[$path]=1
         dest_list+=("$path")
     done
+
+    if [ -n "${PATH-}" ]; then
+        while IFS= read -d '' -r path; do
+            [ -n "${dest_dict[$path]+x}" ] && continue
+            dest_dict[$path]=1
+            dest_list+=("$path")
+        done < <( str_split -z -- "${PATH-}" ':' | xargs -0 -- readlink -z --canonicalize-missing -- )
+    fi
 
     str_join ':' ${dest_list[@]+"${dest_list[@]}"}
 )
