@@ -53,6 +53,8 @@ alias copy='xclip -sel clip'
 [ -r "$HOME/.bash_utils/ruby.sh"   ] && source "$HOME/.bash_utils/ruby.sh"
 [ -r "$HOME/.bash_utils/text.sh"   ] && source "$HOME/.bash_utils/text.sh"
 
+[ -r "$HOME/.bash_aliases" ] && source "$HOME/.bash_aliases"
+
 os_is_cygwin && set -o igncr
 os_is_cygwin || complete -r
 
