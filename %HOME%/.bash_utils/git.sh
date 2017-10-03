@@ -5,8 +5,6 @@
 # For details, see https://github.com/egor-tensin/cygwin-home.
 # Distributed under the MIT License.
 
-source "$HOME/.bash_utils/text.sh"
-
 alias branch_files='git ls-tree -r --name-only HEAD'
 alias branch_dirs='git ls-tree -r --name-only HEAD -d'
 

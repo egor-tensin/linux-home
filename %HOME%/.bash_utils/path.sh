@@ -5,8 +5,6 @@
 # For details, see https://github.com/egor-tensin/cygwin-home.
 # Distributed under the MIT License.
 
-source "$HOME/.bash_utils/text.sh"
-
 path_add() (
     set -o errexit -o nounset -o pipefail
 

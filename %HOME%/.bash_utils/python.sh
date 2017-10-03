@@ -8,8 +8,6 @@
 # This is a half-assed way to automatically add your user's pip binary
 # directory to $PATH.
 
-source "$HOME/.bash_utils/path.sh"
-
 python_setup_() (
     set -o errexit -o nounset -o pipefail
 

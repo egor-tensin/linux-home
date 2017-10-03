@@ -5,8 +5,6 @@
 # For details, see https://github.com/egor-tensin/cygwin-home.
 # Distributed under the MIT License.
 
-source "$HOME/.bash_utils/path.sh"
-
 ruby_setup() {
     local user_dir
     local bin_dir
