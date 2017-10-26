@@ -27,3 +27,5 @@
 	prune = true
 [log]
 	follow = true
+[include]
+	path = ~/.gitconfig_work
