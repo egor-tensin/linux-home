@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
 # Copyright (c) 2017 Egor Tensin <Egor.Tensin@gmail.com>
-# This file is part of the "Cygwin configuration files" project.
-# For details, see https://github.com/egor-tensin/cygwin-home.
+# This file is part of the "Linux/Cygwin environment" project.
+# For details, see https://github.com/egor-tensin/linux-home.
 # Distributed under the MIT License.
 
 # This is a half-assed way to automatically add your user's pip binary

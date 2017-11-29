@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
 # Copyright (c) 2016 Egor Tensin <Egor.Tensin@gmail.com>
-# This file is part of the "Cygwin configuration files" project.
-# For details, see https://github.com/egor-tensin/cygwin-home.
+# This file is part of the "Linux/Cygwin environment" project.
+# For details, see https://github.com/egor-tensin/linux-home.
 # Distributed under the MIT License.
 
 path_add() (

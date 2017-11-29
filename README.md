@@ -13,7 +13,7 @@ Deployment
 Using [config-links]:
 
     > pwd
-    /cygdrive/d/workspace/personal/cygwin-home
+    /cygdrive/d/workspace/personal/linux-home
 
     > ../config-links/update.sh
     ...
@@ -31,4 +31,4 @@ License
 Distributed under the MIT License.
 See [LICENSE.txt] for details.
 
-[LICENSE.txt]: .LICENSE.txt
+[LICENSE.txt]: LICENSE.txt
