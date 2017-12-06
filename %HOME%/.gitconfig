@@ -23,6 +23,10 @@
 	# I think this is only usable on Cygwin, given all the file permission
 	# madness there:
 	xx = update-index --add --chmod=+x
+
+	hide = update-index --skip-worktree
+	unhide = update-index --no-skip-worktree
+	hidden = !git ls-files -v | grep --basic-regexp \"^\\([[:lower:]]\\|S\\)\"
 [fetch]
 	prune = true
 [log]
