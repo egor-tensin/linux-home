@@ -27,6 +27,8 @@
 	hide = update-index --skip-worktree
 	unhide = update-index --no-skip-worktree
 	hidden = !git ls-files -v | grep --basic-regexp \"^\\([[:lower:]]\\|S\\)\"
+
+	fixup = !git commit -a --fixup=HEAD && GIT_EDITOR=true git rebase -i --autosquash HEAD~2
 [fetch]
 	prune = true
 [log]
