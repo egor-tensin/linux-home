@@ -52,6 +52,7 @@ alias copy='xclip -sel clip'
 [ -r "$HOME/.bash_utils/os.sh"    ] && source "$HOME/.bash_utils/os.sh"
 [ -r "$HOME/.bash_utils/path.sh"  ] && source "$HOME/.bash_utils/path.sh"
 
+[ -r "$HOME/.bash_utils/mysql.sh"  ] && source "$HOME/.bash_utils/mysql.sh"
 [ -r "$HOME/.bash_utils/python.sh" ] && source "$HOME/.bash_utils/python.sh"
 [ -r "$HOME/.bash_utils/ruby.sh"   ] && source "$HOME/.bash_utils/ruby.sh"
 
