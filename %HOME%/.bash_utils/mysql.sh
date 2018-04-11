@@ -26,16 +26,20 @@ runsql() (
     _runsql_check_var MYSQL_USER MYSQL_PASSWORD MYSQL_HOST
     local MYSQL_PORT="${MYSQL_PORT:-3306}"
 
-    local -a statement_list
+    local -a args
     local stmt
     for stmt; do
-        statement_list+=(-e "$stmt")
+        args+=(-e "$stmt")
     done
+
+    if [ -n "${MYSQL_DATABASE:+x}" ]; then
+        args+=("$MYSQL_DATABASE")
+    fi
 
     mysql \
         --user="$MYSQL_USER" \
         --password="$MYSQL_PASSWORD" \
         --host="$MYSQL_HOST" \
         --port="$MYSQL_PORT" \
-        "${statement_list[@]}"
+        "${args[@]}"
 )
