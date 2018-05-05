@@ -37,6 +37,7 @@ runsql() (
     fi
 
     mysql \
+        --no-auto-rehash \
         --user="$MYSQL_USER" \
         --password="$MYSQL_PASSWORD" \
         --host="$MYSQL_HOST" \
