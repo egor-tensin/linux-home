@@ -28,7 +28,31 @@
 	unhide = update-index --no-skip-worktree
 	hidden = !git ls-files -v | grep --basic-regexp \"^\\([[:lower:]]\\|S\\)\"
 
-	fixup = !git commit -a --fixup=HEAD && GIT_EDITOR=true git rebase -i --autosquash HEAD~2
+	# I heard git might use sh for aliases, so I tried to keep that in
+	# mind. Didn't want to bother with an external script.
+	fixup = "! \
+f() { \
+    if ! git rev-parse --is-inside-work-tree >/dev/null ; then \
+        return 1 ; \
+    fi ; \
+\
+    has_staged_changes=-a ; \
+    git diff --cached --quiet --exit-code || has_staged_changes= ; \
+\
+    numof_parents=`git rev-list --parents -n 1 HEAD | wc --words` ; \
+    if [ \"$numof_parents\" -eq 1 ] ; then \
+        dest_ref=--root ; \
+    elif [ \"$numof_parents\" -eq 2 ] ; then \
+        dest_ref=HEAD^^ ; \
+    else \
+        echo \"Sure you want to fixup a merge commit?\" >&2 ; \
+        return 1 ; \
+    fi ; \
+\
+    git commit $has_staged_changes --fixup=HEAD && GIT_EDITOR=true git rebase -i --autosquash \"$dest_ref\" ; \
+} ; \
+f ; \
+"
 [fetch]
 	prune = true
 [log]
