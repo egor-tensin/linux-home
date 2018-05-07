@@ -36,8 +36,13 @@ f() { \
         return 1 ; \
     fi ; \
 \
-    has_staged_changes=-a ; \
-    git diff --cached --quiet --exit-code || has_staged_changes= ; \
+    add=-a ; \
+    git diff --cached --quiet --exit-code || add= ; \
+\
+    if [ -z \"${add}\" ] ; then \
+        echo \"There're unstaged changes, can't rebase.\" >&2 ; \
+        return 1 ; \
+    fi ; \
 \
     numof_parents=`git rev-list --parents -n 1 HEAD | wc --words` ; \
     if [ \"$numof_parents\" -eq 1 ] ; then \
@@ -49,7 +54,7 @@ f() { \
         return 1 ; \
     fi ; \
 \
-    git commit $has_staged_changes --fixup=HEAD && GIT_EDITOR=true git rebase -i --autosquash \"$dest_ref\" ; \
+    git commit $add --fixup=HEAD && GIT_EDITOR=true git rebase -i --autosquash \"$dest_ref\" ; \
 } ; \
 f ; \
 "
