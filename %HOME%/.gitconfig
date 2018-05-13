@@ -31,18 +31,30 @@
 	# I heard git might use sh for aliases, so I tried to keep that in
 	# mind. Didn't want to bother with an external script.
 	fixup = "! \
-f() { \
-    if ! git rev-parse --is-inside-work-tree >/dev/null ; then \
+__git_fixup() { \
+    if ! git rev-parse --is-inside-work-tree >/dev/null 2>&1 ; then \
+        echo 'Not inside a Git repository.' >&2 ; \
+        return 1 ; \
+    fi ; \
+\
+    if ! git rev-parse HEAD >/dev/null 2>&1 ; then \
+        echo \"Where's your HEAD?\" >&2 ; \
+        return 1 ; \
+    fi ; \
+\
+    has_staged_changes= ; \
+    git diff --cached --ignore-submodules --quiet || has_staged_changes=1 ; \
+\
+    has_unstaged_changes= ; \
+    git diff --ignore-submodules --quiet || has_unstaged_changes=1 ; \
+\
+    if [ -z \"${has_staged_changes}\" ] && [ -z \"${has_unstaged_changes}\" ]; then \
+        echo 'No staged or unstaged changes, seemingly?' >&2 ; \
         return 1 ; \
     fi ; \
 \
     add=-a ; \
-    git diff --cached --quiet --exit-code || add= ; \
-\
-    if [ -z \"${add}\" ] ; then \
-        echo \"There're unstaged changes, can't rebase.\" >&2 ; \
-        return 1 ; \
-    fi ; \
+    [ -n \"$has_staged_changes\" ] && add= ; \
 \
     numof_parents=`git rev-list --parents -n 1 HEAD | wc --words` ; \
     if [ \"$numof_parents\" -eq 1 ] ; then \
@@ -50,13 +62,26 @@ f() { \
     elif [ \"$numof_parents\" -eq 2 ] ; then \
         dest_ref=HEAD^^ ; \
     else \
-        echo \"Sure you want to fixup a merge commit?\" >&2 ; \
+        echo 'Sure you want to fixup a merge commit?' >&2 ; \
         return 1 ; \
     fi ; \
 \
-    git commit $add --fixup=HEAD && GIT_EDITOR=true git rebase -i --autosquash \"$dest_ref\" ; \
+    git commit $add --fixup=HEAD || return $? ; \
+\
+    stash= ; \
+    [ -n \"$has_staged_changes\" ] && [ -n \"$has_unstaged_changes\" ] && stash=1 ; \
+\
+    if [ -n \"$stash\" ]; then \
+        git stash push --quiet || return $? ; \
+    fi ; \
+\
+    GIT_EDITOR=true git rebase -i --autosquash \"$dest_ref\" || return $? ; \
+\
+    if [ -n \"$stash\" ]; then \
+        git stash pop --quiet || return $? ; \
+    fi ; \
 } ; \
-f ; \
+__git_fixup ; \
 "
 [fetch]
 	prune = true
