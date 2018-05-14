@@ -5,10 +5,12 @@ esac
 
 export PS1="\[\e[1;32m\]\h\[\e[m\] \[\e[1;34m\]\W\[\e[m\] # \[$(tput sgr0)\]"
 
+# `echo "!)"` doesn't work otherwise (namely, in third-party scripts):
 set +o histexpand
-# `echo "!)"` doesn't work otherwise (namely, in third-party scripts).
-#set -o nounset
+
 # Too many third-party scripts stop working w/ nounset enabled :-(
+#set -o nounset
+
 set -o pipefail
 
 shopt -s checkwinsize
@@ -17,6 +19,7 @@ shopt -s histappend
 shopt -s nullglob
 shopt -s nocaseglob
 
+# Make aliases work with sudo:
 alias sudo='sudo '
 
 alias df='df --human-readable'
