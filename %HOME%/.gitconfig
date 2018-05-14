@@ -38,3 +38,7 @@
 	process = git-lfs filter-process
 	required = true
 	clean = git-lfs clean -- %f
+[diff]
+	submodule = log
+[status]
+	submoduleSummary = true
