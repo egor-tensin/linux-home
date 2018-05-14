@@ -87,3 +87,6 @@ fi
 os_is_cygwin \
     || command -v stty > /dev/null 2>&1 \
     && stty -ixon
+
+command -v path_export > /dev/null 2>&1 \
+    && path_export "$HOME/.local/bin"
