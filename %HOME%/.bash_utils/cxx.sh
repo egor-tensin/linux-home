@@ -117,7 +117,10 @@ runc() (
     local build_dir
     build_dir="$( mktemp --directory )"
 
-    trap "$( printf -- 'popd > /dev/null && rm -rf -- %q' "$build_dir" )" 0
+    local rm_build_dir
+    rm_build_dir="$( printf -- 'popd > /dev/null && rm -rf -- %q' "$build_dir" )"
+
+    trap "$rm_build_dir" EXIT
     pushd "$build_dir" > /dev/null
 
     local output_name
