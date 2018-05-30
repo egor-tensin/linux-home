@@ -1,0 +1,10 @@
+# .xsessionrc might only be read on Debian and its derivatives like Ubuntu.
+
+# This is a workaround to make notify-send inside cron jobs work.
+# Thanks to this dude: https://unix.stackexchange.com/a/111190/60124
+# Then you source ~/.dbus/Xdbus inside your cron job, and voilà!
+touch "$HOME/.dbus/Xdbus" \
+    && chmod 0600 "$HOME/.dbus/Xdbus" \
+    && [ -n "${DBUS_SESSION_BUS_ADDRESS+x}" ] \
+    && command -v printf > /dev/null 2>&1 \
+    && printf -- 'export DBUS_SESSION_BUS_ADDRESS=%q\n' "$DBUS_SESSION_BUS_ADDRESS" > "$HOME/.dbus/Xdbus"
