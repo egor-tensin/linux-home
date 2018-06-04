@@ -3,6 +3,8 @@
 echo "Welcome to $( hostname )"
 
 spawn_ssh_agent() {
+    # This spawns ssh-agent and exports its variables to ~/.ssh_agent.sh,
+    # to be used in cron jobs and such.
     local rm_ssh_agent
     local output_path="$HOME/.ssh_agent.sh"
     [ -z "${SSH_AGENT_PID:+x}" ] \
