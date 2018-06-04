@@ -2,25 +2,5 @@
 
 echo "Welcome to $( hostname )"
 
-kill_ssh_agent() {
-    [ -n "${SSH_AGENT_PID:+x}" ] && kill "$SSH_AGENT_PID"
-    local output_path="$HOME/.ssh_agent.sh"
-    rm -f -- "$output_path"
-}
-
-spawn_ssh_agent() {
-    # This spawns ssh-agent and exports its variables to ~/.ssh_agent.sh,
-    # to be used in cron jobs and such.
-    local output_path="$HOME/.ssh_agent.sh"
-    [ -z "${SSH_AGENT_PID:+x}" ] \
-        && command -v ssh-agent > /dev/null 2>&1 \
-        && touch -- "$output_path" \
-        && chmod 0600 -- "$output_path" \
-        && ssh-agent -s > "$output_path" \
-        && source "$output_path" > /dev/null \
-        && [ -n "${SSH_AGENT_PID:+x}" ] \
-        && echo "Spawned ssh-agent with PID: $SSH_AGENT_PID." \
-        && trap kill_ssh_agent EXIT
-}
-
-spawn_ssh_agent
+command -v spawn_ssh_agent > /dev/null 2>&1 \
+    && spawn_ssh_agent

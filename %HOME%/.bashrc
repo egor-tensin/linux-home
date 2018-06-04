@@ -44,8 +44,6 @@ alias utc_iso='date --utc +"%Y-%m-%dT%H:%M:%SZ"'
 # fixed in sed 4.3.
 # Don't forget to uncomment once sed 4.3 becomes common.
 
-alias ssh-copy-id='ssh-copy-id -i'
-
 alias cls='echo -en "\ec"'
 alias copy='xclip -sel clip'
 
@@ -57,6 +55,7 @@ alias copy='xclip -sel clip'
 [ -r "$HOME/.bash_utils/git.sh"   ] && source "$HOME/.bash_utils/git.sh"
 [ -r "$HOME/.bash_utils/os.sh"    ] && source "$HOME/.bash_utils/os.sh"
 [ -r "$HOME/.bash_utils/path.sh"  ] && source "$HOME/.bash_utils/path.sh"
+[ -r "$HOME/.bash_utils/ssh.sh"   ] && source "$HOME/.bash_utils/ssh.sh"
 
 [ -r "$HOME/.bash_utils/mysql.sh"  ] && source "$HOME/.bash_utils/mysql.sh"
 [ -r "$HOME/.bash_utils/python.sh" ] && source "$HOME/.bash_utils/python.sh"
