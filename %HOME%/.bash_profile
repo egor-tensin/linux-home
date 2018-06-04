@@ -1,4 +1,5 @@
-[ -r "$HOME/.bashrc" ] && source "$HOME/.bashrc"
+[ -r "$HOME/.profile" ] && source "$HOME/.profile"
+[ -r "$HOME/.bashrc"  ] && source "$HOME/.bashrc"
 
 echo "Welcome to $( hostname )"
 
