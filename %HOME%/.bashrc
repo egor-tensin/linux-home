@@ -55,13 +55,10 @@ alias copy='xclip -sel clip'
 [ -r "$HOME/.bash_utils/cxx.sh"   ] && source "$HOME/.bash_utils/cxx.sh"
 [ -r "$HOME/.bash_utils/distr.sh" ] && source "$HOME/.bash_utils/distr.sh"
 [ -r "$HOME/.bash_utils/git.sh"   ] && source "$HOME/.bash_utils/git.sh"
+[ -r "$HOME/.bash_utils/mysql.sh" ] && source "$HOME/.bash_utils/mysql.sh"
 [ -r "$HOME/.bash_utils/os.sh"    ] && source "$HOME/.bash_utils/os.sh"
 [ -r "$HOME/.bash_utils/path.sh"  ] && source "$HOME/.bash_utils/path.sh"
 [ -r "$HOME/.bash_utils/ssh.sh"   ] && source "$HOME/.bash_utils/ssh.sh"
-
-[ -r "$HOME/.bash_utils/mysql.sh"  ] && source "$HOME/.bash_utils/mysql.sh"
-[ -r "$HOME/.bash_utils/python.sh" ] && source "$HOME/.bash_utils/python.sh"
-[ -r "$HOME/.bash_utils/ruby.sh"   ] && source "$HOME/.bash_utils/ruby.sh"
 
 [ -r "$HOME/.bashrc_work" ] && source "$HOME/.bashrc_work"
 
