@@ -5,6 +5,10 @@
 # For details, see https://github.com/egor-tensin/linux-home.
 # Distributed under the MIT License.
 
+# These are a couple of routines that allow you to add to your $PATH correctly
+# and safely. Originally added as a dependency for other routines, currently
+# are unused. TODO: remove?
+
 path_add() (
     set -o errexit -o nounset -o pipefail
 
