@@ -59,3 +59,21 @@ python_setup() {
 python_setup python3 python
 
 [ -r "$HOME/.pythonrc" ] && export PYTHONSTARTUP="$HOME/.pythonrc"
+
+# ssh-agent
+
+kill_ssh_agent() {
+    [ -n "${SSH_AGENT_PID:+x}" ] && kill "$SSH_AGENT_PID"
+}
+
+spawn_ssh_agent() {
+    local output
+    [ -z "${SSH_AGENT_PID:+x}" ] \
+        && command -v ssh-agent > /dev/null 2>&1 \
+        && output="$( ssh-agent -s )" \
+        && eval "$output" > /dev/null \
+        && [ -n "${SSH_AGENT_PID:+x}" ] \
+        && trap kill_ssh_agent EXIT
+}
+
+spawn_ssh_agent

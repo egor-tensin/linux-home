@@ -49,6 +49,8 @@ alias cls='echo -en "\ec"'
 
 alias copy='xclip -sel clip'
 
+alias ssh-copy-id='ssh-copy-id -i'
+
 [ -r "$HOME/.bash_utils/file.sh" ] && source "$HOME/.bash_utils/file.sh"
 [ -r "$HOME/.bash_utils/text.sh" ] && source "$HOME/.bash_utils/text.sh"
 
@@ -58,7 +60,6 @@ alias copy='xclip -sel clip'
 [ -r "$HOME/.bash_utils/mysql.sh" ] && source "$HOME/.bash_utils/mysql.sh"
 [ -r "$HOME/.bash_utils/os.sh"    ] && source "$HOME/.bash_utils/os.sh"
 [ -r "$HOME/.bash_utils/path.sh"  ] && source "$HOME/.bash_utils/path.sh"
-[ -r "$HOME/.bash_utils/ssh.sh"   ] && source "$HOME/.bash_utils/ssh.sh"
 
 [ -r "$HOME/.bashrc_work" ] && source "$HOME/.bashrc_work"
 
