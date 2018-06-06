@@ -58,7 +58,6 @@ python_setup() {
     for python; do
         command -v "$python" > /dev/null 2>&1                 \
             && user_base="$( "$python" -m site --user-base )" \
-            && [ -d "$user_base/bin" ]                        \
             && path_export "$user_base/bin"
     done
 }
