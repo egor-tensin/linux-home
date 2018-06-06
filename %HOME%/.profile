@@ -12,6 +12,10 @@ fi
 path_export() {
     local path
     for path; do
+        # Don't add paths with colons in them:
+        case "$path" in
+            *:*) continue ;;
+        esac
         case "${PATH-}" in
             "$path")     continue ;;
             *":$path")   continue ;;
@@ -55,9 +59,7 @@ python_setup() {
         command -v "$python" > /dev/null 2>&1                 \
             && user_base="$( "$python" -m site --user-base )" \
             && [ -d "$user_base/bin" ]                        \
-            && path_export "$user_base/bin"                   \
-            && continue
-        break
+            && path_export "$user_base/bin"
     done
 }
 

@@ -16,6 +16,6 @@ export_dbus_variables() {
 }
 
 # This is semi-deprecated, since systemd timers can replace cron jobs
-# completely, and they works with various DISPLAY/XAUTHORITY/DBUS* variables.
+# completely, and they work with various DISPLAY/XAUTHORITY/DBUS* variables.
 # TODO: remove?
 export_dbus_variables
