@@ -54,8 +54,6 @@ alias cls='echo -en "\ec"'
 
 alias copy='xclip -sel clip'
 
-alias ssh-copy-id='ssh-copy-id -i'
-
 [ -r "$HOME/.bash_utils/file.sh" ] && source "$HOME/.bash_utils/file.sh"
 [ -r "$HOME/.bash_utils/text.sh" ] && source "$HOME/.bash_utils/text.sh"
 
