@@ -5,24 +5,34 @@
 # For details, see https://github.com/egor-tensin/linux-home.
 # Distributed under the MIT License.
 
-_runc_is_cygwin() (
+_runc_os_is_cygwin() (
     set -o errexit -o nounset -o pipefail
     local os
     os="$( uname -o )"
     test 'Cygwin' = "$os"
 )
 
-if _runc_is_cygwin; then
+if _runc_os_is_cygwin; then
     _runc_exe_ext='.exe'
 fi
 
-runc_flags=('-Wall' '-Wextra')
-runcxx_flags=('-Wall' '-Wextra' '-std=c++14')
+runc_use_gcc() {
+    runc_compiler=gcc
+    runcxx_compiler=g++
+    declare -ag runc_flags=('-Wall' '-Wextra')
+    declare -ag runcxx_flags=('-Wall' '-Wextra' '-std=c++14')
+}
 
-runc_compiler=gcc
-runcxx_compiler=g++
+runc_use_clang() {
+    runc_compiler=clang
+    runcxx_compiler=clang++
+    declare -ag runc_flags=('-Wall' '-Wextra')
+    declare -ag runcxx_flags=('-Wall' '-Wextra')
+}
 
-_get_absolute_path() {
+runc_use_gcc
+
+_runc_get_absolute_path() {
     readlink -z --canonicalize-missing -- "$@"
 }
 
@@ -37,7 +47,7 @@ _runc_usage() (
         echo "$prefix: $msg"
     done
 
-    echo "usage: $prefix [-h|--help] [-c|--comp-arg ARG]... [-I DIR]... [-L DIR]... PATH... [-- [PROG_ARG]...]"
+    echo "usage: $prefix [-h|--help] [-c|--comp-arg ARG]... [-I DIR]... [-L DIR]... [-l LIB]... PATH... [-- [PROG_ARG]...]"
 )
 
 runc() (
@@ -47,6 +57,7 @@ runc() (
     local -a src_files=()
     local -a include_dirs=()
     local -a lib_dirs=()
+    local -a libs=()
     local -a prog_args
 
     while [ "$#" -gt 0 ]; do
@@ -58,7 +69,7 @@ runc() (
                 _runc_usage
                 return 0
                 ;;
-            -c|--comp-arg|-I|-L)
+            -c|--comp-arg|-I|-L|-l)
                 if [ "$#" -eq 0 ]; then
                     _runc_usage "missing argument for parameter: $key" >&2
                     return 1
@@ -74,6 +85,10 @@ runc() (
                 ;;
             -L)
                 lib_dirs+=("$1")
+                shift
+                ;;
+            -l)
+                libs+=("$1")
                 shift
                 ;;
             --)
@@ -98,20 +113,27 @@ runc() (
     local src_file
     while IFS= read -d '' -r src_file; do
         src_files+=("$src_file")
-    done < <( _get_absolute_path ${_src_files[@]+"${_src_files[@]}"} )
+    done < <( _runc_get_absolute_path ${_src_files[@]+"${_src_files[@]}"} )
 
     if [ "${#include_dirs[@]}" -gt 0 ]; then
         local include_dir
         while IFS= read -d '' -r include_dir; do
             c_flags+=("-I$include_dir")
-        done < <( _get_absolute_path ${include_dirs[@]+"${include_dirs[@]}"} )
+        done < <( _runc_get_absolute_path ${include_dirs[@]+"${include_dirs[@]}"} )
     fi
 
     if [ "${#lib_dirs[@]}" -gt 0 ]; then
         local lib_dir
         while IFS= read -d '' -r lib_dir; do
             c_flags+=("-L$lib_dir")
-        done < <( _get_absolute_path ${lib_dirs[@]+"${lib_dirs[@]}"} )
+        done < <( _runc_get_absolute_path ${lib_dirs[@]+"${lib_dirs[@]}"} )
+    fi
+
+    if [ "${#libs[@]}" -gt 0 ]; then
+        local lib
+        for lib in ${libs[@]+"${libs[@]}"}; do
+            c_flags+=("-l$lib")
+        done
     fi
 
     local build_dir
