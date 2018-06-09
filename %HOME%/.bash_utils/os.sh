@@ -11,6 +11,7 @@ _CYGWIN='Cygwin'
 _UBUNTU='Ubuntu'
 _MINT='Linux Mint'
 _ARCH='Arch Linux'
+_ARCH_ARM='Arch Linux ARM'
 _FEDORA='Fedora'
 
 os_detect() {
@@ -21,10 +22,11 @@ os_detect() {
 
     [ -r /etc/os-release ]                              \
         && _os="$( . /etc/os-release && echo "$NAME" )" \
-        && test "$_os" == "$_UBUNTU" \
-             -o "$_os" == "$_MINT"   \
-             -o "$_os" == "$_ARCH"   \
-             -o "$_os" == "$_FEDORA" \
+        && test "$_os" == "$_UBUNTU"   \
+             -o "$_os" == "$_MINT"     \
+             -o "$_os" == "$_ARCH"     \
+             -o "$_os" == "$_ARCH_ARM" \
+             -o "$_os" == "$_FEDORA"   \
         && return 0
 
     _os=''
@@ -38,7 +40,7 @@ os_detected() { test -n "$_os" ; }
 os_is_cygwin() { test "$_os" == "$_CYGWIN" ; }
 os_is_ubuntu() { test "$_os" == "$_UBUNTU" ; }
 os_is_mint()   { test "$_os" == "$_MINT"   ; }
-os_is_arch()   { test "$_os" == "$_ARCH"   ; }
+os_is_arch()   { test "$_os" == "$_ARCH" -o "$_os" == "$_ARCH_ARM" ; }
 os_is_fedora() { test "$_os" == "$_FEDORA" ; }
 
 # Cygwin
@@ -125,7 +127,7 @@ pkg_list() (
     elif os_is_fedora; then
         pkg_list_fedora
     else
-        echo "${FUNCTION[0]}: unsupported OS" >&2
+        echo "${FUNCNAME[0]}: unsupported OS" >&2
         return 1
     fi
 )
