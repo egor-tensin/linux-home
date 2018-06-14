@@ -54,6 +54,9 @@ alias cls='echo -en "\ec"'
 
 alias copy='xclip -sel clip'
 
+# Make sure ssh-copy-id copies public keys along with their comments.
+alias ssh-copy-id='ssh-copy-id -i'
+
 [ -r "$HOME/.bash_utils/file.sh" ] && source "$HOME/.bash_utils/file.sh"
 [ -r "$HOME/.bash_utils/text.sh" ] && source "$HOME/.bash_utils/text.sh"
 
