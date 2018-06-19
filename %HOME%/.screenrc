@@ -1,3 +1,4 @@
+startup_message off
 # Make scrollbars work on Linux Mint (among others):
 # https://stackoverflow.com/a/1125947/514684
 termcapinfo xterm* ti@:te@
