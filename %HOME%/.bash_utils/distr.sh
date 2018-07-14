@@ -133,7 +133,8 @@ sums_add_distr() (
     while IFS= read -d '' -r path; do
         paths+=("$path")
     done < <( find . -type f -\( \
-        -iname '*.exe'           \
+        -iname '*.7z'            \
+        -o -iname '*.exe'        \
         -o -iname '*.img'        \
         -o -iname '*.iso'        \
         -o -iname '*.tar'        \
