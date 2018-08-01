@@ -265,3 +265,29 @@ str_join() (
     done
     echo
 )
+
+str_grep() (
+    set -o errexit -o nounset -o pipefail
+
+    if [ "$#" -ne 1 ]; then
+        echo "usage: ${FUNCNAME[0]} PATTERN" >&2
+        return 1
+    fi
+
+    local pattern="$1"
+
+    find . -type f -exec grep --fixed-strings --binary-files=without-match --regexp="$pattern" -- {} +
+)
+
+str_grep_word() (
+    set -o errexit -o nounset -o pipefail
+
+    if [ "$#" -ne 1 ]; then
+        echo "usage: ${FUNCNAME[0]} PATTERN" >&2
+        return 1
+    fi
+
+    local pattern="$1"
+
+    find . -type f -exec grep --basic-regexp --binary-files=without-match --regexp="\b$pattern\b" -- {} +
+)
