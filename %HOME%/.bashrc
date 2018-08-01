@@ -57,6 +57,10 @@ alias cls='echo -en "\ec"'
 
 alias copy='xclip -sel clip'
 
+# Make ssh work properly when connecting to some CentOS servers from inside a
+# screen session:
+alias ssh='TERM=vt100 ssh'
+
 # Make sure ssh-copy-id copies public keys along with their comments.
 alias ssh-copy-id='ssh-copy-id -i'
 
