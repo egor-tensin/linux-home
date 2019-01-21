@@ -162,3 +162,40 @@ runcxx() (
         runc_compiler="${runcxx_compiler:-g++}" \
         runc "$@"
 )
+
+apport_gdb() (
+    set -o errexit -o nounset -o pipefail
+
+    if [ "$#" -ne 1 ]; then
+        echo "usage: ${FUNCNAME[0]} BINARY" >&2
+        return 1
+    fi
+
+    local binary_path="$1"
+    binary_path="$( readlink --canonicalize-missing -- "$binary_path" )"
+
+    local crash_path
+    crash_path="$( str_replace "$binary_path" '/' '_' )"
+    crash_path="$crash_path.$UID.crash"
+    crash_path="/var/crash/$crash_path"
+
+    if [ ! -r "$crash_path" ]; then
+        echo "${FUNCNAME[0]}: $crash_path doesn't exist or isn't readable" >&2
+        return 1
+    fi
+
+    local crash_dir
+    crash_dir="$( mktemp --directory )"
+
+    local rm_crash_dir
+    rm_crash_dir="$( printf -- 'rm -rf -- %q' "$crash_dir" )"
+
+    trap "$rm_crash_dir" EXIT
+
+    apport-unpack "$crash_path" "$crash_dir"
+    gdb "$binary_path" "$crash_dir/CoreDump"
+)
+
+agdb() {
+    apport_gdb "$@"
+}

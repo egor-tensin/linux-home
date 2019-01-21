@@ -65,7 +65,7 @@ _sed_escape_substitution() (
     echo "$s"
 )
 
-str_replace() (
+file_replace() (
     set -o errexit -o nounset -o pipefail
 
     if [ "$#" -lt 3 ]; then
@@ -83,7 +83,7 @@ str_replace() (
     sed --binary --in-place -- "s/$old/$new/g" "$@"
 )
 
-str_replace_word() (
+file_replace_word() (
     set -o errexit -o nounset -o pipefail
 
     if [ "$#" -lt 3 ]; then
@@ -99,6 +99,23 @@ str_replace_word() (
     shift
 
     sed --binary --in-place -- "s/\\b$old\\b/$new/g" "$@"
+)
+
+str_replace() (
+    set -o errexit -o nounset -o pipefail
+
+    if [ "$#" -ne 3 ]; then
+        echo "usage: ${FUNCNAME[0]} STR SUB REP" >&2
+        return 1
+    fi
+
+    local str="$1"
+    local sub="$2"
+    local rep="$3"
+
+    sub="$( _bash_escape_pattern "$sub" )"
+
+    echo "${str//$sub/$rep}"
 )
 
 str_tolower() (
