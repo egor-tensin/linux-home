@@ -163,7 +163,35 @@ runcxx() (
         runc "$@"
 )
 
-apport_gdb() (
+_runc_gdb() (
+    set -o errexit -o nounset -o pipefail
+
+    if [ "$#" -ne 2 ]; then
+        echo "usage: ${FUNCNAME[0]} BINARY CORE_DUMP" >&2
+        return 1
+    fi
+
+    local binary_path="$1"
+    local core_dump_path="$2"
+
+    gdb "$binary_path" "$core_dump_path"
+)
+
+_runc_lldb() (
+    set -o errexit -o nounset -o pipefail
+
+    if [ "$#" -ne 2 ]; then
+        echo "usage: ${FUNCNAME[0]} BINARY CORE_DUMP" >&2
+        return 1
+    fi
+
+    local binary_path="$1"
+    local core_dump_path="$2"
+
+    lldb -f "$binary_path" -c "$core_dump_path"
+)
+
+runc_debug() (
     set -o errexit -o nounset -o pipefail
 
     if [ "$#" -ne 1 ]; then
@@ -189,13 +217,23 @@ apport_gdb() (
 
     local rm_crash_dir
     rm_crash_dir="$( printf -- 'rm -rf -- %q' "$crash_dir" )"
-
     trap "$rm_crash_dir" EXIT
 
     apport-unpack "$crash_path" "$crash_dir"
-    gdb "$binary_path" "$crash_dir/CoreDump"
+    local core_dump_path="$crash_dir/CoreDump"
+
+    if [ ! -r "$core_dump_path" ]; then
+        echo "${FUNCNAME[0]}: $core_dump_path doesn't exist or isn't readable" >&2
+        return 1
+    fi
+
+    "${DEBUG_FUNCTION:-_runc_gdb}" "$binary_path" "$core_dump_path"
 )
 
-agdb() {
-    apport_gdb "$@"
+runc_gdb() {
+    DEBUG_FUNCTION=_runc_gdb runc_debug "$@"
+}
+
+runc_lldb() {
+    DEBUG_FUNCTION=_runc_lldb runc_debug "$@"
 }
