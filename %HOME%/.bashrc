@@ -41,7 +41,7 @@ alias grep='grep --color=auto'
 alias ls='LC_COLLATE=C ls --almost-all -l --human-readable --color=auto'
 alias dir='ls --format=vertical'
 
-alias less='less --ignore-case --RAW-CONTROL-CHARS'
+alias less='less --ignore-case --line-numbers --RAW-CONTROL-CHARS'
 alias tree='tree -a'
 
 alias utc_file_name='date --utc +"%Y%m%d%H%M%S"'
