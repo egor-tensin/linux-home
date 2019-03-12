@@ -308,3 +308,48 @@ str_grep_word() (
 
     find . -type f -exec grep --basic-regexp --binary-files=without-match --regexp="\b$pattern\b" -- {} +
 )
+
+str_iconv_fromto() (
+    set -o errexit -o nounset -o pipefail
+
+    if [ "$#" -lt 3 ]; then
+        echo "usage: ${FUNCNAME[0]} SRC_ENCODING DEST_ENCODING PATH..." >&2
+        return 1
+    fi
+
+    local src_encoding="$1"
+    shift
+    local dest_encoding="$1"
+    shift
+
+    local path path_dir tmp_path rm_tmp_path
+
+    for path; do
+        path_dir="$( dirname -- "$path" )"
+        tmp_path="$( mktemp -- "$path_dir/${FUNCNAME[0]}_XXX" )"
+        if iconv --from-code="$src_encoding" --to-code="$dest_encoding" -- "$path" > "$tmp_path"; then
+            mv -f -- "$tmp_path" "$path"
+        else
+            rm -f -- "$tmp_path"
+            return 1
+        fi
+    done
+)
+
+str_iconv() (
+    set -o errexit -o nounset -o pipefail
+
+    if [ "$#" -lt 2 ]; then
+        echo "usage: ${FUNCNAME[0]} DEST_ENCODING PATH..." >&2
+        return 1
+    fi
+
+    local dest_encoding="$1"
+    shift
+
+    local src_encoding path
+    for path; do
+        src_encoding="$( file --brief --mime-encoding -- "$path" )"
+        str_iconv_fromto "$src_encoding" "$dest_encoding" "$path"
+    done
+)
