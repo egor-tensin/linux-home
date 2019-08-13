@@ -15,7 +15,7 @@ Using [config-links]:
     > pwd
     /cygdrive/d/workspace/personal/linux-home
 
-    > ../config-links/update.sh
+    > ../config-links/bin/update.sh
     ...
 
 Issues
