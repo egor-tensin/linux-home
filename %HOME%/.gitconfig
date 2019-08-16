@@ -27,6 +27,7 @@
 [push]
 	# If no refspec is given, push to the branch with the same name.
 	default = current
+	followTags = true
 [status]
 	submoduleSummary = true
 
