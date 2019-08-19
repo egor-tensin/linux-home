@@ -52,6 +52,8 @@ alias utc_iso='date --utc +"%Y-%m-%dT%H:%M:%SZ"'
 # fixed in sed 4.3.
 # Don't forget to uncomment once sed 4.3 becomes common.
 
+alias detached='screen -d -m'
+
 # Clear the screen (https://stackoverflow.com/a/5367075/514684):
 alias cls='echo -en "\ec"'
 
