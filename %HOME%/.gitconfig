@@ -1,35 +1,48 @@
 [user]
 	name = Egor Tensin
 	email = Egor.Tensin@gmail.com
+
 [core]
-	editor = vim
+	# Don't touch line endings (I hate the fact that this is an option).
+	# My go-to approach now is to store everything w/ LF line endings in
+	# index (using '* text=auto' in root .gitattributes), and checkout with
+	# specific line endings as required (using additional records in
+	# .gitattributes, like '*.sh text eol=lf', '*.bat text eol=crlf',
+	# etc.).
 	autocrlf = false
 
+[push]
+	# If no refspec is given, push to the branch with the same name.
+	default = upstream
+
+# Show submodule changes in a more verbose way.
 [diff]
-	# Include submodule changes into git-diff's output.
 	submodule = log
+[status]
+	submoduleSummary = true
+
+# Automatically remove obsolete things/publish new things.
 [fetch]
 	# Prune old branches:
 	prune = true
 	# Prune old tags (since Git 2.17.0):
 	pruneTags = true
-[include]
-	# Include a file with work-specific settings (like a different [user]
-	# section under a specific directory).
-	path = ~/.gitconfig_work
-[log]
-	follow = true
-[mergetool]
-	keepBackup = false
-[pull]
-	# Don't create a merge commit, fast-forward only.
-	ff = only
 [push]
-	# If no refspec is given, push to the branch with the same name.
-	default = current
+	# Push new tags:
 	followTags = true
-[status]
-	submoduleSummary = true
+
+[log]
+	# Follow renames:
+	follow = true
+
+[mergetool]
+	# I don't even know why those are necessary, since we can abort and
+	# retry merges.
+	keepBackup = false
+
+[pull]
+	# Don't create a merge commit when pulling, fast-forward only.
+	ff = only
 
 [alias]
 	clean-all = clean -fdx
@@ -52,5 +65,10 @@
 [filter "lfs"]
 	smudge = git-lfs smudge -- %f
 	process = git-lfs filter-process
-	required = true
 	clean = git-lfs clean -- %f
+	required = true
+
+[include]
+	# Include a file with work-specific settings (like a different [user]
+	# section under a specific directory).
+	path = ~/.gitconfig_work
