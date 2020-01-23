@@ -69,6 +69,6 @@
 	required = true
 
 [include]
-	# Include a file with work-specific settings (like a different [user]
-	# section under a specific directory).
-	path = ~/.gitconfig_work
+        # Include a file with computer-specific settings (like a different
+        # [user] section under a specific directory, etc.).
+	path = ~/.gitconfig_local
