@@ -77,7 +77,7 @@ alias ssh-copy-id='ssh-copy-id -i'
 [ -r "$HOME/.bash_utils/os.sh"           ] && source "$HOME/.bash_utils/os.sh"
 [ -r "$HOME/.bash_utils/path.sh"         ] && source "$HOME/.bash_utils/path.sh"
 
-[ -r "$HOME/.bashrc_work" ] && source "$HOME/.bashrc_work"
+[ -r "$HOME/.bashrc_local" ] && source "$HOME/.bashrc_local"
 
 os_is_cygwin && set -o igncr
 os_is_cygwin || complete -r
