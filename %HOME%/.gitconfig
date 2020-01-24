@@ -15,11 +15,17 @@
 	# If no refspec is given, push to the branch with the same name.
 	default = upstream
 
+# Git submodules suck, but they suck less if you read
+# https://medium.com/@porteneuve/mastering-git-submodules-34c65e940407.
+
 # Show submodule changes in a more verbose way.
 [diff]
 	submodule = log
 [status]
 	submoduleSummary = true
+[alias]
+	# Pull and sync submodules.
+	pulll = !git pull && git submodule sync --recursive && git submodule update --init --recursive
 
 # Automatically remove obsolete things/publish new things.
 [fetch]
@@ -61,6 +67,10 @@
 	hide = update-index --skip-worktree
 	unhide = update-index --no-skip-worktree
 	hidden = !git ls-files -v | grep --basic-regexp \"^\\([[:lower:]]\\|S\\)\"
+
+        # Squash the staging area with the latest commit.
+        # Pass "-a" to skip using `git add`.
+	fixup = !GIT_EDITOR=true git commit --amend
 
 [filter "lfs"]
 	smudge = git-lfs smudge -- %f
