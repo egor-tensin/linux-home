@@ -18,14 +18,15 @@
 		"no_bold",
 		"no_italic"
 	],
-	"font_size": 10,
+	"font_size": 11,
 	"highlight_line": true,
 	"highlight_modified_tabs": true,
 	"hot_exit": false,
 	"remember_open_files": false,
 	"rulers":
 	[
-		79
+		79,
+        99
 	],
 	"scroll_speed": 0,
 	"show_definitions": false,
