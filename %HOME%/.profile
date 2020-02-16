@@ -89,3 +89,7 @@ spawn_ssh_agent() {
 # Also, this file needs to be sourced by both your login shell and your display
 # manager.
 command -v systemctl > /dev/null 2>&1 || spawn_ssh_agent
+
+# Rust-specific stuff:
+
+path_export "$HOME/.cargo/bin"
