@@ -26,13 +26,14 @@
 	"rulers":
 	[
 		79,
-        99
+		99
 	],
 	"scroll_speed": 0,
 	"show_definitions": false,
 	"show_encoding": true,
 	"show_line_endings": true,
 	"smart_indent": false,
+	"theme": "Default.sublime-theme",
 	"translate_tabs_to_spaces": true,
 	"trim_trailing_white_space_on_save": true,
 	"update_check": false,
