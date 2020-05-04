@@ -79,3 +79,7 @@ hi SpellLocal ctermfg=0
 " Highlight current line.
 set cursorline
 "set cursorcolumn
+
+" Insert newline without entering insert mode.
+nmap <S-Enter> O<Esc>
+nmap <CR> o<Esc>
