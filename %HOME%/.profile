@@ -84,7 +84,7 @@ kill_ssh_agent() {
 
 spawn_ssh_agent() {
     local output
-    [ -z "${SSH_AGENT_PID:+x}" ] \
+    [ -z "${SSH_AUTH_SOCK:+x}" ] \
         && command -v ssh-agent > /dev/null 2>&1 \
         && output="$( ssh-agent -s )" \
         && eval "$output" > /dev/null \
