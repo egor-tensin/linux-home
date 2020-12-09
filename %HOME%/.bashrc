@@ -99,3 +99,9 @@ fi
 os_is_cygwin \
     || command -v stty > /dev/null 2>&1 \
     && stty -ixon
+
+# Hopefully, this Tilix warning is really important:
+# https://gnunn1.github.io/tilix-web/manual/vteconfig/
+if [ "$TILIX_ID" ] || [ "$VTE_VERSION" ]; then
+    [ -r /etc/profile.d/vte.sh ] && source /etc/profile.d/vte.sh
+fi
