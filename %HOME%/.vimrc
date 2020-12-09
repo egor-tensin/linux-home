@@ -83,3 +83,14 @@ set cursorline
 " Insert newline without entering insert mode.
 nmap <S-Enter> O<Esc>
 nmap <CR> o<Esc>
+
+" Disable opening directories, netrw is too confusing.
+" https://unix.stackexchange.com/q/297844
+for f in argv()
+  if isdirectory(f)
+    echomsg "Cowardly refusing to edit directory: " . f
+    quit
+  endif
+endfor
+
+let loaded_netrwPlugin=1
