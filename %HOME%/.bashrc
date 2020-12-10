@@ -105,3 +105,12 @@ os_is_cygwin \
 if [ "$TILIX_ID" ] || [ "$VTE_VERSION" ]; then
     [ -r /etc/profile.d/vte.sh ] && source /etc/profile.d/vte.sh
 fi
+
+# Prevent nested ranger instances.
+ranger() {
+    if [ -z "$RANGER_LEVEL" ]; then
+        /usr/bin/ranger "$@"
+    else
+        exit
+    fi
+}
