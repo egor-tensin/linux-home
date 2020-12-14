@@ -1,0 +1,46 @@
+#!/usr/bin/env bash
+
+# Like the fzcd plugin, but better.
+
+set -o errexit -o pipefail
+
+if command -v fzf > /dev/null 2>&1; then
+    sel="$( fzf )"
+else
+    exit 1
+fi
+
+nnn_cd() {
+    dir="$1"
+
+    if [ -z "$NNN_PIPE" ]; then
+        echo "No pipe file found" >&2
+        return
+    fi
+
+    printf -- '%s' "0c$dir" > "$NNN_PIPE"
+}
+
+
+if [ -n "$sel" ]; then
+    if [ ! -d "$sel" ]; then
+        sel="$( dirname -- "$sel" )"
+    elif [ "$sel" = . ]; then
+        exit 0
+    fi
+
+    case "$sel" in
+    /*)
+        nnn_cd "$sel"
+        ;;
+    *)  
+        sel="${sel#./}"
+ 
+        if [ "$PWD" = "/" ]; then
+            nnn_cd "/$sel"
+        else
+            nnn_cd "$PWD/$sel"
+        fi
+        ;;
+    esac    
+fi

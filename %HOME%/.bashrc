@@ -114,3 +114,26 @@ ranger() {
         exit
     fi
 }
+
+# nnn
+
+# The selected paths.
+alias ncp="cat ${NNN_SEL:-${XDG_CONFIG_HOME:-$HOME/.config}/nnn/.selection} | tr '\0' '\n'"
+
+# Like quitcd.bash_zsh, but better.
+n() {
+    [ -n "$NNNLVL" ] && [ "${NNNLVL:-0}" -ge 1 ] && exit
+
+    export NNN_TMPFILE="${XDG_CONFIG_HOME:-$HOME/.config}/nnn/.lastd"
+
+    /usr/bin/nnn "$@"
+
+    if [ -f "$NNN_TMPFILE" ]; then
+        . "$NNN_TMPFILE"
+        rm -f -- "$NNN_TMPFILE" > /dev/null
+    fi
+}
+
+nnn() {
+    n "$@"
+}

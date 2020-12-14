@@ -103,3 +103,18 @@ command -v systemctl > /dev/null 2>&1 || spawn_ssh_agent
 # Rust-specific stuff:
 
 path_export "$HOME/.cargo/bin"
+
+# fzf
+
+# Search directories and hidden files by default.
+export FZF_DEFAULT_COMMAND='find -L . -\( -fstype dev -o -fstype proc -\) -prune -o -print 2> /dev/null'
+
+command -v fd > /dev/null 2>&1 \
+    && export FZF_DEFAULT_COMMAND='fd --follow --show-errors --hidden 2> /dev/null'
+
+# nnn
+# -e    Open text files in $EDITOR.
+# -H    Show hidden files.
+# -o    Only open on Enter, not on l.
+export NNN_OPTS=eHo
+export NNN_PLUG='f:myfzcd'
