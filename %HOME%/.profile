@@ -116,5 +116,5 @@ command -v fd > /dev/null 2>&1 \
 # -e    Open text files in $EDITOR.
 # -H    Show hidden files.
 # -o    Only open on Enter, not on l.
-export NNN_OPTS=eHo
+export NNN_OPTS=eo
 export NNN_PLUG='f:myfzcd'
