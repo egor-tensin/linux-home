@@ -110,7 +110,7 @@ path_export "$HOME/.cargo/bin"
 export FZF_DEFAULT_COMMAND='find -L . -\( -fstype dev -o -fstype proc -\) -prune -o -print 2> /dev/null'
 
 command -v fd > /dev/null 2>&1 \
-    && export FZF_DEFAULT_COMMAND='fd --follow --show-errors --hidden 2> /dev/null'
+    && export FZF_DEFAULT_COMMAND='fd --follow --show-errors --hidden --no-ignore-vcs 2> /dev/null'
 
 # nnn
 # -e    Open text files in $EDITOR.
