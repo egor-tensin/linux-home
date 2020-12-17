@@ -100,13 +100,13 @@ os_is_cygwin \
     || command -v stty > /dev/null 2>&1 \
     && stty -ixon
 
-# Hopefully, this Tilix warning is really important:
+# Tilix: fix the important warning.
 # https://gnunn1.github.io/tilix-web/manual/vteconfig/
 if [ "$TILIX_ID" ] || [ "$VTE_VERSION" ]; then
     [ -r /etc/profile.d/vte.sh ] && source /etc/profile.d/vte.sh
 fi
 
-# Prevent nested ranger instances.
+# ranger: prevent nested instances.
 ranger() {
     if [ -z "$RANGER_LEVEL" ]; then
         /usr/bin/ranger "$@"
@@ -115,12 +115,10 @@ ranger() {
     fi
 }
 
-# nnn
-
-# The selected paths.
+# nnn: print selected paths.
 alias ncp="cat ${NNN_SEL:-${XDG_CONFIG_HOME:-$HOME/.config}/nnn/.selection} | tr '\0' '\n'"
 
-# Like quitcd.bash_zsh, but better.
+# nnn: like quitcd.bash_zsh, but better.
 n() {
     [ -n "$NNNLVL" ] && [ "${NNNLVL:-0}" -ge 1 ] && exit
 
@@ -137,3 +135,9 @@ n() {
 nnn() {
     n "$@"
 }
+
+# tmux: start automatically.
+# https://unix.stackexchange.com/a/113768
+if command -v tmux &> /dev/null && [ -n "$PS1" ] && [[ ! "$TERM" =~ screen ]] && [[ ! "$TERM" =~ tmux ]] && [ -z "$TMUX" ]; then
+    exec tmux new-session -A -s main
+fi
