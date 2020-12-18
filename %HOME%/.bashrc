@@ -135,5 +135,5 @@ nnn() {
 # tmux: start automatically.
 # https://unix.stackexchange.com/a/113768
 if command -v tmux &> /dev/null && [ -z "$STY" ] && [ -z "$TMUX" ]; then
-    exec tmux new-session -A -s main
+    exec tmux
 fi
