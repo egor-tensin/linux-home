@@ -132,8 +132,23 @@ nnn() {
     n "$@"
 }
 
+remote_terminal() {
+    test -n "$SSH_CLIENT" -o -n "$SSH_TTY"
+}
+
+local_terminal() {
+    ! remote_terminal
+}
+
+multiplexed() {
+    test -n "$STY" -o -n "$TMUX"
+}
+
 # tmux: start automatically.
 # https://unix.stackexchange.com/a/113768
-if command -v tmux &> /dev/null && [ -z "$STY" ] && [ -z "$TMUX" ]; then
+if os_is_cygwin && local_terminal; then
+    # Skip, as it's too slow for some reason.
+    true
+elif ! multiplexed && command -v tmux &> /dev/null; then
     exec tmux
 fi
