@@ -111,12 +111,16 @@ ranger() {
     fi
 }
 
+inside_nnn() {
+    [ -n "$NNNLVL" ] && [ "${NNNLVL:-0}" -ge 1 ]
+}
+
 # nnn: print selected paths.
 alias ncp="cat ${NNN_SEL:-${XDG_CONFIG_HOME:-$HOME/.config}/nnn/.selection} | tr '\0' '\n'"
 
 # nnn: like quitcd.bash_zsh, but better.
 n() {
-    [ -n "$NNNLVL" ] && [ "${NNNLVL:-0}" -ge 1 ] && exit
+    inside_nnn && exit
 
     export NNN_TMPFILE="${XDG_CONFIG_HOME:-$HOME/.config}/nnn/.lastd"
 
@@ -144,11 +148,19 @@ multiplexed() {
     test -n "$STY" -o -n "$TMUX"
 }
 
+if multiplexed && ! inside_nnn && local_terminal; then
+    # Launch nnn automatically in tmux, except when I'm inside a ssh session.
+    command -v nnn &> /dev/null && exec nnn
+fi
+
 # tmux: start automatically.
 # https://unix.stackexchange.com/a/113768
 if os_is_cygwin && local_terminal; then
     # Skip, as it's too slow for some reason.
     true
-elif ! multiplexed && command -v tmux &> /dev/null; then
+elif multiplexed; then
+    # Skip, we're already running a multiplexer.
+    true
+elif command -v tmux &> /dev/null; then
     exec tmux
 fi
