@@ -94,3 +94,6 @@ for f in argv()
 endfor
 
 let loaded_netrwPlugin=1
+
+" Access X clipboard.
+set clipboard=unnamedplus
