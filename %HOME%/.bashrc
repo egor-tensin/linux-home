@@ -137,7 +137,7 @@ nnn() {
 }
 
 remote_terminal() {
-    test -n "$SSH_CLIENT" -o -n "$SSH_TTY"
+    test -n "$SSH_CONNECTION"
 }
 
 local_terminal() {
