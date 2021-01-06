@@ -150,7 +150,9 @@ multiplexed() {
 
 if multiplexed && ! inside_nnn && local_terminal; then
     # Launch nnn automatically in tmux, except when I'm inside a ssh session.
-    command -v nnn &> /dev/null && exec nnn
+    # `which` instead of the normal `command -v` here because we need the
+    # actual external executable, not the function defined above.
+    which nnn &> /dev/null && exec nnn
 fi
 
 # tmux: start automatically.
