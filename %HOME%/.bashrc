@@ -166,3 +166,8 @@ elif multiplexed; then
 elif command -v tmux &> /dev/null; then
     exec tmux
 fi
+
+# Vagrant: fix `vagrant plugin install`.
+# https://github.com/hashicorp/vagrant/issues/12202
+# TODO: remove when 2.2.15 is released?
+export VAGRANT_DISABLE_STRICT_DEPENDENCY_ENFORCEMENT=1
