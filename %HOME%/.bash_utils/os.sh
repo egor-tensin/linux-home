@@ -115,6 +115,16 @@ user_pkg_list_manjaro() (
              <( pacman -Qeqn | sort )
 )
 
+manual_pkg_list_arch() (
+    set -o errexit -o nounset -o pipefail
+
+    expac '%n %p' | grep 'Unknown Packager'
+)
+
+manual_pkg_list_manjaro() {
+    manual_pkg_list_arch
+}
+
 pkg_list_arch() {
     pacman -Qq
 }
