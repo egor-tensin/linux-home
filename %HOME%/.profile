@@ -57,6 +57,12 @@ chruby_setup() {
 
 chruby_setup
 
+rbenv_setup() {
+    command -v rbenv > /dev/null && eval "$( rbenv init - )"
+}
+
+rbenv_setup
+
 # Python-specific stuff
 
 # This is a half-assed way to automatically add your user's pip binary
