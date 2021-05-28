@@ -171,3 +171,7 @@ fi
 # https://github.com/hashicorp/vagrant/issues/12202
 # TODO: remove when 2.2.15 is released?
 export VAGRANT_DISABLE_STRICT_DEPENDENCY_ENFORCEMENT=1
+
+# Disable Alt+N shortcuts, which I use in tmux:
+# https://superuser.com/a/770902
+for i in "-" {0..9}; do bind -r "\e$i"; done
