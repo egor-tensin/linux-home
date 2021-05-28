@@ -82,6 +82,12 @@ python_setup python3 python
 
 [ -r "$HOME/.pythonrc" ] && export PYTHONSTARTUP="$HOME/.pythonrc"
 
+pyenv_setup() {
+    command -v pyenv > /dev/null && eval "$( pyenv init - )"
+}
+
+pyenv_setup
+
 # ssh-agent
 
 kill_ssh_agent() {
