@@ -9,3 +9,5 @@ set history filename ~/.gdb-history
 set history size 1000
 
 set confirm off
+
+set print pretty on
