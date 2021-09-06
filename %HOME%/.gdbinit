@@ -11,3 +11,7 @@ set history size 1000
 set confirm off
 
 set print pretty on
+
+define bta
+    thread apply all backtrace
+end
