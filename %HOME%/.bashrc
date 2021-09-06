@@ -44,15 +44,7 @@ alias dir='ls --format=vertical'
 alias less='less --ignore-case --line-numbers --RAW-CONTROL-CHARS'
 alias tree='tree -a'
 
-alias utc_file_name='date --utc +"%Y%m%d%H%M%S"'
-alias utc_iso='date --utc +"%Y-%m-%dT%H:%M:%SZ"'
-
-#alias sed='sed --follow-symlinks'
-# The alias above doesn't actually work with stdin in sed 4.2.2, it's a bug
-# fixed in sed 4.3.
-# Don't forget to uncomment once sed 4.3 becomes common.
-
-alias detached='screen -d -m'
+alias sed='sed --follow-symlinks'
 
 # Clear the screen (https://stackoverflow.com/a/5367075/514684):
 alias cls='echo -en "\ec"'
