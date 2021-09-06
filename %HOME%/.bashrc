@@ -57,6 +57,9 @@ alias ssh-copy-id='ssh-copy-id -i'
 # Shut GDB up:
 alias gdb='gdb -q'
 
+# Group by 1 byte only with xxd:
+alias xxd='xxd -g 1'
+
 [ -r "$HOME/.bash_utils/file.sh" ] && source "$HOME/.bash_utils/file.sh"
 [ -r "$HOME/.bash_utils/text.sh" ] && source "$HOME/.bash_utils/text.sh"
 
