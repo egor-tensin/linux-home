@@ -94,6 +94,14 @@ os_is_cygwin \
     || command -v stty > /dev/null 2>&1 \
     && stty -ixon
 
+# Vagrant: fix `vagrant plugin install`.
+# https://github.com/hashicorp/vagrant/issues/12202
+# TODO: remove when 2.2.15 is released?
+export VAGRANT_DISABLE_STRICT_DEPENDENCY_ENFORCEMENT=1
+
+# nnn
+# ---
+
 inside_nnn() {
     [ -n "$NNNLVL" ] && [ "${NNNLVL:-0}" -ge 1 ]
 }
@@ -118,6 +126,9 @@ n() {
 nnn() {
     n "$@"
 }
+
+# tmux
+# ----
 
 remote_terminal() {
     test -n "$SSH_CONNECTION"
@@ -149,11 +160,6 @@ elif multiplexed; then
 elif command -v tmux &> /dev/null; then
     exec tmux
 fi
-
-# Vagrant: fix `vagrant plugin install`.
-# https://github.com/hashicorp/vagrant/issues/12202
-# TODO: remove when 2.2.15 is released?
-export VAGRANT_DISABLE_STRICT_DEPENDENCY_ENFORCEMENT=1
 
 # Disable Alt+N shortcuts, which I use in tmux:
 # https://superuser.com/a/770902
