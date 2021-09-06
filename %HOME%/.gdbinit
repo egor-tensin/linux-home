@@ -15,3 +15,8 @@ set print pretty on
 define bta
     thread apply all backtrace
 end
+
+define xxd
+    dump binary memory /tmp/dump.bin $arg0 ((char *)$arg0)+$arg1
+    shell xxd -g 1 /tmp/dump.bin
+end
