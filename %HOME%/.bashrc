@@ -91,21 +91,6 @@ os_is_cygwin \
     || command -v stty > /dev/null 2>&1 \
     && stty -ixon
 
-# Tilix: fix the important warning.
-# https://gnunn1.github.io/tilix-web/manual/vteconfig/
-if [ "$TILIX_ID" ] || [ "$VTE_VERSION" ]; then
-    [ -r /etc/profile.d/vte.sh ] && source /etc/profile.d/vte.sh
-fi
-
-# ranger: prevent nested instances.
-ranger() {
-    if [ -z "$RANGER_LEVEL" ]; then
-        /usr/bin/ranger "$@"
-    else
-        exit
-    fi
-}
-
 inside_nnn() {
     [ -n "$NNNLVL" ] && [ "${NNNLVL:-0}" -ge 1 ]
 }
