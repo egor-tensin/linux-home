@@ -18,5 +18,5 @@ end
 
 define xxd
     dump binary memory /tmp/dump.bin $arg0 ((char *)$arg0)+$arg1
-    shell xxd -g 1 /tmp/dump.bin
+    shell xxd -groupsize 1 /tmp/dump.bin
 end
