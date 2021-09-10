@@ -56,6 +56,7 @@ alias ssh-copy-id='ssh-copy-id -i'
 
 # Shut GDB up:
 alias gdb='gdb -q'
+alias coredumpctl='coredumpctl --debugger-arguments="-q"'
 
 # Group by 1 byte only with xxd:
 alias xxd='xxd -groupsize 1'
