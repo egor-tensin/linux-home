@@ -72,6 +72,9 @@
         # Pass "-a" to skip using `git add`.
 	fixup = !GIT_EDITOR=true git commit --amend
 
+	# Life is too short.
+	s = status
+
 [filter "lfs"]
 	smudge = git-lfs smudge -- %f
 	process = git-lfs filter-process
