@@ -61,6 +61,16 @@ alias coredumpctl='coredumpctl --debugger-arguments="-q"'
 # Group by 1 byte only with xxd:
 alias xxd='xxd -groupsize 1'
 
+# This doc says that "you should always add the following lines to your
+# .bashrc":
+#
+#     https://www.gnupg.org/documentation/manuals/gnupg/Invoking-GPG_002dAGENT.html
+#
+# Otherwise, GPG signing in git often doesn't work (for example, ever a SSH
+# connection): https://stackoverflow.com/a/54809060/514684
+GPG_TTY="$( tty )"
+export GPG_TTY
+
 [ -r "$HOME/.bash_utils/file.sh" ] && source "$HOME/.bash_utils/file.sh"
 [ -r "$HOME/.bash_utils/text.sh" ] && source "$HOME/.bash_utils/text.sh"
 
