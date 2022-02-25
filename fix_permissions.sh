@@ -13,4 +13,4 @@ script_dir="$( dirname -- "${BASH_SOURCE[0]}" )"
 script_dir="$( cd -- "$script_dir" && pwd )"
 readonly script_dir
 
-find "$script_dir" -mindepth 1 -path "$script_dir/.git" -prune -o -exec chmod go-w {} +
+links-chmod go-w
