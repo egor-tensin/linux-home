@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # Copyright (c) 2018 Egor Tensin <Egor.Tensin@gmail.com>
-# This file is part of the "Linux/Cygwin environment" project.
+# This file is part of the "linux-home" project.
 # For details, see https://github.com/egor-tensin/linux-home.
 # Distributed under the MIT License.
 

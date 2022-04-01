@@ -1,7 +1,8 @@
-Linux/Cygwin environment
-========================
+linux-home
+==========
 
-Personal Linux/Cygwin environment (a.k.a. my dotfiles).
+My dotfiles.
+
 The files are maintained in this repository and shared across different
 machines using [config-links].
 
