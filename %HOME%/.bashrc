@@ -78,7 +78,6 @@ export GPG_TTY
 [ -r "$HOME/.bash_utils/cxx.sh"          ] && source "$HOME/.bash_utils/cxx.sh"
 [ -r "$HOME/.bash_utils/distr.sh"        ] && source "$HOME/.bash_utils/distr.sh"
 [ -r "$HOME/.bash_utils/git.sh"          ] && source "$HOME/.bash_utils/git.sh"
-[ -r "$HOME/.bash_utils/mysql.sh"        ] && source "$HOME/.bash_utils/mysql.sh"
 [ -r "$HOME/.bash_utils/os.sh"           ] && source "$HOME/.bash_utils/os.sh"
 [ -r "$HOME/.bash_utils/path.sh"         ] && source "$HOME/.bash_utils/path.sh"
 
