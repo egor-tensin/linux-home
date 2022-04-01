@@ -6,6 +6,7 @@
 # Distributed under the MIT License.
 
 set -o errexit -o nounset -o pipefail
+shopt -s inherit_errexit
 
 dump() {
     local msg
@@ -42,10 +43,13 @@ update_box_from_line() {
 }
 
 update_all_boxes() {
+    local output
+    output="$( vagrant box outdated --global | grep -F outdated )"
+
     local line
     while IFS= read -r line; do
         update_box_from_line "$line"
-    done < <( vagrant box outdated --global | grep -F outdated )
+    done <<< "$output"
 }
 
 clean_old_boxes() {
