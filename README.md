@@ -11,13 +11,7 @@ machines using [config-links].
 Deployment
 ----------
 
-Using [config-links]:
-
-    > pwd
-    /cygdrive/d/workspace/personal/linux-home
-
-    > links-update
-    ...
+Go to the top directory and execute `links-update` (from [config-links]).
 
 Issues
 ------
