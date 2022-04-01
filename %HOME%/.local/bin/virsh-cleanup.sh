@@ -5,6 +5,8 @@
 # For details, see https://github.com/egor-tensin/linux-home.
 # Distributed under the MIT License.
 
+# This script destroys all libvirt resources.
+
 set -o errexit -o nounset -o pipefail
 shopt -s inherit_errexit
 
