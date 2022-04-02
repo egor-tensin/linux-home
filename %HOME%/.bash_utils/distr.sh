@@ -80,7 +80,8 @@ sums_list_paths() (
             fi
 
             IFS= read -r path
-            path="${path#'*'}"
+            path="${path:1}"
+
             [ -n "$escaped" ] && path="$( _sums_unescape_path "$path" )"
 
             [ -n "$print_lines" ] && output+=("$line")
