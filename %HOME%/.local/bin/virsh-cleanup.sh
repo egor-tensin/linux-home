@@ -8,7 +8,7 @@
 # This script destroys all libvirt resources.
 
 set -o errexit -o nounset -o pipefail
-shopt -s inherit_errexit
+shopt -s inherit_errexit lastpipe
 
 CONNECT="${CONNECT:=qemu:///system}"
 POOL="${POOL:=default}"
@@ -24,7 +24,7 @@ dump() {
 }
 
 run_virsh() {
-    virsh -c "$CONNECT" "$@"
+    virsh -q -c "$CONNECT" "$@"
 }
 
 list_domains() {
@@ -32,24 +32,18 @@ list_domains() {
 }
 
 list_networks() {
-    local output
-    output="$( run_virsh net-list --all --name )"
-
     local name
-    while IFS= read -r name; do
+    run_virsh net-list --all --name | while IFS= read -r name; do
         [ "$name" = default ] && continue
         echo "$name"
-    done <<< "$output"
+    done
 }
 
 list_volumes() {
-    local output
-    output="$( run_virsh vol-list "$POOL" | tail -n +3 | tr -s ' ' )"
-
     local name
-    while IFS=' ' read -r name _; do
+    run_virsh vol-list "$POOL" | tr -s ' ' | while IFS=' ' read -r name _; do
         echo "$name"
-    done <<< "$output"
+    done
 }
 
 remove_domain() {
@@ -79,22 +73,11 @@ remove_volume() {
 }
 
 main() {
-    local output item
+    local item
 
-    output="$( list_domains )"
-    if [ -n "$output" ]; then
-        while IFS= read -r item; do remove_domain "$item"; done <<< "$output"
-    fi
-
-    output="$( list_volumes )"
-    if [ -n "$output" ]; then
-        while IFS= read -r item; do remove_volume "$item"; done <<< "$output"
-    fi
-
-    output="$( list_networks )"
-    if [ -n "$output" ]; then
-        while IFS= read -r item; do remove_network "$item"; done <<< "$output"
-    fi
+    list_domains  | while IFS= read -r item; do remove_domain  "$item"; done
+    list_volumes  | while IFS= read -r item; do remove_volume  "$item"; done
+    list_networks | while IFS= read -r item; do remove_network "$item"; done
 }
 
 main

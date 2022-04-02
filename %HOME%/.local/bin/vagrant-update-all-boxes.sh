@@ -8,7 +8,7 @@
 # This script updates all Vagrant boxes.
 
 set -o errexit -o nounset -o pipefail
-shopt -s inherit_errexit
+shopt -s inherit_errexit lastpipe
 
 dump() {
     local msg
@@ -45,13 +45,10 @@ update_box_from_line() {
 }
 
 update_all_boxes() {
-    local output
-    output="$( vagrant box outdated --global | grep -F outdated )"
-
     local line
-    while IFS= read -r line; do
+    vagrant box outdated --global | grep -F outdated | while IFS= read -r line; do
         update_box_from_line "$line"
-    done <<< "$output"
+    done
 }
 
 clean_old_boxes() {
