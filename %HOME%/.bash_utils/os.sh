@@ -53,6 +53,7 @@ os_is_arch_based()   { os_is_arch || os_is_manjaro ; }
 
 pkg_list_cygwin() (
     set -o errexit -o nounset -o pipefail
+    shopt -s inherit_errexit
 
     cygcheck --check-setup --dump-only \
         | tail -n +3                   \
@@ -63,6 +64,7 @@ pkg_list_cygwin() (
 
 setup_pkg_list_ubuntu() (
     set -o errexit -o nounset -o pipefail
+    shopt -s inherit_errexit
 
     local -r initial_status='/var/log/installer/initial-status.gz'
 
@@ -74,13 +76,20 @@ setup_pkg_list_ubuntu() (
 
 user_pkg_list_ubuntu() (
     set -o errexit -o nounset -o pipefail
+    shopt -s inherit_errexit
 
-    comm -23 <( apt-mark showmanual | sort | uniq ) \
-             <( setup_pkg_list_ubuntu )
+    local manual
+    manual="$( apt-mark showmanual | sort | uniq )"
+
+    local setup
+    setup="$( setup_pkg_list_ubuntu )"
+
+    comm -23 <( echo "$manual" ) <( echo "$setup" )
 )
 
 pkg_list_ubuntu() (
     set -o errexit -o nounset -o pipefail
+    shopt -s inherit_errexit
 
     dpkg --get-selections                     \
         | grep --invert-match -- 'deinstall$' \
@@ -92,6 +101,7 @@ pkg_list_ubuntu() (
 
 setup_pkg_list_arch() (
     set -o errexit -o nounset -o pipefail
+    shopt -s inherit_errexit
 
     # Assuming you only selected groups 'base and 'base-devel' during
     # installation.
@@ -102,21 +112,35 @@ setup_pkg_list_arch() (
 
 user_pkg_list_arch() (
     set -o errexit -o nounset -o pipefail
+    shopt -s inherit_errexit
 
-    comm -23 <( pacman -Q --explicit -q | sort ) \
-             <( setup_pkg_list_arch )
+    local manual
+    manual="$( pacman -Q --explicit -q | sort )"
+
+    local setup
+    setup="$( setup_pkg_list_arch )"
+
+    comm -23 <( echo "$manual" ) <( echo "$setup" )
 )
 
 user_pkg_list_manjaro() (
     set -o errexit -o nounset -o pipefail
+    shopt -s inherit_errexit
 
     # https://forum.manjaro.org/t/how-do-i-get-a-list-of-all-packages-installed-on-a-system/50289/8
-    comm -12 <( grep --perl-regexp --only-matching -e '\[ALPM\] installed \K\S*' /var/log/pacman.log | sort | uniq ) \
-             <( pacman -Qeqn | sort )
+
+    local setup
+    setup="$( grep --perl-regexp --only-matching -e '\[ALPM\] installed \K\S*' /var/log/pacman.log | sort | uniq )"
+
+    local manual
+    manual="$( pacman -Qeqn | sort )"
+
+    comm -12 <( echo "$setup" ) <( echo "$manual" )
 )
 
 manual_pkg_list_arch() (
     set -o errexit -o nounset -o pipefail
+    shopt -s inherit_errexit
 
     expac '%n %p' | grep 'Unknown Packager'
 )
@@ -137,6 +161,7 @@ pkg_list_manjaro() {
 
 pkg_list_fedora() (
     set -o errexit -o nounset -o pipefail
+    shopt -s inherit_errexit
 
     rpm --queryformat="%{NAME}\n" -qa | sort
 )
@@ -145,6 +170,7 @@ pkg_list_fedora() (
 
 pkg_list() (
     set -o errexit -o nounset -o pipefail
+    shopt -s inherit_errexit
 
     if os_is_cygwin; then
         pkg_list_cygwin
@@ -164,6 +190,7 @@ pkg_list() (
 
 user_pkg_list() (
     set -o errexit -o nounset -o pipefail
+    shopt -s inherit_errexit
 
     if os_is_ubuntu || os_is_mint; then
         user_pkg_list_ubuntu

@@ -58,7 +58,11 @@ chruby_setup() {
 chruby_setup
 
 rbenv_setup() {
-    command -v rbenv > /dev/null && eval "$( rbenv init - )"
+    local rbenv_init
+
+    command -v rbenv > /dev/null && \
+        rbenv_init="$( rbenv init - )" && \
+        eval "$rbenv_init"
 }
 
 rbenv_setup
@@ -83,7 +87,11 @@ python_setup python3 python
 [ -r "$HOME/.pythonrc" ] && export PYTHONSTARTUP="$HOME/.pythonrc"
 
 pyenv_setup() {
-    command -v pyenv > /dev/null && eval "$( pyenv init - )"
+    local pyenv_init
+
+    command -v pyenv > /dev/null && \
+        pyenv_init="$( pyenv init - )" && \
+        eval "$pyenv_init"
 }
 
 pyenv_setup

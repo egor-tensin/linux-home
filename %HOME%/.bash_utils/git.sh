@@ -12,9 +12,15 @@ alias repo_branches='git for-each-ref '"'"'--format=%(refname:short)'"'"' refs/h
 
 workdir_is_clean() (
     set -o errexit -o nounset -o pipefail
+    shopt -s inherit_errexit
+
     local status
     status="$( git status --porcelain )"
-    test -z "$status"
+
+    if [ -n "$status" ]; then
+        echo "${FUNCNAME[0]}: repository isn't clean" >&2
+        return 1
+    fi
 )
 
 alias workdir_clean_all='git clean -fdx'
@@ -22,16 +28,14 @@ alias workdir_clean_ignored='git clean -fdX'
 
 branch_eol_normalized() (
     set -o errexit -o nounset -o pipefail
+    shopt -s inherit_errexit lastpipe
 
-    if ! workdir_is_clean; then
-        echo "${FUNCNAME[0]}: repository isn't clean" >&2
-        return 1
-    fi
+    workdir_is_clean
 
     local normalized=0
 
     local line
-    while IFS= read -d '' -r line; do
+    git ls-files -z --eol | while IFS= read -d '' -r line; do
         local eolinfo
         if ! eolinfo="$( expr "$line" : 'i/\([^ ]*\)' )"; then
             echo "${FUNCNAME[0]}: couldn't extract eolinfo from: $line" >&2
@@ -53,28 +57,27 @@ branch_eol_normalized() (
         fi
 
         normalized=1
-    done < <( git ls-files -z --eol )
+    done
 
     return "$normalized"
 )
 
 repo_eol_normalized() (
     set -o errexit -o nounset -o pipefail
+    shopt -s inherit_errexit lastpipe
 
-    if ! workdir_is_clean; then
-        echo "${FUNCNAME[0]}: repository isn't clean" >&2
-        return 1
-    fi
+    workdir_is_clean
 
     local branch
-    while IFS= read -r branch; do
+    repo_branches | while IFS= read -r branch; do
         git checkout --quiet "$branch"
         branch_eol_normalized "$branch"
-    done < <( repo_branches )
+    done
 )
 
 workdir_tighten_permissions() (
     set -o errexit -o nounset -o pipefail
+    shopt -s inherit_errexit
 
     branch_files -z | xargs -0 -- chmod 0600 --
     branch_dirs  -z | xargs -0 -- chmod 0700 --
@@ -83,32 +86,35 @@ workdir_tighten_permissions() (
 
 branch_doslint() (
     set -o errexit -o nounset -o pipefail
+    shopt -s inherit_errexit lastpipe
 
     local -a paths
-    local path
 
-    while IFS= read -d '' -r path; do
+    local path
+    branch_files -z | while IFS= read -d '' -r path; do
         paths+=("$path")
-    done < <( branch_files -z )
+    done
 
     doslint ${paths[@]+"${paths[@]}"}
 )
 
 branch_lint() (
     set -o errexit -o nounset -o pipefail
+    shopt -s inherit_errexit lastpipe
 
     local -a paths
-    local path
 
-    while IFS= read -d '' -r path; do
+    local path
+    branch_files -z | while IFS= read -d '' -r path; do
         paths+=("$path")
-    done < <( branch_files -z )
+    done
 
     lint ${paths[@]+"${paths[@]}"}
 )
 
 branch_backup() (
     set -o errexit -o nounset -o pipefail
+    shopt -s inherit_errexit
 
     local repo_dir
     repo_dir="$( pwd )"
@@ -135,6 +141,8 @@ branch_backup() (
 
 branch_backup_dropbox() (
     set -o errexit -o nounset -o pipefail
+    shopt -s inherit_errexit
+
     branch_backup "$USERPROFILE/Dropbox/backups"
 )
 

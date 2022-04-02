@@ -7,6 +7,8 @@
 
 _runc_os_is_cygwin() (
     set -o errexit -o nounset -o pipefail
+    shopt -s inherit_errexit
+
     local os
     os="$( uname -o )"
     test 'Cygwin' = "$os"
@@ -38,6 +40,7 @@ _runc_get_absolute_path() {
 
 _runc_usage() (
     set -o errexit -o nounset -o pipefail
+    shopt -s inherit_errexit
 
     local prefix="${FUNCNAME[0]}"
     [ "${#FUNCNAME[@]}" -gt 1 ] && prefix="${FUNCNAME[1]}"
@@ -52,6 +55,7 @@ _runc_usage() (
 
 runc() (
     set -o errexit -o nounset -o pipefail
+    shopt -s inherit_errexit lastpipe
 
     local -a c_flags=(${runc_flags[@]+"${runc_flags[@]}"})
     local -a src_files=()
@@ -111,22 +115,22 @@ runc() (
     src_files=()
 
     local src_file
-    while IFS= read -d '' -r src_file; do
+    _runc_get_absolute_path ${_src_files[@]+"${_src_files[@]}"} | while IFS= read -d '' -r src_file; do
         src_files+=("$src_file")
-    done < <( _runc_get_absolute_path ${_src_files[@]+"${_src_files[@]}"} )
+    done
 
     if [ "${#include_dirs[@]}" -gt 0 ]; then
         local include_dir
-        while IFS= read -d '' -r include_dir; do
+        _runc_get_absolute_path ${include_dirs[@]+"${include_dirs[@]}"} | while IFS= read -d '' -r include_dir; do
             c_flags+=("-I$include_dir")
-        done < <( _runc_get_absolute_path ${include_dirs[@]+"${include_dirs[@]}"} )
+        done
     fi
 
     if [ "${#lib_dirs[@]}" -gt 0 ]; then
         local lib_dir
-        while IFS= read -d '' -r lib_dir; do
+        _runc_get_absolute_path ${lib_dirs[@]+"${lib_dirs[@]}"} | while IFS= read -d '' -r lib_dir; do
             c_flags+=("-L$lib_dir")
-        done < <( _runc_get_absolute_path ${lib_dirs[@]+"${lib_dirs[@]}"} )
+        done
     fi
 
     if [ "${#libs[@]}" -gt 0 ]; then
@@ -157,6 +161,8 @@ runc() (
 
 runcxx() (
     set -o errexit -o nounset -o pipefail
+    shopt -s inherit_errexit
+
     local -a runc_flags=(${runcxx_flags[@]+"${runcxx_flags[@]}"})
     BASH_ENV=<( declare -p runc_flags ) \
         runc_compiler="${runcxx_compiler:-g++}" \
@@ -165,6 +171,7 @@ runcxx() (
 
 _runc_gdb() (
     set -o errexit -o nounset -o pipefail
+    shopt -s inherit_errexit
 
     if [ "$#" -ne 2 ]; then
         echo "usage: ${FUNCNAME[0]} BINARY CORE_DUMP" >&2
@@ -179,6 +186,7 @@ _runc_gdb() (
 
 _runc_lldb() (
     set -o errexit -o nounset -o pipefail
+    shopt -s inherit_errexit
 
     if [ "$#" -ne 2 ]; then
         echo "usage: ${FUNCNAME[0]} BINARY CORE_DUMP" >&2
@@ -193,6 +201,7 @@ _runc_lldb() (
 
 runc_debug() (
     set -o errexit -o nounset -o pipefail
+    shopt -s inherit_errexit
 
     if [ "$#" -ne 1 ]; then
         echo "usage: ${FUNCNAME[0]} BINARY" >&2

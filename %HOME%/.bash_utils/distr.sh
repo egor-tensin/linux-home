@@ -10,6 +10,7 @@ sums_name="$( basename -- "$sums_path" )"
 
 _sums_unescape_path() (
     set -o errexit -o nounset -o pipefail
+    shopt -s inherit_errexit
 
     if [ "$#" -ne 1 ]; then
         echo "usage: ${FUNCNAME[0]} PATH" >&2
@@ -24,6 +25,7 @@ _sums_unescape_path() (
 
 sums_list_paths() (
     set -o errexit -o nounset -o pipefail
+    shopt -s inherit_errexit
 
     local print_lines=
     local print_sums=
@@ -87,20 +89,22 @@ sums_list_paths() (
         } <<< "$line"
     done < "$sums_path"
 
-    [ "${#output[@]}" -gt 0 ] && printf -- "$fmt_output" ${output[@]+"${output[@]}"}
+    if [ "${#output[@]}" -gt 0 ]; then
+        printf -- "$fmt_output" ${output[@]+"${output[@]}"}
+    fi
 )
 
 sums_add() (
     set -o errexit -o nounset -o pipefail
+    shopt -s inherit_errexit lastpipe
 
     local -A existing
     local -a missing=()
 
     local path
-
-    while IFS= read -d '' -r path; do
+    sums_list_paths -z | while IFS= read -d '' -r path; do
         existing[$path]=1
-    done < <( sums_list_paths -z )
+    done
 
     for path; do
         [ -z "${existing[$path]+x}" ] && missing+=("$path")
@@ -113,47 +117,52 @@ sums_add() (
 
 sums_add_all() (
     set -o errexit -o nounset -o pipefail
+    shopt -s inherit_errexit lastpipe
 
     local -a paths
-    local path
 
-    while IFS= read -d '' -r path; do
+    local path
+    find . -type f -\! -iname "$sums_name" -printf '%P\0' | while IFS= read -d '' -r path; do
         paths+=("$path")
-    done < <( find . -type f -\! -iname "$sums_name" -printf '%P\0' )
+    done
 
     sums_add ${paths[@]+"${paths[@]}"}
 )
 
 sums_add_distr() (
     set -o errexit -o nounset -o pipefail
+    shopt -s inherit_errexit lastpipe
 
     local -a paths
     local path
 
+    find . -type f -\(        \
+        -iname '*.7z'         \
+        -o -iname '*.exe'     \
+        -o -iname '*.img'     \
+        -o -iname '*.iso'     \
+        -o -iname '*.tar'     \
+        -o -iname '*.tar.bz2' \
+        -o -iname '*.tar.gz'  \
+        -o -iname '*.zip'     \
+        -\) -printf '%P\0' |
     while IFS= read -d '' -r path; do
         paths+=("$path")
-    done < <( find . -type f -\( \
-        -iname '*.7z'            \
-        -o -iname '*.exe'        \
-        -o -iname '*.img'        \
-        -o -iname '*.iso'        \
-        -o -iname '*.tar'        \
-        -o -iname '*.tar.bz2'    \
-        -o -iname '*.tar.gz'     \
-        -o -iname '*.zip'        \
-        -\) -printf '%P\0' )
+    done
 
     sums_add ${paths[@]+"${paths[@]}"}
 )
 
 sums_verify() (
     set -o errexit -o nounset -o pipefail
+    shopt -s inherit_errexit
 
     sha1sum --check --strict --quiet -- "$sums_path"
 )
 
 sums_remove_missing() (
     set -o errexit -o nounset -o pipefail
+    shopt -s inherit_errexit lastpipe
 
     local dry_run=
 
@@ -177,13 +186,13 @@ sums_remove_missing() (
 
     local -a input=()
     local -a paths=()
-    local line path
 
-    while IFS= read -d '' -r line; do
+    local line path
+    sums_list_paths -z --lines | while IFS= read -d '' -r line; do
         IFS= read -d '' -r path
         input+=("$line")
         paths+=("$path")
-    done < <( sums_list_paths -z --lines )
+    done
 
     local -a output=()
 

@@ -28,6 +28,7 @@ doslint() {
 
 _sed_escape_pattern() (
     set -o errexit -o nounset -o pipefail
+    shopt -s inherit_errexit
 
     if [ "$#" -ne 1 ]; then
         echo "usage: ${FUNCNAME[0]} STR" >&2
@@ -51,6 +52,7 @@ _sed_escape_pattern() (
 
 _sed_escape_substitution() (
     set -o errexit -o nounset -o pipefail
+    shopt -s inherit_errexit
 
     if [ "$#" -ne 1 ]; then
         echo "usage: ${FUNCNAME[0]} STR" >&2
@@ -67,6 +69,7 @@ _sed_escape_substitution() (
 
 file_replace() (
     set -o errexit -o nounset -o pipefail
+    shopt -s inherit_errexit
 
     if [ "$#" -lt 3 ]; then
         echo "usage: ${FUNCNAME[0]} OLD NEW PATH..." >&2
@@ -85,6 +88,7 @@ file_replace() (
 
 file_replace_word() (
     set -o errexit -o nounset -o pipefail
+    shopt -s inherit_errexit
 
     if [ "$#" -lt 3 ]; then
         echo "usage: ${FUNCNAME[0]} OLD NEW PATH..." >&2
@@ -103,6 +107,7 @@ file_replace_word() (
 
 str_replace() (
     set -o errexit -o nounset -o pipefail
+    shopt -s inherit_errexit
 
     if [ "$#" -ne 3 ]; then
         echo "usage: ${FUNCNAME[0]} STR SUB REP" >&2
@@ -120,6 +125,7 @@ str_replace() (
 
 str_tolower() (
     set -o errexit -o nounset -o pipefail
+    shopt -s inherit_errexit
 
     local s
     for s; do
@@ -129,6 +135,7 @@ str_tolower() (
 
 str_toupper() (
     set -o errexit -o nounset -o pipefail
+    shopt -s inherit_errexit
 
     local s
     for s; do
@@ -138,6 +145,7 @@ str_toupper() (
 
 _bash_escape_pattern() (
     set -o errexit -o nounset -o pipefail
+    shopt -s inherit_errexit
 
     if [ "$#" -ne 1 ]; then
         echo "usage: ${FUNCNAME[0]} STR" >&2
@@ -157,6 +165,7 @@ _bash_escape_pattern() (
 
 str_contains() (
     set -o errexit -o nounset -o pipefail
+    shopt -s inherit_errexit
 
     if [ "$#" -ne 2 ]; then
         echo "usage: ${FUNCNAME[0]} STR SUB" >&2
@@ -174,6 +183,7 @@ str_contains() (
 
 str_starts_with() (
     set -o errexit -o nounset -o pipefail
+    shopt -s inherit_errexit
 
     if [ "$#" -ne 2 ]; then
         echo "usage: ${FUNCNAME[0]} STR SUB" >&2
@@ -191,6 +201,7 @@ str_starts_with() (
 
 str_ends_with() (
     set -o errexit -o nounset -o pipefail
+    shopt -s inherit_errexit
 
     if [ "$#" -ne 2 ]; then
         echo "usage: ${FUNCNAME[0]} STR SUB" >&2
@@ -208,6 +219,7 @@ str_ends_with() (
 
 str_split() (
     set -o errexit -o nounset -o pipefail
+    shopt -s inherit_errexit lastpipe
 
     local fmt='%s\n'
     local -a args
@@ -255,13 +267,14 @@ str_split() (
 
     # Thanks to this guy for this trick:
     # http://stackoverflow.com/a/24426608/514684
-    IFS="$delim" read -a xs -d '' -r < <( printf -- "%s$delim\\0" "$str" )
+    printf -- "%s$delim\\0" "$str" | IFS="$delim" read -a xs -d '' -r
 
     [ "${#xs[@]}" -gt 0 ] && printf -- "$fmt" ${xs[@]+"${xs[@]}"}
 )
 
 str_join() (
     set -o errexit -o nounset -o pipefail
+    shopt -s inherit_errexit
 
     if [ "$#" -lt 1 ]; then
         echo "usage: ${FUNCNAME[0]} DELIM [STR]..." >&2
@@ -285,6 +298,7 @@ str_join() (
 
 str_grep() (
     set -o errexit -o nounset -o pipefail
+    shopt -s inherit_errexit
 
     if [ "$#" -ne 1 ]; then
         echo "usage: ${FUNCNAME[0]} PATTERN" >&2
@@ -298,6 +312,7 @@ str_grep() (
 
 str_grep_word() (
     set -o errexit -o nounset -o pipefail
+    shopt -s inherit_errexit
 
     if [ "$#" -ne 1 ]; then
         echo "usage: ${FUNCNAME[0]} PATTERN" >&2
@@ -311,6 +326,7 @@ str_grep_word() (
 
 str_iconv_fromto() (
     set -o errexit -o nounset -o pipefail
+    shopt -s inherit_errexit
 
     if [ "$#" -lt 3 ]; then
         echo "usage: ${FUNCNAME[0]} SRC_ENCODING DEST_ENCODING PATH..." >&2
@@ -338,6 +354,7 @@ str_iconv_fromto() (
 
 str_iconv() (
     set -o errexit -o nounset -o pipefail
+    shopt -s inherit_errexit
 
     if [ "$#" -lt 2 ]; then
         echo "usage: ${FUNCNAME[0]} DEST_ENCODING PATH..." >&2

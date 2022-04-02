@@ -11,15 +11,16 @@
 
 path_add() (
     set -o errexit -o nounset -o pipefail
+    shopt -s inherit_errexit lastpipe
 
     [ "$#" -eq 0 ] && return 0
 
     local -a src_list
-    local path
 
-    while IFS= read -d '' -r path; do
+    local path
+    readlink -z --canonicalize-missing -- "$@" | while IFS= read -d '' -r path; do
         src_list+=("$path")
-    done < <( readlink -z --canonicalize-missing -- "$@" )
+    done
 
     for path; do
         if str_contains "$path" ':'; then
@@ -38,11 +39,11 @@ path_add() (
     done
 
     if [ -n "${PATH-}" ]; then
-        while IFS= read -d '' -r path; do
+        str_split -z -- "${PATH-}" ':' | xargs -0 -- readlink -z --canonicalize-missing -- | while IFS= read -d '' -r path; do
             [ -n "${dest_dict[$path]+x}" ] && continue
             dest_dict[$path]=1
             dest_list+=("$path")
-        done < <( str_split -z -- "${PATH-}" ':' | xargs -0 -- readlink -z --canonicalize-missing -- )
+        done
     fi
 
     str_join ':' ${dest_list[@]+"${dest_list[@]}"}
@@ -50,7 +51,12 @@ path_add() (
 
 path_export() {
     local new_path
+    local ret
 
-    new_path="$( path_add "$@" )" \
-        && export PATH="$new_path"
+    new_path="$( path_add "$@" )"
+    ret="$?"
+
+    [ "$ret" -ne 0 ] && return "$ret"
+
+    export PATH="$new_path"
 }
