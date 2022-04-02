@@ -8,8 +8,6 @@
 alias branch_files='git ls-tree -r --name-only HEAD'
 alias branch_dirs='git ls-tree -r --name-only HEAD -d'
 
-alias repo_branches='git for-each-ref '"'"'--format=%(refname:short)'"'"' refs/heads/'
-
 workdir_is_clean() (
     set -o errexit -o nounset -o pipefail
     shopt -s inherit_errexit
@@ -22,9 +20,6 @@ workdir_is_clean() (
         return 1
     fi
 )
-
-alias workdir_clean_all='git clean -fdx'
-alias workdir_clean_ignored='git clean -fdX'
 
 branch_eol_normalized() (
     set -o errexit -o nounset -o pipefail
@@ -62,28 +57,6 @@ branch_eol_normalized() (
     return "$normalized"
 )
 
-repo_eol_normalized() (
-    set -o errexit -o nounset -o pipefail
-    shopt -s inherit_errexit lastpipe
-
-    workdir_is_clean
-
-    local branch
-    repo_branches | while IFS= read -r branch; do
-        git checkout --quiet "$branch"
-        branch_eol_normalized "$branch"
-    done
-)
-
-workdir_tighten_permissions() (
-    set -o errexit -o nounset -o pipefail
-    shopt -s inherit_errexit
-
-    branch_files -z | xargs -0 -- chmod 0600 --
-    branch_dirs  -z | xargs -0 -- chmod 0700 --
-    chmod 0700 .git
-)
-
 branch_doslint() (
     set -o errexit -o nounset -o pipefail
     shopt -s inherit_errexit lastpipe
@@ -117,7 +90,7 @@ branch_backup() (
     shopt -s inherit_errexit
 
     local repo_dir
-    repo_dir="$( pwd )"
+    repo_dir="$( git rev-parse --show-toplevel )"
     local repo_name
     repo_name="$( basename -- "$repo_dir" )"
     local backup_dir="$repo_dir"
@@ -138,12 +111,3 @@ branch_backup() (
         --remote="$repo_dir" \
         HEAD
 )
-
-branch_backup_dropbox() (
-    set -o errexit -o nounset -o pipefail
-    shopt -s inherit_errexit
-
-    branch_backup "$USERPROFILE/Dropbox/backups"
-)
-
-alias branch_fixup_committer_dates='git filter-branch --force --env-filter '"'"'export GIT_COMMITTER_DATE="$GIT_AUTHOR_DATE"'"'"

@@ -46,9 +46,6 @@ alias tree='tree -a'
 
 alias sed='sed --follow-symlinks'
 
-# Clear the screen (https://stackoverflow.com/a/5367075/514684):
-alias cls='echo -en "\ec"'
-
 alias copy='xclip -sel clip'
 
 # Make sure ssh-copy-id copies public keys along with their comments.
@@ -91,23 +88,11 @@ os_is_cygwin || complete -r
 #export SHELLOPTS
 #export BASHOPTS
 
-if os_is_cygwin; then
-    alias mingcc32='i686-w64-mingw32-gcc'
-    alias ming++32='i686-w64-mingw32-g++'
-    alias mingcc='x86_64-w64-mingw32-gcc'
-    alias ming++='x86_64-w64-mingw32-g++'
-fi
-
 # I've bumped into this on Linux Mint: Ctrl+S causes my terminal to freeze
 # completely (Ctrl+Q is a temporary escape, stty is the cure).
 os_is_cygwin \
     || command -v stty > /dev/null 2>&1 \
     && stty -ixon
-
-# Vagrant: fix `vagrant plugin install`.
-# https://github.com/hashicorp/vagrant/issues/12202
-# TODO: remove when 2.2.15 is released?
-export VAGRANT_DISABLE_STRICT_DEPENDENCY_ENFORCEMENT=1
 
 # nnn
 # ---
