@@ -41,6 +41,9 @@
 	# Follow renames:
 	follow = true
 
+[merge]
+	# Show the common ancestor when resolving a conflict:
+	conflictStyle = diff3
 [mergetool]
 	# I don't even know why those are necessary, since we can abort and
 	# retry merges.
