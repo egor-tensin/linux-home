@@ -8,7 +8,10 @@ case "$-" in
       *) return ;;
 esac
 
-PS1="\[\e[1;32m\]\h\[\e[m\] \[\e[1;34m\]\W\[\e[m\] # \[$(tput sgr0)\]"
+# Tango:
+#PS1="\[\e[1;32m\]\h\[\e[m\] \[\e[1;34m\]\W\[\e[m\] # \[$(tput sgr0)\]"
+# Solarized (light):
+PS1="\[\e[1;35m\]\h\[\e[m\] \[\e[1;36m\]\W\[\e[m\] # \[$(tput sgr0)\]"
 
 # `echo "!)"` doesn't work otherwise (namely, in third-party scripts):
 set +o histexpand
