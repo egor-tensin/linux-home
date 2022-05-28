@@ -1,7 +1,9 @@
 source $VIMRUNTIME/vimrc_example.vim
 
-" Color scheme.
-color desert
+syntax enable
+"set background=dark
+set background=light
+colorscheme solarized
 
 set nowrap " Don't wrap lines.
 
@@ -56,25 +58,6 @@ set secure
 " Case-insensitive (more precisely, so-called smart) search.
 set ignorecase
 set smartcase
-
-" White on a bright background, ridiculous!
-hi IncSearch ctermfg=0
-hi Search    ctermfg=0
-
-hi MatchParen ctermfg=0
-
-hi Error    ctermfg=0
-hi ErrorMsg ctermfg=0
-
-hi DiffAdd    ctermfg=0
-hi DiffChange ctermfg=0
-hi DiffDelete ctermfg=0
-hi DiffText   ctermfg=0
-
-hi SpellBad   ctermfg=0
-hi SpellCap   ctermfg=0
-hi SpellRare  ctermfg=0
-hi SpellLocal ctermfg=0
 
 " Highlight current line.
 set cursorline
