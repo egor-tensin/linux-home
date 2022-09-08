@@ -19,8 +19,8 @@ setup_alternatives_cc() (
     mkdir -p -- ~/.local/bin
 
     update-my-alternatives --remove-all cc || true
-    update-my-alternatives --install ~/.local/bin/cc cc "$clang_cc" 512 --slave ~/.local/bin/c++ c++ "$clang_cxx"
-    update-my-alternatives --install ~/.local/bin/cc cc "$gcc_cc"   256 --slave ~/.local/bin/c++ c++ "$gcc_cxx"
+    update-my-alternatives --install ~/.local/bin/cc cc "$clang_cc" 256 --slave ~/.local/bin/c++ c++ "$clang_cxx"
+    update-my-alternatives --install ~/.local/bin/cc cc "$gcc_cc"   512 --slave ~/.local/bin/c++ c++ "$gcc_cxx"
 )
 
 setup_alternatives() (
