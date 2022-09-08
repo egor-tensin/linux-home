@@ -21,6 +21,7 @@
 # Show submodule changes in a more verbose way.
 [diff]
 	submodule = log
+	wsErrorHighlight = all
 [status]
 	submoduleSummary = true
 [alias]
