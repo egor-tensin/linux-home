@@ -78,6 +78,7 @@
 
 	# Life is too short.
 	s = status
+	co = checkout
 
 [filter "lfs"]
 	smudge = git-lfs smudge -- %f
