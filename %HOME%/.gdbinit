@@ -16,6 +16,8 @@ set history save on
 set history filename ~/.gdb-history
 set history size 1000
 
+set debuginfod enabled on
+
 define xxd
     dump binary memory /tmp/dump.bin $arg0 ((char *)$arg0)+$arg1
     shell xxd -groupsize 1 /tmp/dump.bin
