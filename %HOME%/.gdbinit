@@ -19,4 +19,5 @@ set history size 1000
 define xxd
     dump binary memory /tmp/dump.bin $arg0 ((char *)$arg0)+$arg1
     shell xxd -groupsize 1 /tmp/dump.bin
+    shell rm -f /tmp/dump.bin
 end
