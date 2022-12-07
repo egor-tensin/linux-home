@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
 set -o errexit -o nounset -o pipefail
+shopt -s inherit_errexit lastpipe
 
 plugins_dir="$HOME/.vim/pack/plugins/start"
 name='vim-colors-solarized'

@@ -3,6 +3,7 @@
 # Like the fzcd plugin, but better.
 
 set -o errexit -o pipefail
+shopt -s inherit_errexit lastpipe
 
 if command -v fzf > /dev/null 2>&1; then
     sel="$( fzf )"
