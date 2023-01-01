@@ -133,7 +133,8 @@ command -v fd > /dev/null 2>&1 \
     && export FZF_DEFAULT_COMMAND='fd --follow --show-errors --hidden --no-ignore-vcs 2> /dev/null'
 
 # nnn
+# -A    Don't auto-enter directories.
 # -e    Open text files in $EDITOR.
 # -o    Only open on Enter, not on l.
-export NNN_OPTS=eo
+export NNN_OPTS=Aeo
 export NNN_PLUG='f:myfzcd'
