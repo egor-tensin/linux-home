@@ -138,3 +138,4 @@ command -v fd > /dev/null 2>&1 \
 # -o    Only open on Enter, not on l.
 export NNN_OPTS=Aeo
 export NNN_PLUG='f:myfzcd'
+export NNN_BMS="d:$HOME/Downloads;w:$HOME/workspace/personal"
