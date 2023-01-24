@@ -72,8 +72,8 @@
 	unhide = update-index --no-skip-worktree
 	hidden = !git ls-files -v | grep --basic-regexp \"^\\([[:lower:]]\\|S\\)\"
 
-        # Squash the staging area with the latest commit.
-        # Pass "-a" to skip using `git add`.
+	# Squash the staging area with the latest commit.
+	# Pass "-a" to skip using `git add`.
 	fixup = !GIT_EDITOR=true git commit --amend
 
 	# Life is too short.
@@ -87,6 +87,6 @@
 	required = true
 
 [include]
-        # Include a file with computer-specific settings (like a different
-        # [user] section under a specific directory, etc.).
+	# Include a file with computer-specific settings (like a different
+	# [user] section under a specific directory, etc.).
 	path = ~/.gitconfig_local
