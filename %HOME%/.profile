@@ -28,6 +28,20 @@ path_export() {
 
 path_export "$HOME/.local/bin"
 
+# Homebrew-specific stuff
+
+brew_setup() {
+    [ -x /opt/homebrew/bin/brew ] && \
+        eval "$( /opt/homebrew/bin/brew shellenv )" && \
+        prefix="$( brew --prefix )" && \
+        path_export \
+            "$prefix/opt/coreutils/libexec/gnubin" \
+            "$prefix/opt/findutils/libexec/gnubin" \
+            "$prefix/opt/grep/libexec/gnubin"
+}
+
+brew_setup
+
 # Ruby-specific stuff
 
 # This is a half-assed way to automatically add your user's gem binary
