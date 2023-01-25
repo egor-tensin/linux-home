@@ -12,7 +12,6 @@ _UBUNTU='Ubuntu'
 _MINT='Linux Mint'
 _ARCH='Arch Linux'
 _ARCH_ARM='Arch Linux ARM'
-_MANJARO='Manjaro Linux'
 _FEDORA='Fedora'
 
 os_detect() {
@@ -27,7 +26,6 @@ os_detect() {
              -o "$_os" == "$_MINT"     \
              -o "$_os" == "$_ARCH"     \
              -o "$_os" == "$_ARCH_ARM" \
-             -o "$_os" == "$_MANJARO"  \
              -o "$_os" == "$_FEDORA"   \
         && return 0
 
@@ -43,11 +41,9 @@ os_is_cygwin()  { test "$_os" == "$_CYGWIN"  ; }
 os_is_ubuntu()  { test "$_os" == "$_UBUNTU"  ; }
 os_is_mint()    { test "$_os" == "$_MINT"    ; }
 os_is_arch()    { test "$_os" == "$_ARCH" -o "$_os" == "$_ARCH_ARM" ; }
-os_is_manjaro() { test "$_os" == "$_MANJARO" ; }
 os_is_fedora()  { test "$_os" == "$_FEDORA"  ; }
 
 os_is_debian_based() { os_is_ubuntu || os_is_mint ; }
-os_is_arch_based()   { os_is_arch || os_is_manjaro ; }
 
 # Cygwin
 
@@ -97,7 +93,7 @@ pkg_list_ubuntu() (
         | cut -d ':' -f 1
 )
 
-# Arch Linux/Manjaro
+# Arch Linux
 
 setup_pkg_list_arch() (
     set -o errexit -o nounset -o pipefail
@@ -123,21 +119,6 @@ user_pkg_list_arch() (
     comm -23 <( echo "$manual" ) <( echo "$setup" )
 )
 
-user_pkg_list_manjaro() (
-    set -o errexit -o nounset -o pipefail
-    shopt -s inherit_errexit
-
-    # https://forum.manjaro.org/t/how-do-i-get-a-list-of-all-packages-installed-on-a-system/50289/8
-
-    local setup
-    setup="$( grep --perl-regexp --only-matching -e '\[ALPM\] installed \K\S*' /var/log/pacman.log | sort | uniq )"
-
-    local manual
-    manual="$( pacman -Qeqn | sort )"
-
-    comm -12 <( echo "$setup" ) <( echo "$manual" )
-)
-
 manual_pkg_list_arch() (
     set -o errexit -o nounset -o pipefail
     shopt -s inherit_errexit
@@ -145,16 +126,8 @@ manual_pkg_list_arch() (
     expac '%n %p' | grep 'Unknown Packager'
 )
 
-manual_pkg_list_manjaro() {
-    manual_pkg_list_arch
-}
-
 pkg_list_arch() {
     pacman -Qq
-}
-
-pkg_list_manjaro() {
-    pkg_list_arch
 }
 
 # Fedora
@@ -178,8 +151,6 @@ pkg_list() (
         pkg_list_ubuntu
     elif os_is_arch; then
         pkg_list_arch
-    elif os_is_manjaro; then
-        pkg_list_manjaro
     elif os_is_fedora; then
         pkg_list_fedora
     else
@@ -196,8 +167,6 @@ user_pkg_list() (
         user_pkg_list_ubuntu
     elif os_is_arch; then
         user_pkg_list_arch
-    elif os_is_manjaro; then
-        user_pkg_list_manjaro
     else
         echo "${FUNCNAME[0]}: unsupported OS" >&2
         return 1
