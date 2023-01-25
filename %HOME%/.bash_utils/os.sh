@@ -43,8 +43,6 @@ os_is_mint()    { test "$_os" == "$_MINT"    ; }
 os_is_arch()    { test "$_os" == "$_ARCH" -o "$_os" == "$_ARCH_ARM" ; }
 os_is_fedora()  { test "$_os" == "$_FEDORA"  ; }
 
-os_is_debian_based() { os_is_ubuntu || os_is_mint ; }
-
 # Cygwin
 
 pkg_list_cygwin() (
