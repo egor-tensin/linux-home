@@ -31,6 +31,10 @@ shopt -s histappend
 shopt -s nullglob
 shopt -s nocaseglob
 
+alias ..='cd ..'
+alias ...='cd ../..'
+alias ....='cd ../../..'
+
 # Make aliases work with sudo:
 alias sudo='sudo '
 
