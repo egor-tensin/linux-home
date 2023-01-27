@@ -1,6 +1,8 @@
 source $VIMRUNTIME/vimrc_example.vim
 
+filetype plugin on
 syntax enable
+
 "set background=dark
 set background=light
 colorscheme solarized
@@ -11,6 +13,8 @@ set nowrap " Don't wrap lines.
 set softtabstop=4
 set shiftwidth=4
 set expandtab
+set autoindent
+filetype indent on
 
 " C++'s public/private/protected keywords don't increase indentation level.
 set cinoptions+=g0
@@ -55,13 +59,17 @@ endif
 set exrc
 set secure
 
-" Case-insensitive (more precisely, so-called smart) search.
+" Search settings.
 set ignorecase
 set smartcase
+set hlsearch
+set incsearch
 
-" Highlight current line.
+" Line numbers & identification.
 set cursorline
 "set cursorcolumn
+set number
+set ruler
 
 " Insert newline without entering insert mode.
 nmap <S-Enter> O<Esc>
