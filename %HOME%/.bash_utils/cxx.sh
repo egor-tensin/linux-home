@@ -5,14 +5,9 @@
 # For details, see https://github.com/egor-tensin/linux-home.
 # Distributed under the MIT License.
 
-_runc_os_is_cygwin() (
-    set -o errexit -o nounset -o pipefail
-    shopt -s inherit_errexit
-
-    local os
-    os="$( uname -o )"
-    test 'Cygwin' = "$os"
-)
+_runc_os_is_cygwin() {
+    test "$OSTYPE" = cygwin
+}
 
 if _runc_os_is_cygwin; then
     _runc_exe_ext='.exe'

@@ -15,9 +15,8 @@ _ARCH_ARM='Arch Linux ARM'
 _FEDORA='Fedora'
 
 os_detect() {
-    command -v uname > /dev/null             \
-        && [ "$( uname -o )" == "$_CYGWIN" ] \
-        && _os="$_CYGWIN"                    \
+    [ "$OSTYPE" == cygwin ] \
+        && _os="$_CYGWIN"   \
         && return 0
 
     [ -r /etc/os-release ]                              \
