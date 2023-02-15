@@ -37,7 +37,8 @@ brew_setup() {
         path_export \
             "$prefix/opt/coreutils/libexec/gnubin" \
             "$prefix/opt/findutils/libexec/gnubin" \
-            "$prefix/opt/grep/libexec/gnubin"
+            "$prefix/opt/grep/libexec/gnubin" \
+            "$prefix/opt/python/libexec/bin"
 }
 
 brew_setup
