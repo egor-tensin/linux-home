@@ -161,7 +161,7 @@ elif multiplexed; then
     # Skip, we're already running a multiplexer.
     true
 elif command -v tmux &> /dev/null; then
-    exec tmux
+    exec tmux new -A -s main
 fi
 
 # Disable Alt+N shortcuts, which I use in tmux:
