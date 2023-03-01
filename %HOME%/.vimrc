@@ -45,10 +45,9 @@ set colorcolumn=80
 " Key bindings
 " -----------------------------------------------------------------------------
 
-" In insert mode, press F2 to enter 'paste mode'.
-" Now you can paste text from elsewhere and _not_ mess up indentation.
-" Nice and easy, right?
-" Press F2 again to exit 'paste mode'.
+" In insert mode, press F2 to enter 'paste mode'. Now you can paste text from
+" elsewhere and _not_ mess up indentation. Nice and easy, right? Press F2 again
+" to exit 'paste mode'.
 nnoremap <F2> :set invpaste paste?<CR>
 set pastetoggle=<F2>
 set showmode
@@ -61,18 +60,18 @@ nmap <CR> o<Esc>
 " System settings
 " -----------------------------------------------------------------------------
 
-" Backup files are written to ~/.vimtmp/backup/.
-" I'm not sure how the whole thing's gonna work out in case of concurrent
-" writes to multiple files with the same name, since backup file names will
-" collide due to a long-standing Vim issue.
+" Backup files are written to ~/.vimtmp/backup/. I'm not sure how the whole
+" thing's gonna work out in case of concurrent writes to multiple files with
+" the same name, since backup file names will collide due to a long-standing
+" Vim issue.
+"
 " Vim treats `backupdir` option inconsistently: if its value ends with two
 " slashes, Vim doesn't convert the absolute path of the file being backed up
 " to its backup file name (replacing directory separators with % signs) as it
 " does with swap and 'persisent undo' files, but rather simply appends ~ to
-" the end of file's name.
-" For some reason it still works this way when there're two slashes at the
-" end, so I'm gonna stick with this, hoping that this problem gets fixed in
-" the future.
+" the end of file's name. For some reason it still works this way when there're
+" two slashes at the end, so I'm gonna stick with this, hoping that this
+" problem gets fixed in the future.
 set backupdir=~/.vimtmp/backup//
 set nobackup
 set writebackup
