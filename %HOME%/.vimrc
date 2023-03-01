@@ -55,10 +55,6 @@ nnoremap <F2> :set invpaste paste?<CR>
 set pastetoggle=<F2>
 set showmode
 
-" Insert newline without entering insert mode.
-nmap <S-Enter> O<Esc>
-nmap <CR> o<Esc>
-
 " -----------------------------------------------------------------------------
 " System settings
 " -----------------------------------------------------------------------------
