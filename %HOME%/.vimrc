@@ -1,5 +1,9 @@
 source $VIMRUNTIME/vimrc_example.vim
 
+" -----------------------------------------------------------------------------
+" File display
+" -----------------------------------------------------------------------------
+
 filetype plugin on
 syntax enable
 
@@ -8,6 +12,10 @@ set background=light
 colorscheme solarized
 
 set nowrap " Don't wrap lines.
+
+" -----------------------------------------------------------------------------
+" Indentation
+" -----------------------------------------------------------------------------
 
 " 4 spaces per indentation level, no tabs.
 set softtabstop=4
@@ -19,7 +27,23 @@ filetype indent on
 " C++'s public/private/protected keywords don't increase indentation level.
 set cinoptions+=g0
 
+" -----------------------------------------------------------------------------
+" User interface
+" -----------------------------------------------------------------------------
+
+" Highlight current line/column.
+set cursorline
+"set cursorcolumn
+" Show current line/column number in the status bar.
+set ruler
+" Show line numbers on the left.
+set number
+" Add a vertical ruler.
 set colorcolumn=80
+
+" -----------------------------------------------------------------------------
+" Key bindings
+" -----------------------------------------------------------------------------
 
 " In insert mode, press F2 to enter 'paste mode'.
 " Now you can paste text from elsewhere and _not_ mess up indentation.
@@ -28,6 +52,14 @@ set colorcolumn=80
 nnoremap <F2> :set invpaste paste?<CR>
 set pastetoggle=<F2>
 set showmode
+
+" Insert newline without entering insert mode.
+nmap <S-Enter> O<Esc>
+nmap <CR> o<Esc>
+
+" -----------------------------------------------------------------------------
+" System settings
+" -----------------------------------------------------------------------------
 
 " Backup files are written to ~/.vimtmp/backup/.
 " I'm not sure how the whole thing's gonna work out in case of concurrent
@@ -59,21 +91,18 @@ endif
 set exrc
 set secure
 
-" Search settings.
+" -----------------------------------------------------------------------------
+" Search
+" -----------------------------------------------------------------------------
+
 set ignorecase
 set smartcase
 set hlsearch
 set incsearch
 
-" Line numbers & identification.
-set cursorline
-"set cursorcolumn
-set number
-set ruler
-
-" Insert newline without entering insert mode.
-nmap <S-Enter> O<Esc>
-nmap <CR> o<Esc>
+" -----------------------------------------------------------------------------
+" Directories
+" -----------------------------------------------------------------------------
 
 " Disable opening directories, netrw is too confusing.
 " https://unix.stackexchange.com/q/297844
@@ -85,6 +114,10 @@ for f in argv()
 endfor
 
 let loaded_netrwPlugin=1
+
+" -----------------------------------------------------------------------------
+" Clipboard
+" -----------------------------------------------------------------------------
 
 " Access X clipboard.
 set clipboard=unnamedplus
