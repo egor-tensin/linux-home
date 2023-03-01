@@ -24,6 +24,22 @@ export HISTFILESIZE=20000
 export HISTSIZE=20000
 
 # -----------------------------------------------------------------------------
+# Includes
+# -----------------------------------------------------------------------------
+
+[ -r "$HOME/.bash_utils/file.sh" ] && source "$HOME/.bash_utils/file.sh"
+[ -r "$HOME/.bash_utils/text.sh" ] && source "$HOME/.bash_utils/text.sh"
+
+[ -r "$HOME/.bash_utils/alternatives.sh" ] && source "$HOME/.bash_utils/alternatives.sh"
+[ -r "$HOME/.bash_utils/cxx.sh"          ] && source "$HOME/.bash_utils/cxx.sh"
+[ -r "$HOME/.bash_utils/distr.sh"        ] && source "$HOME/.bash_utils/distr.sh"
+[ -r "$HOME/.bash_utils/git.sh"          ] && source "$HOME/.bash_utils/git.sh"
+[ -r "$HOME/.bash_utils/os.sh"           ] && source "$HOME/.bash_utils/os.sh"
+[ -r "$HOME/.bash_utils/path.sh"         ] && source "$HOME/.bash_utils/path.sh"
+
+[ -r "$HOME/.bashrc_local" ] && source "$HOME/.bashrc_local"
+
+# -----------------------------------------------------------------------------
 # Shell options
 # -----------------------------------------------------------------------------
 
@@ -37,6 +53,20 @@ shopt -s dotglob
 shopt -s histappend
 shopt -s nullglob
 shopt -s nocaseglob
+
+os_is_cygwin && set -o igncr
+os_is_cygwin || complete -r
+
+# I'm sick and tired of third-party scripts breaking b/c of a random shell
+# option I use (configure scripts in particular), so I'm commenting this out.
+#export SHELLOPTS
+#export BASHOPTS
+
+# I've bumped into this on Linux Mint: Ctrl+S causes my terminal to freeze
+# completely (Ctrl+Q is a temporary escape, stty is the cure).
+os_is_cygwin \
+    || command -v stty > /dev/null 2>&1 \
+    && stty -ixon
 
 # -----------------------------------------------------------------------------
 # Aliases
@@ -90,40 +120,6 @@ alias xxd='xxd -groupsize 1'
 # connection): https://stackoverflow.com/a/54809060/514684
 GPG_TTY="$( tty )"
 export GPG_TTY
-
-# -----------------------------------------------------------------------------
-# Includes
-# -----------------------------------------------------------------------------
-
-[ -r "$HOME/.bash_utils/file.sh" ] && source "$HOME/.bash_utils/file.sh"
-[ -r "$HOME/.bash_utils/text.sh" ] && source "$HOME/.bash_utils/text.sh"
-
-[ -r "$HOME/.bash_utils/alternatives.sh" ] && source "$HOME/.bash_utils/alternatives.sh"
-[ -r "$HOME/.bash_utils/cxx.sh"          ] && source "$HOME/.bash_utils/cxx.sh"
-[ -r "$HOME/.bash_utils/distr.sh"        ] && source "$HOME/.bash_utils/distr.sh"
-[ -r "$HOME/.bash_utils/git.sh"          ] && source "$HOME/.bash_utils/git.sh"
-[ -r "$HOME/.bash_utils/os.sh"           ] && source "$HOME/.bash_utils/os.sh"
-[ -r "$HOME/.bash_utils/path.sh"         ] && source "$HOME/.bash_utils/path.sh"
-
-[ -r "$HOME/.bashrc_local" ] && source "$HOME/.bashrc_local"
-
-# -----------------------------------------------------------------------------
-# More shell options
-# -----------------------------------------------------------------------------
-
-os_is_cygwin && set -o igncr
-os_is_cygwin || complete -r
-
-# I'm sick and tired of third-party scripts breaking b/c of a random shell
-# option I use (configure scripts in particular), so I'm commenting this out.
-#export SHELLOPTS
-#export BASHOPTS
-
-# I've bumped into this on Linux Mint: Ctrl+S causes my terminal to freeze
-# completely (Ctrl+Q is a temporary escape, stty is the cure).
-os_is_cygwin \
-    || command -v stty > /dev/null 2>&1 \
-    && stty -ixon
 
 # -----------------------------------------------------------------------------
 # nnn
