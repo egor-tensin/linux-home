@@ -28,7 +28,9 @@ path_export() {
 
 path_export "$HOME/.local/bin"
 
-# Homebrew-specific stuff
+# -----------------------------------------------------------------------------
+# Homebrew
+# -----------------------------------------------------------------------------
 
 brew_setup() {
     [ -x /opt/homebrew/bin/brew ] && \
@@ -43,7 +45,9 @@ brew_setup() {
 
 brew_setup
 
-# Ruby-specific stuff
+# -----------------------------------------------------------------------------
+# Ruby
+# -----------------------------------------------------------------------------
 
 # This is a half-assed way to automatically add your user's gem binary
 # directory to $PATH (also setting GEM_HOME).
@@ -82,7 +86,9 @@ rbenv_setup() {
 
 rbenv_setup
 
-# Python-specific stuff
+# -----------------------------------------------------------------------------
+# Python
+# -----------------------------------------------------------------------------
 
 # This is a half-assed way to automatically add your user's pip binary
 # directory to $PATH.
@@ -111,7 +117,9 @@ pyenv_setup() {
 
 pyenv_setup
 
+# -----------------------------------------------------------------------------
 # ssh-agent
+# -----------------------------------------------------------------------------
 
 kill_ssh_agent() {
     [ -n "${SSH_AGENT_PID:+x}" ] && kill "$SSH_AGENT_PID"
@@ -135,11 +143,15 @@ spawn_ssh_agent() {
 # manager.
 command -v systemctl > /dev/null 2>&1 || spawn_ssh_agent
 
-# Rust-specific stuff:
+# -----------------------------------------------------------------------------
+# Rust
+# -----------------------------------------------------------------------------
 
 path_export "$HOME/.cargo/bin"
 
+# -----------------------------------------------------------------------------
 # fzf
+# -----------------------------------------------------------------------------
 
 # Search directories and hidden files by default.
 export FZF_DEFAULT_COMMAND='find -L . -\( -fstype dev -o -fstype proc -\) -prune -o -print 2> /dev/null'
@@ -147,7 +159,10 @@ export FZF_DEFAULT_COMMAND='find -L . -\( -fstype dev -o -fstype proc -\) -prune
 command -v fd > /dev/null 2>&1 \
     && export FZF_DEFAULT_COMMAND='fd --follow --show-errors --hidden --no-ignore-vcs 2> /dev/null'
 
+# -----------------------------------------------------------------------------
 # nnn
+# -----------------------------------------------------------------------------
+
 # -A    Don't auto-enter directories.
 # -e    Open text files in $EDITOR.
 # -o    Only open on Enter, not on l.

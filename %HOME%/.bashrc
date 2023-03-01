@@ -13,12 +13,19 @@ esac
 # Solarized (light):
 PS1="\[\e[1;35m\]\h\[\e[m\] \[\e[1;36m\]\W\[\e[m\] # \[$(tput sgr0)\]"
 
+# -----------------------------------------------------------------------------
+# Command history
+# -----------------------------------------------------------------------------
 # `echo "!)"` doesn't work otherwise (namely, in third-party scripts):
 set +o histexpand
 
 export HISTCONTROL=ignoredups
 export HISTFILESIZE=20000
 export HISTSIZE=20000
+
+# -----------------------------------------------------------------------------
+# Shell options
+# -----------------------------------------------------------------------------
 
 # Too many third-party scripts stop working w/ nounset enabled :-(
 #set -o nounset
@@ -30,6 +37,10 @@ shopt -s dotglob
 shopt -s histappend
 shopt -s nullglob
 shopt -s nocaseglob
+
+# -----------------------------------------------------------------------------
+# Aliases
+# -----------------------------------------------------------------------------
 
 alias ..='cd ..'
 alias ...='cd ../..'
@@ -66,6 +77,10 @@ alias coredumpctl='coredumpctl --debugger-arguments="-q"'
 # Group by 1 byte only with xxd:
 alias xxd='xxd -groupsize 1'
 
+# -----------------------------------------------------------------------------
+# GnuPG
+# -----------------------------------------------------------------------------
+
 # This doc says that "you should always add the following lines to your
 # .bashrc":
 #
@@ -75,6 +90,10 @@ alias xxd='xxd -groupsize 1'
 # connection): https://stackoverflow.com/a/54809060/514684
 GPG_TTY="$( tty )"
 export GPG_TTY
+
+# -----------------------------------------------------------------------------
+# Includes
+# -----------------------------------------------------------------------------
 
 [ -r "$HOME/.bash_utils/file.sh" ] && source "$HOME/.bash_utils/file.sh"
 [ -r "$HOME/.bash_utils/text.sh" ] && source "$HOME/.bash_utils/text.sh"
@@ -87,6 +106,10 @@ export GPG_TTY
 [ -r "$HOME/.bash_utils/path.sh"         ] && source "$HOME/.bash_utils/path.sh"
 
 [ -r "$HOME/.bashrc_local" ] && source "$HOME/.bashrc_local"
+
+# -----------------------------------------------------------------------------
+# More shell options
+# -----------------------------------------------------------------------------
 
 os_is_cygwin && set -o igncr
 os_is_cygwin || complete -r
@@ -102,8 +125,9 @@ os_is_cygwin \
     || command -v stty > /dev/null 2>&1 \
     && stty -ixon
 
+# -----------------------------------------------------------------------------
 # nnn
-# ---
+# -----------------------------------------------------------------------------
 
 inside_nnn() {
     [ -n "$NNNLVL" ] && [ "${NNNLVL:-0}" -ge 1 ]
@@ -130,8 +154,9 @@ nnn() {
     n "$@"
 }
 
+# -----------------------------------------------------------------------------
 # tmux
-# ----
+# -----------------------------------------------------------------------------
 
 remote_terminal() {
     test -n "$SSH_CONNECTION"
