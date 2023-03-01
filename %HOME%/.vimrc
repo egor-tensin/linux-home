@@ -41,6 +41,8 @@ set ruler
 set number
 " Add a vertical ruler.
 set colorcolumn=80
+" Show a few lines of context around the cursor.
+set scrolloff=5
 
 " -----------------------------------------------------------------------------
 " Key bindings
