@@ -89,6 +89,14 @@ endif
 set exrc
 set secure
 
+" Remember cursor position. This was copied from a random vimrc_example.vim.
+" It should be picked up when sourcing vimrc_example.vim, but I'm currently
+" using a platform that doesn't have this file.
+autocmd BufReadPost *
+  \ if line("'\"") >= 1 && line("'\"") <= line("$") && &ft !~# 'commit'
+  \ |   exe "normal! g`\""
+  \ | endif
+
 " -----------------------------------------------------------------------------
 " Search
 " -----------------------------------------------------------------------------
