@@ -11,7 +11,8 @@ syntax enable
 set background=light
 colorscheme solarized
 
-set nowrap " Don't wrap lines.
+" Don't wrap lines.
+set nowrap
 
 " -----------------------------------------------------------------------------
 " Indentation
