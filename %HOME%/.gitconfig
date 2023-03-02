@@ -15,6 +15,10 @@
 	# If no refspec is given, push to the branch with the same name.
 	default = current
 
+[advice]
+	# I know about detached HEADs, shut up.
+	detachedHead = false
+
 # Git submodules suck, but they suck less if you read
 # https://medium.com/@porteneuve/mastering-git-submodules-34c65e940407.
 
