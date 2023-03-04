@@ -12,7 +12,8 @@ script_dir="$( dirname -- "${BASH_SOURCE[0]}" )"
 script_dir="$( cd -- "$script_dir" && pwd )"
 readonly script_dir
 
-cd -- "$script_dir"
 export PATH="$script_dir/../config-links:$PATH"
 
+cd -- "$script_dir"
+links-update
 links-chmod go-w
