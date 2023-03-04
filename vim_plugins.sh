@@ -8,6 +8,7 @@ readonly plugins_dir
 
 plugins=(
     alteraction/vim-colors-solarized
+    editorconfig/editorconfig-vim
 )
 
 pull() {
