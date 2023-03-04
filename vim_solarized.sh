@@ -4,14 +4,32 @@ set -o errexit -o nounset -o pipefail
 shopt -s inherit_errexit lastpipe
 
 plugins_dir="$HOME/.vim/pack/plugins/start"
-name='vim-colors-solarized'
+readonly plugins_dir
 
-mkdir -p -- "$plugins_dir"
-cd -- "$plugins_dir"
+plugins=(
+    alteraction/vim-colors-solarized
+)
 
-if [ -d "$name" ]; then
-    cd -- "$name"
-    git pull
-else
-    git clone "https://github.com/altercation/$name.git"
-fi
+pull() {
+    local plugin
+    for plugin in ${plugins[@]+"${plugins[@]}"}; do
+        echo "Plugin: $plugin"
+
+        local name
+        name="${plugin#*/}"
+
+        if [ -d "$name" ]; then
+            git -C "$name" pull
+        else
+            git clone "https://github.com/$plugin.git"
+        fi
+    done
+}
+
+main() {
+    mkdir -p -- "$plugins_dir"
+    cd -- "$plugins_dir"
+    pull
+}
+
+main
