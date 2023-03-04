@@ -20,9 +20,9 @@ pull() {
         name="${plugin#*/}"
 
         if [ -d "$name" ]; then
-            git -C "$name" pull
+            git -C "$name" pull -q
         else
-            git clone "https://github.com/$plugin.git"
+            git clone -q "https://github.com/$plugin.git"
         fi
     done
 }
