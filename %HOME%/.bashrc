@@ -95,7 +95,15 @@ alias tree='tree -a'
 
 alias sed='sed --follow-symlinks'
 
-alias copy='xclip -sel clip'
+# Use in a pipeline:
+#     command | copy
+if os_is_linux; then
+    alias copy='xclip -sel clip'
+elif os_is_cygwin; then
+    alias copy='cat > /dev/clipboard'
+elif os_is_macos; then
+    alias copy='pbcopy'
+fi
 
 # Make sure ssh-copy-id copies public keys along with their comments.
 alias ssh-copy-id='ssh-copy-id -i'
