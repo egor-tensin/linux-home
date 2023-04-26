@@ -37,3 +37,19 @@ swap_files() (
     mv -- "$path2" "$path1"
     mv -- "$tmp_path" "$path2"
 )
+
+pastebin() (
+    set -o errexit -o nounset -o pipefail
+    shopt -s inherit_errexit
+
+    if [ "$#" -ne 1 ]; then
+        echo "usage: ${FUNCNAME[0]} PATH" >&2
+        return 1
+    fi
+
+    local path="$1"
+
+    # Use the .txt file extension so that when you open a link, it displays
+    # the contents instead of downloading.
+    curl -sS --connect-timeout 5 -F "file=@$path;filename=.txt" https://x0.at/
+)
