@@ -10,6 +10,7 @@ _os=''
 _CYGWIN='Cygwin'
 _MACOS='macOS'
 _UBUNTU='Ubuntu'
+_DEBIAN='Debian GNU/Linux'
 _MINT='Linux Mint'
 _ARCH='Arch Linux'
 _ARCH_ARM='Arch Linux ARM'
@@ -28,7 +29,7 @@ os_detect() {
         linux-gnu*)
             if [ -r /etc/os-release ] && _os="$( . /etc/os-release && echo "$NAME" )"; then
                 case "$_os" in
-                    "$_UBUNTU"|"$_MINT"|"$_ARCH"|"$_ARCH_ARM"|"$_FEDORA")
+                    "$_UBUNTU"|"$_DEBIAN"|"$_MINT"|"$_ARCH"|"$_ARCH_ARM"|"$_FEDORA")
                         return 0
                         ;;
                     *)
@@ -52,11 +53,13 @@ os_is_cygwin() { test "$_os" == "$_CYGWIN" ; }
 os_is_macos()  { test "$_os" == "$_MACOS"  ; }
 
 os_is_ubuntu() { test "$_os" == "$_UBUNTU" ; }
+os_is_debian() { test "$_os" == "$_DEBIAN" ; }
 os_is_mint()   { test "$_os" == "$_MINT"   ; }
 os_is_arch()   { test "$_os" == "$_ARCH" -o "$_os" == "$_ARCH_ARM" ; }
 os_is_fedora() { test "$_os" == "$_FEDORA" ; }
 
-os_is_linux() { os_is_ubuntu || os_is_mint || os_is_arch || os_is_fedora ; }
+os_is_ubuntu_like() { os_is_ubuntu || os_is_debian || os_is_mint ; }
+os_is_linux() { os_is_ubuntu_like || os_is_arch || os_is_fedora ; }
 
 # Cygwin
 
@@ -69,7 +72,7 @@ pkg_list_cygwin() (
         | cut -d ' ' -f 1
 )
 
-# Ubuntu/Linux Mint
+# Ubuntu-likes
 
 setup_pkg_list_ubuntu() (
     set -o errexit -o nounset -o pipefail
@@ -160,7 +163,7 @@ pkg_list() (
 
     if os_is_cygwin; then
         pkg_list_cygwin
-    elif os_is_ubuntu || os_is_mint; then
+    elif os_is_ubuntu_like; then
         pkg_list_ubuntu
     elif os_is_arch; then
         pkg_list_arch
@@ -176,7 +179,7 @@ user_pkg_list() (
     set -o errexit -o nounset -o pipefail
     shopt -s inherit_errexit
 
-    if os_is_ubuntu || os_is_mint; then
+    if os_is_ubuntu_like; then
         user_pkg_list_ubuntu
     elif os_is_arch; then
         user_pkg_list_arch
