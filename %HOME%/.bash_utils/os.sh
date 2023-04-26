@@ -8,6 +8,7 @@
 _os=''
 
 _CYGWIN='Cygwin'
+_MACOS='macOS'
 _UBUNTU='Ubuntu'
 _MINT='Linux Mint'
 _ARCH='Arch Linux'
@@ -15,32 +16,47 @@ _ARCH_ARM='Arch Linux ARM'
 _FEDORA='Fedora'
 
 os_detect() {
-    [ "$OSTYPE" == cygwin ] \
-        && _os="$_CYGWIN"   \
-        && return 0
-
-    [ -r /etc/os-release ]                              \
-        && _os="$( . /etc/os-release && echo "$NAME" )" \
-        && test "$_os" == "$_UBUNTU"   \
-             -o "$_os" == "$_MINT"     \
-             -o "$_os" == "$_ARCH"     \
-             -o "$_os" == "$_ARCH_ARM" \
-             -o "$_os" == "$_FEDORA"   \
-        && return 0
-
-    _os=''
-    return 1
+    case "$OSTYPE" in
+        cygwin)
+            _os="$_CYGWIN"
+            return 0
+            ;;
+        darwin*)
+            _os="$_MACOS"
+            return 0
+            ;;
+        linux-gnu*)
+            if [ -r /etc/os-release ] && _os="$( . /etc/os-release && echo "$NAME" )"; then
+                case "$_os" in
+                    "$_UBUNTU"|"$_MINT"|"$_ARCH"|"$_ARCH_ARM"|"$_FEDORA")
+                        return 0
+                        ;;
+                    *)
+                        _os=''
+                        return 1
+                        ;;
+                esac
+            fi
+            ;;
+        *)
+            return 1
+            ;;
+    esac
 }
 
 os_detect
 
 os_detected() { test -n "$_os" ; }
 
-os_is_cygwin()  { test "$_os" == "$_CYGWIN"  ; }
-os_is_ubuntu()  { test "$_os" == "$_UBUNTU"  ; }
-os_is_mint()    { test "$_os" == "$_MINT"    ; }
-os_is_arch()    { test "$_os" == "$_ARCH" -o "$_os" == "$_ARCH_ARM" ; }
-os_is_fedora()  { test "$_os" == "$_FEDORA"  ; }
+os_is_cygwin() { test "$_os" == "$_CYGWIN" ; }
+os_is_macos()  { test "$_os" == "$_MACOS"  ; }
+
+os_is_ubuntu() { test "$_os" == "$_UBUNTU" ; }
+os_is_mint()   { test "$_os" == "$_MINT"   ; }
+os_is_arch()   { test "$_os" == "$_ARCH" -o "$_os" == "$_ARCH_ARM" ; }
+os_is_fedora() { test "$_os" == "$_FEDORA" ; }
+
+os_is_linux() { os_is_ubuntu || os_is_mint || os_is_arch || os_is_fedora ; }
 
 # Cygwin
 
