@@ -111,3 +111,33 @@ branch_backup() (
         --remote="$repo_dir" \
         HEAD
 )
+
+git_replace() (
+    set -o errexit -o nounset -o pipefail
+    shopt -s inherit_errexit lastpipe
+
+    if [ "$#" -ne 2 ]; then
+        echo "usage: ${FUNCNAME[0]} STR SUB" 1>&2
+        exit 1
+    fi
+
+    readonly str="$1"
+    readonly sub="$2"
+
+    git grep --files-with-matches -- "$str" | xargs sed -i "s/$str/$sub/g"
+)
+
+git_replace_word() (
+    set -o errexit -o nounset -o pipefail
+    shopt -s inherit_errexit lastpipe
+
+    if [ "$#" -ne 2 ]; then
+        echo "usage: ${FUNCNAME[0]} STR SUB" 1>&2
+        exit 1
+    fi
+
+    readonly str="$1"
+    readonly sub="$2"
+
+    git grep --files-with-matches --word-regexp -- "$str" | xargs sed -i "s/\b$str\b/$sub/g"
+)
