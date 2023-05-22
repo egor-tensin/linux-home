@@ -9,7 +9,7 @@ alias update-my-alternatives='update-alternatives --quiet --altdir ~/.local/etc/
 
 setup_alternatives_cc() (
     set -o errexit -o nounset -o pipefail
-    shopt -s inherit_errexit
+    shopt -s inherit_errexit 2> /dev/null || true
 
     gcc_cc="$(  command -v gcc 2> /dev/null )" || return 0
     gcc_cxx="$( command -v g++ 2> /dev/null )" || return 0
@@ -25,7 +25,7 @@ setup_alternatives_cc() (
 
 setup_alternatives() (
     set -o errexit -o nounset -o pipefail
-    shopt -s inherit_errexit
+    shopt -s inherit_errexit 2> /dev/null || true
 
     command -v update-alternatives > /dev/null 2>&1 || return 0
     mkdir -p -- ~/.local/etc/alternatives ~/.local/var/lib/alternatives
@@ -37,7 +37,7 @@ setup_alternatives
 
 alt_gcc() (
     set -o errexit -o nounset -o pipefail
-    shopt -s inherit_errexit
+    shopt -s inherit_errexit 2> /dev/null || true
 
     gcc_cc="$( command -v gcc 2> /dev/null )"
     update-my-alternatives --set cc "$gcc_cc"
@@ -45,7 +45,7 @@ alt_gcc() (
 
 alt_clang() (
     set -o errexit -o nounset -o pipefail
-    shopt -s inherit_errexit
+    shopt -s inherit_errexit 2> /dev/null || true
 
     clang_cc="$( command -v clang 2> /dev/null )"
     update-my-alternatives --set cc "$clang_cc"

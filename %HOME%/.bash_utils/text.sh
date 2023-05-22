@@ -28,7 +28,7 @@ doslint() {
 
 _sed_escape_pattern() (
     set -o errexit -o nounset -o pipefail
-    shopt -s inherit_errexit
+    shopt -s inherit_errexit 2> /dev/null || true
 
     if [ "$#" -ne 1 ]; then
         echo "usage: ${FUNCNAME[0]} STR" >&2
@@ -52,7 +52,7 @@ _sed_escape_pattern() (
 
 _sed_escape_substitution() (
     set -o errexit -o nounset -o pipefail
-    shopt -s inherit_errexit
+    shopt -s inherit_errexit 2> /dev/null || true
 
     if [ "$#" -ne 1 ]; then
         echo "usage: ${FUNCNAME[0]} STR" >&2
@@ -69,7 +69,7 @@ _sed_escape_substitution() (
 
 file_replace() (
     set -o errexit -o nounset -o pipefail
-    shopt -s inherit_errexit
+    shopt -s inherit_errexit 2> /dev/null || true
 
     if [ "$#" -lt 3 ]; then
         echo "usage: ${FUNCNAME[0]} OLD NEW PATH..." >&2
@@ -88,7 +88,7 @@ file_replace() (
 
 file_replace_word() (
     set -o errexit -o nounset -o pipefail
-    shopt -s inherit_errexit
+    shopt -s inherit_errexit 2> /dev/null || true
 
     if [ "$#" -lt 3 ]; then
         echo "usage: ${FUNCNAME[0]} OLD NEW PATH..." >&2
@@ -107,7 +107,7 @@ file_replace_word() (
 
 str_replace() (
     set -o errexit -o nounset -o pipefail
-    shopt -s inherit_errexit
+    shopt -s inherit_errexit 2> /dev/null || true
 
     if [ "$#" -ne 3 ]; then
         echo "usage: ${FUNCNAME[0]} STR SUB REP" >&2
@@ -125,7 +125,7 @@ str_replace() (
 
 _bash_escape_pattern() (
     set -o errexit -o nounset -o pipefail
-    shopt -s inherit_errexit
+    shopt -s inherit_errexit 2> /dev/null || true
 
     if [ "$#" -ne 1 ]; then
         echo "usage: ${FUNCNAME[0]} STR" >&2
@@ -145,7 +145,7 @@ _bash_escape_pattern() (
 
 str_contains() (
     set -o errexit -o nounset -o pipefail
-    shopt -s inherit_errexit
+    shopt -s inherit_errexit 2> /dev/null || true
 
     if [ "$#" -ne 2 ]; then
         echo "usage: ${FUNCNAME[0]} STR SUB" >&2
@@ -163,7 +163,7 @@ str_contains() (
 
 str_starts_with() (
     set -o errexit -o nounset -o pipefail
-    shopt -s inherit_errexit
+    shopt -s inherit_errexit 2> /dev/null || true
 
     if [ "$#" -ne 2 ]; then
         echo "usage: ${FUNCNAME[0]} STR SUB" >&2
@@ -181,7 +181,7 @@ str_starts_with() (
 
 str_ends_with() (
     set -o errexit -o nounset -o pipefail
-    shopt -s inherit_errexit
+    shopt -s inherit_errexit 2> /dev/null || true
 
     if [ "$#" -ne 2 ]; then
         echo "usage: ${FUNCNAME[0]} STR SUB" >&2
@@ -199,7 +199,8 @@ str_ends_with() (
 
 str_split() (
     set -o errexit -o nounset -o pipefail
-    shopt -s inherit_errexit lastpipe
+    shopt -s inherit_errexit 2> /dev/null || true
+    shopt -s lastpipe
 
     local fmt='%s\n'
     local -a args
@@ -254,7 +255,7 @@ str_split() (
 
 str_join() (
     set -o errexit -o nounset -o pipefail
-    shopt -s inherit_errexit
+    shopt -s inherit_errexit 2> /dev/null || true
 
     if [ "$#" -lt 1 ]; then
         echo "usage: ${FUNCNAME[0]} DELIM [STR]..." >&2

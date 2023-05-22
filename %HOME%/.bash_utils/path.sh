@@ -11,7 +11,8 @@
 
 path_add() (
     set -o errexit -o nounset -o pipefail
-    shopt -s inherit_errexit lastpipe
+    shopt -s inherit_errexit 2> /dev/null || true
+    shopt -s lastpipe
 
     [ "$#" -eq 0 ] && return 0
 

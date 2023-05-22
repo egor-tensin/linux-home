@@ -65,7 +65,7 @@ os_is_linux() { os_is_ubuntu_like || os_is_arch || os_is_fedora ; }
 
 pkg_list_cygwin() (
     set -o errexit -o nounset -o pipefail
-    shopt -s inherit_errexit
+    shopt -s inherit_errexit 2> /dev/null || true
 
     cygcheck --check-setup --dump-only \
         | tail -n +3                   \
@@ -76,7 +76,7 @@ pkg_list_cygwin() (
 
 setup_pkg_list_ubuntu() (
     set -o errexit -o nounset -o pipefail
-    shopt -s inherit_errexit
+    shopt -s inherit_errexit 2> /dev/null || true
 
     local -r initial_status='/var/log/installer/initial-status.gz'
 
@@ -88,7 +88,7 @@ setup_pkg_list_ubuntu() (
 
 user_pkg_list_ubuntu() (
     set -o errexit -o nounset -o pipefail
-    shopt -s inherit_errexit
+    shopt -s inherit_errexit 2> /dev/null || true
 
     local manual
     manual="$( apt-mark showmanual | sort | uniq )"
@@ -101,7 +101,7 @@ user_pkg_list_ubuntu() (
 
 pkg_list_ubuntu() (
     set -o errexit -o nounset -o pipefail
-    shopt -s inherit_errexit
+    shopt -s inherit_errexit 2> /dev/null || true
 
     dpkg --get-selections                     \
         | grep --invert-match -- 'deinstall$' \
@@ -113,7 +113,7 @@ pkg_list_ubuntu() (
 
 setup_pkg_list_arch() (
     set -o errexit -o nounset -o pipefail
-    shopt -s inherit_errexit
+    shopt -s inherit_errexit 2> /dev/null || true
 
     # Assuming you only selected groups 'base and 'base-devel' during
     # installation.
@@ -124,7 +124,7 @@ setup_pkg_list_arch() (
 
 user_pkg_list_arch() (
     set -o errexit -o nounset -o pipefail
-    shopt -s inherit_errexit
+    shopt -s inherit_errexit 2> /dev/null || true
 
     local manual
     manual="$( pacman -Q --explicit -q | sort )"
@@ -137,7 +137,7 @@ user_pkg_list_arch() (
 
 manual_pkg_list_arch() (
     set -o errexit -o nounset -o pipefail
-    shopt -s inherit_errexit
+    shopt -s inherit_errexit 2> /dev/null || true
 
     expac '%n %p' | grep 'Unknown Packager'
 )
@@ -150,7 +150,7 @@ pkg_list_arch() {
 
 pkg_list_fedora() (
     set -o errexit -o nounset -o pipefail
-    shopt -s inherit_errexit
+    shopt -s inherit_errexit 2> /dev/null || true
 
     rpm --queryformat="%{NAME}\n" -qa | sort
 )
@@ -159,7 +159,7 @@ pkg_list_fedora() (
 
 pkg_list() (
     set -o errexit -o nounset -o pipefail
-    shopt -s inherit_errexit
+    shopt -s inherit_errexit 2> /dev/null || true
 
     if os_is_cygwin; then
         pkg_list_cygwin
@@ -177,7 +177,7 @@ pkg_list() (
 
 user_pkg_list() (
     set -o errexit -o nounset -o pipefail
-    shopt -s inherit_errexit
+    shopt -s inherit_errexit 2> /dev/null || true
 
     if os_is_ubuntu_like; then
         user_pkg_list_ubuntu

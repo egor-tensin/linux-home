@@ -7,7 +7,7 @@
 
 swap_files() (
     set -o errexit -o nounset -o pipefail
-    shopt -s inherit_errexit
+    shopt -s inherit_errexit 2> /dev/null || true
 
     if [ "$#" -ne 2 ]; then
         echo "usage: ${FUNCNAME[0]} PATH1 PATH2" >&2
@@ -40,7 +40,7 @@ swap_files() (
 
 pastebin() (
     set -o errexit -o nounset -o pipefail
-    shopt -s inherit_errexit
+    shopt -s inherit_errexit 2> /dev/null || true
 
     if [ "$#" -ne 1 ]; then
         echo "usage: ${FUNCNAME[0]} PATH" >&2

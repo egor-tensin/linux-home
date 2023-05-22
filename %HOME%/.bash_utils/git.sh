@@ -10,7 +10,7 @@ alias branch_dirs='git ls-tree -r --name-only HEAD -d'
 
 workdir_is_clean() (
     set -o errexit -o nounset -o pipefail
-    shopt -s inherit_errexit
+    shopt -s inherit_errexit 2> /dev/null || true
 
     local status
     status="$( git status --porcelain )"
@@ -23,7 +23,8 @@ workdir_is_clean() (
 
 branch_eol_normalized() (
     set -o errexit -o nounset -o pipefail
-    shopt -s inherit_errexit lastpipe
+    shopt -s inherit_errexit 2> /dev/null || true
+    shopt -s lastpipe
 
     workdir_is_clean
 
@@ -59,7 +60,8 @@ branch_eol_normalized() (
 
 branch_doslint() (
     set -o errexit -o nounset -o pipefail
-    shopt -s inherit_errexit lastpipe
+    shopt -s inherit_errexit 2> /dev/null || true
+    shopt -s lastpipe
 
     local -a paths
 
@@ -73,7 +75,8 @@ branch_doslint() (
 
 branch_lint() (
     set -o errexit -o nounset -o pipefail
-    shopt -s inherit_errexit lastpipe
+    shopt -s inherit_errexit 2> /dev/null || true
+    shopt -s lastpipe
 
     local -a paths
 
@@ -87,7 +90,7 @@ branch_lint() (
 
 branch_backup() (
     set -o errexit -o nounset -o pipefail
-    shopt -s inherit_errexit
+    shopt -s inherit_errexit 2> /dev/null || true
 
     local repo_dir
     repo_dir="$( git rev-parse --show-toplevel )"
@@ -114,7 +117,8 @@ branch_backup() (
 
 git_replace() (
     set -o errexit -o nounset -o pipefail
-    shopt -s inherit_errexit lastpipe
+    shopt -s inherit_errexit 2> /dev/null || true
+    shopt -s lastpipe
 
     if [ "$#" -ne 2 ]; then
         echo "usage: ${FUNCNAME[0]} STR SUB" 1>&2
@@ -129,7 +133,8 @@ git_replace() (
 
 git_replace_word() (
     set -o errexit -o nounset -o pipefail
-    shopt -s inherit_errexit lastpipe
+    shopt -s inherit_errexit 2> /dev/null || true
+    shopt -s lastpipe
 
     if [ "$#" -ne 2 ]; then
         echo "usage: ${FUNCNAME[0]} STR SUB" 1>&2

@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 
 set -o errexit -o nounset -o pipefail
-shopt -s inherit_errexit lastpipe
+shopt -s inherit_errexit 2> /dev/null || true
+shopt -s lastpipe
 
 plugins_dir="$HOME/.vim/pack/plugins/start"
 readonly plugins_dir
