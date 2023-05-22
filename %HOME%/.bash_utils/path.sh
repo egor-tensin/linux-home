@@ -14,6 +14,13 @@ path_add() (
     shopt -s inherit_errexit 2> /dev/null || true
     shopt -s lastpipe
 
+    local prepend=
+
+    if [ "$#" -gt 0 ] && [ "$1" == --prepend ]; then
+        shift
+        prepend=y
+    fi
+
     [ "$#" -eq 0 ] && return 0
 
     local -a src_list
@@ -30,24 +37,29 @@ path_add() (
         fi
     done
 
-    local -A dest_dict
-    local -a dest_list
+    local -A uniq_paths
+    local -a new_paths current_paths
 
     for path in ${src_list[@]+"${src_list[@]}"}; do
-        [ -n "${dest_dict[$path]+x}" ] && continue
-        dest_dict[$path]=1
-        dest_list+=("$path")
+        [ -n "${uniq_paths[$path]+x}" ] && continue
+        uniq_paths[$path]=1
+        new_paths+=("$path")
     done
 
     if [ -n "${PATH-}" ]; then
         str_split -z -- "${PATH-}" ':' | xargs -0 -- readlink -z --canonicalize-missing -- | while IFS= read -d '' -r path; do
-            [ -n "${dest_dict[$path]+x}" ] && continue
-            dest_dict[$path]=1
-            dest_list+=("$path")
+            [ -n "${uniq_paths[$path]+x}" ] && continue
+            uniq_paths[$path]=1
+            current_paths+=("$path")
         done
     fi
 
-    str_join ':' ${dest_list[@]+"${dest_list[@]}"}
+    local -a result
+    [ -n "$prepend" ] && result+=(${new_paths[@]+"${new_paths[@]}"})
+    result+=(${current_paths[@]+"${current_paths[@]}"})
+    [ -z "$prepend" ] && result+=(${new_paths[@]+"${new_paths[@]}"})
+
+    str_join ':' ${result[@]+"${result[@]}"}
 )
 
 path_export() {
