@@ -23,13 +23,7 @@ path_add() (
 
     [ "$#" -eq 0 ] && return 0
 
-    local -a src_list
-
     local path
-    readlink -z --canonicalize-missing -- "$@" | while IFS= read -d '' -r path; do
-        src_list+=("$path")
-    done
-
     for path; do
         if str_contains "$path" ':'; then
             echo "${FUNCNAME[0]}: mustn't contain colon (':') characters: $path" >&2
@@ -40,14 +34,14 @@ path_add() (
     local -A uniq_paths
     local -a new_paths current_paths
 
-    for path in ${src_list[@]+"${src_list[@]}"}; do
+    for path; do
         [ -n "${uniq_paths[$path]+x}" ] && continue
         uniq_paths[$path]=1
         new_paths+=("$path")
     done
 
     if [ -n "${PATH-}" ]; then
-        str_split -z -- "${PATH-}" ':' | xargs -0 -- readlink -z --canonicalize-missing -- | while IFS= read -d '' -r path; do
+        str_split -z -- "${PATH-}" ':' | while IFS= read -d '' -r path; do
             [ -n "${uniq_paths[$path]+x}" ] && continue
             uniq_paths[$path]=1
             current_paths+=("$path")
