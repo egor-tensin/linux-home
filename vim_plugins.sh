@@ -8,7 +8,7 @@ plugins_dir="$HOME/.vim/pack/plugins/start"
 readonly plugins_dir
 
 plugins=(
-    alteraction/vim-colors-solarized
+    altercation/vim-colors-solarized
     editorconfig/editorconfig-vim
 )
 
