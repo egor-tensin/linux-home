@@ -83,6 +83,7 @@
 	# Life is too short.
 	s = status
 	co = checkout
+	cp = cherry-pick
 
 [filter "lfs"]
 	smudge = git-lfs smudge -- %f
