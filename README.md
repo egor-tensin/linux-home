@@ -19,7 +19,8 @@ Issues
 Some utilities (notably, GHC) may not work if its configuration files are
 group-writable.
 To fix this, run `chmod g-w` for every file & directory in this repository (you
-can do this using the supplied fix_permissions.sh script).
+can do this by running `links-chmod go-w`; this call is included in the
+update.sh script).
 
 License
 -------
