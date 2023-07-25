@@ -53,6 +53,7 @@ links_update() {
 main() {
     config_links_in_path
     links_update
+    "$script_dir/vim_plugins.sh"
 }
 
 main

@@ -15,14 +15,14 @@ plugins=(
 pull() {
     local plugin
     for plugin in ${plugins[@]+"${plugins[@]}"}; do
-        echo "Plugin: $plugin"
-
         local name
         name="${plugin#*/}"
 
         if [ -d "$name" ]; then
-            git -C "$name" pull -q
+            echo "Updating plugin: $plugin"
+            git -C "$name" pull
         else
+            echo "Installing plugin: $plugin"
             git clone -q "https://github.com/$plugin.git"
         fi
     done
