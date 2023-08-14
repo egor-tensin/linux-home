@@ -65,17 +65,8 @@ ruby_setup() {
         && path_export "$bin_dir"
 }
 
-# Deprecated in favour of using chruby/RVM/etc. for Ruby management.
+# Deprecated in favour of using rbenv for Ruby management.
 #ruby_setup
-
-chruby_setup() {
-    local install_prefix="$HOME/.local"
-    local share_dir="$install_prefix/share/chruby"
-    [ -r "$share_dir/chruby.sh" ] && . "$share_dir/chruby.sh"
-    [ -r "$share_dir/auto.sh"   ] && . "$share_dir/auto.sh"
-}
-
-chruby_setup
 
 rbenv_setup() {
     local rbenv_init
