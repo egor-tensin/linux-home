@@ -1,9 +1,0 @@
-# This file contains default non-project-specific settings for 'stack', used
-# in all projects.  For more information about stack's configuration, see
-# http://docs.haskellstack.org/en/stable/yaml_configuration/
-templates:
-  params:
-    author-name: Egor Tensin
-    author-email: Egor.Tensin@gmail.com
-    copyright: '(c) 2020 Egor Tensin <Egor.Tensin@gmail.com>'
-    github-username: egor-tensin
