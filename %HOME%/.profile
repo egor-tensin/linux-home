@@ -119,32 +119,6 @@ pyenv_setup() {
 pyenv_setup
 
 # -----------------------------------------------------------------------------
-# ssh-agent
-# -----------------------------------------------------------------------------
-
-kill_ssh_agent() {
-    [ -n "${SSH_AGENT_PID:+x}" ] && kill "$SSH_AGENT_PID"
-}
-
-spawn_ssh_agent() {
-    local output
-    [ -z "${SSH_AUTH_SOCK:+x}" ] \
-        && command -v ssh-agent > /dev/null 2>&1 \
-        && output="$( ssh-agent -s )" \
-        && eval "$output" > /dev/null \
-        && [ -n "${SSH_AGENT_PID:+x}" ] \
-        && trap kill_ssh_agent EXIT
-}
-
-# This is a deprecated way to start ssh-agent; now it's managed by systemd (see
-# .config/systemd/user/ssh-agent.service for details).
-# Before starting ssh-agent like this, make sure to disable system ssh-agent's
-# (like those started by Gnome or X11).
-# Also, this file needs to be sourced by both your login shell and your display
-# manager.
-command -v systemctl > /dev/null 2>&1 || spawn_ssh_agent
-
-# -----------------------------------------------------------------------------
 # Rust
 # -----------------------------------------------------------------------------
 
