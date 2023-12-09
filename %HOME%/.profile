@@ -1,4 +1,4 @@
-# Copyright (c) 2018 Egor Tensin <Egor.Tensin@gmail.com>
+# Copyright (c) 2018 Egor Tensin <egor@tensin.name>
 # This file is part of the "linux-home" project.
 # For details, see https://github.com/egor-tensin/linux-home.
 # Distributed under the MIT License.
