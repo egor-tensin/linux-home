@@ -48,6 +48,7 @@ export HISTSIZE=20000
 
 set -o pipefail
 
+shopt -s autocd
 shopt -s checkwinsize
 shopt -s dotglob
 shopt -s histappend
