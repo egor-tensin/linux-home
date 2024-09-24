@@ -191,7 +191,13 @@ elif multiplexed; then
     # Skip, we're already running a multiplexer.
     true
 elif command -v tmux &> /dev/null; then
-    exec tmux new -A -s main
+    # On a remote terminal, always connect to the same session; on a local
+    # terminal, create a new one every time a new terminal is opened.
+    if remote_terminal; then
+        exec tmux new -A -s main
+    elif local_terminal; then
+        exec tmux new
+    fi
 fi
 
 # Disable Alt+N shortcuts, which I use in tmux:
