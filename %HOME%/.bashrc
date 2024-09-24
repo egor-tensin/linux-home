@@ -125,7 +125,7 @@ alias xxd='xxd -groupsize 1'
 #
 #     https://www.gnupg.org/documentation/manuals/gnupg/Invoking-GPG_002dAGENT.html
 #
-# Otherwise, GPG signing in git often doesn't work (for example, ever a SSH
+# Otherwise, GPG signing in git often doesn't work (for example, over a SSH
 # connection): https://stackoverflow.com/a/54809060/514684
 GPG_TTY="$( tty )"
 export GPG_TTY
