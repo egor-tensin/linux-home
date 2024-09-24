@@ -133,5 +133,11 @@ command -v fd > /dev/null 2>&1 \
 # -e    Open text files in $EDITOR.
 # -o    Only open on Enter, not on l.
 export NNN_OPTS=Aeo
+
 export NNN_PLUG='f:myfzcd'
 export NNN_BMS="d:$HOME/Downloads;w:$HOME/workspace/personal"
+
+# For some reason, nnn doesn't support all of the formats by default, I don't
+# know why. Apparently, this is the workaround, source:
+# https://github.com/jarun/nnn/wiki/Usage
+export NNN_ARCHIVE="\\.(7z|a|ace|alz|arc|arj|bz|bz2|cab|cpio|deb|gz|jar|lha|lz|lzh|lzma|lzo|rar|rpm|rz|t7z|tar|tbz|tbz2|tgz|tlz|txz|tZ|tzo|war|xpi|xz|Z|zip)$"
