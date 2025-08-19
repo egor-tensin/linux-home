@@ -49,7 +49,5 @@ pastebin() (
 
     local path="$1"
 
-    # Use the .txt file extension so that when you open a link, it displays
-    # the contents instead of downloading.
-    curl -sS --connect-timeout 5 -F "file=@$path;filename=.txt" https://x0.at/
+    curl -sS --connect-timeout 5 -X PUT --data-binary "@$path" https://paste.tensin.name/
 )
