@@ -5,12 +5,10 @@
 # For details, see https://github.com/egor-tensin/linux-home.
 # Distributed under the MIT License.
 
-alias branch_files='git ls-tree -r --name-only HEAD'
-alias branch_dirs='git ls-tree -r --name-only HEAD -d'
-
-workdir_is_clean() (
+branch_eol_normalized() (
     set -o errexit -o nounset -o pipefail
     shopt -s inherit_errexit 2> /dev/null || true
+    shopt -s lastpipe
 
     local status
     status="$( git status --porcelain )"
@@ -19,14 +17,6 @@ workdir_is_clean() (
         echo "${FUNCNAME[0]}: repository isn't clean" >&2
         return 1
     fi
-)
-
-branch_eol_normalized() (
-    set -o errexit -o nounset -o pipefail
-    shopt -s inherit_errexit 2> /dev/null || true
-    shopt -s lastpipe
-
-    workdir_is_clean
 
     local normalized=0
 
@@ -66,7 +56,7 @@ branch_doslint() (
     local -a paths
 
     local path
-    branch_files -z | while IFS= read -d '' -r path; do
+    git ls-tree -r --name-only -z HEAD | while IFS= read -d '' -r path; do
         paths+=("$path")
     done
 
@@ -81,38 +71,11 @@ branch_lint() (
     local -a paths
 
     local path
-    branch_files -z | while IFS= read -d '' -r path; do
+    git ls-tree -r --name-only -z HEAD | while IFS= read -d '' -r path; do
         paths+=("$path")
     done
 
     lint ${paths[@]+"${paths[@]}"}
-)
-
-branch_backup() (
-    set -o errexit -o nounset -o pipefail
-    shopt -s inherit_errexit 2> /dev/null || true
-
-    local repo_dir
-    repo_dir="$( git rev-parse --show-toplevel )"
-    local repo_name
-    repo_name="$( basename -- "$repo_dir" )"
-    local backup_dir="$repo_dir"
-
-    if [ $# -eq 1 ]; then
-        backup_dir="$1"
-    elif [ $# -gt 1 ]; then
-        echo "usage: ${FUNCNAME[0]} [BACKUP_DIR]" >&2
-        exit 1
-    fi
-
-    local zip_name
-    zip_name="${repo_name}_$( date --utc -- '+%Y%m%dT%H%M%S' ).zip"
-
-    git archive \
-        --format=zip -9 \
-        --output="$backup_dir/$zip_name" \
-        --remote="$repo_dir" \
-        HEAD
 )
 
 git_replace() (
