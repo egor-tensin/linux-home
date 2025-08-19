@@ -1,8 +1,7 @@
 set autoindent
-#set const
-set morespace
-#set nohelp
+# Show cursor coordinates at all times.
+set constantshow
+set linenumbers
 set nowrap
 set tabsize 4
 set tabstospaces
-set smooth
