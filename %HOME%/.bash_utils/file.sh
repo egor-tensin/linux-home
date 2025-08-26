@@ -42,12 +42,15 @@ pastebin() (
     set -o errexit -o nounset -o pipefail
     shopt -s inherit_errexit 2> /dev/null || true
 
-    if [ "$#" -ne 1 ]; then
-        echo "usage: ${FUNCNAME[0]} PATH" >&2
+    if [ "$#" -gt 1 ]; then
+        echo "usage: ${FUNCNAME[0]} [PATH]" >&2
         return 1
     fi
 
-    local path="$1"
+    local data_arg='@-'
+    if [ "$#" -gt 0 ]; then
+        data_arg="@$1"
+    fi
 
-    curl -sS --connect-timeout 5 -X PUT --data-binary "@$path" https://paste.tensin.name/
+    curl -sS --connect-timeout 5 -X PUT --data-binary "$data_arg" https://paste.tensin.name/
 )
