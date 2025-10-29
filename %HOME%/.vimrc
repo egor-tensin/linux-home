@@ -7,8 +7,8 @@ source $VIMRUNTIME/vimrc_example.vim
 filetype plugin on
 syntax enable
 
-"set background=dark
-set background=light
+set background=dark
+"set background=light
 colorscheme solarized
 
 " Don't wrap lines.
