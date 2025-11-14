@@ -50,10 +50,19 @@ links_update() {
     links-chmod go-w
 }
 
+post_update() {
+    # Update the vim plugins:
+    "$script_dir/vim_plugins.sh"
+
+    # Remove ~/.ssh/known_hosts, I don't use it (and have a corresponding
+    # setting in ~/.ssh/config):
+    rm -f -- "$HOME/.ssh/known_hosts"
+}
+
 main() {
     config_links_in_path
     links_update
-    "$script_dir/vim_plugins.sh"
+    post_update
 }
 
 main
