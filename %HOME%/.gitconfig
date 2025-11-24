@@ -84,7 +84,7 @@
 	fixup = !GIT_EDITOR=true git commit --amend
 
 	# Life is too short.
-	s = status
+	s = status --short --branch
 	co = checkout
 	cp = cherry-pick
 
