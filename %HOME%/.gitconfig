@@ -20,7 +20,7 @@
 	detachedHead = false
 
 [init]
-	defaultBranch = main
+	defaultBranch = master
 
 # Git submodules suck, but they suck less if you read
 # https://medium.com/@porteneuve/mastering-git-submodules-34c65e940407.
