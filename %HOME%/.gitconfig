@@ -71,10 +71,6 @@
 	ll = log --graph --full-history --all --pretty=format:"%h%x09%d%x20%s"
 	lll = log --graph --full-history --all --color --pretty=tformat:"%x1b[31m%h%x09%x1b[32m%d%x1b[0m%x20%s%x20%x1b[33m(%an)%x1b[0m"
 
-	# I think this is only usable on Cygwin, given all the file permission
-	# madness there:
-	xx = update-index --add --chmod=+x
-
 	hide = update-index --skip-worktree
 	unhide = update-index --no-skip-worktree
 	hidden = !git ls-files -v | grep --basic-regexp \"^\\([[:lower:]]\\|S\\)\"

@@ -54,8 +54,7 @@ shopt -s histappend
 shopt -s nullglob
 shopt -s nocaseglob
 
-os_is_cygwin && set -o igncr
-os_is_cygwin || complete -r
+complete -r
 
 # I'm sick and tired of third-party scripts breaking b/c of a random shell
 # option I use (configure scripts in particular), so I'm commenting this out.
@@ -64,8 +63,7 @@ os_is_cygwin || complete -r
 
 # I've bumped into this on Linux Mint: Ctrl+S causes my terminal to freeze
 # completely (Ctrl+Q is a temporary escape, stty is the cure).
-os_is_cygwin \
-    || command -v stty > /dev/null 2>&1 \
+command -v stty > /dev/null 2>&1 \
     && stty -ixon
 
 # -----------------------------------------------------------------------------
@@ -99,8 +97,6 @@ alias sed='sed --follow-symlinks'
 #     command | copy
 if os_is_linux; then
     alias copy='xclip -sel clip'
-elif os_is_cygwin; then
-    alias copy='cat > /dev/clipboard'
 elif os_is_macos; then
     alias copy='pbcopy'
 fi
@@ -183,10 +179,7 @@ fi
 
 # tmux: start automatically.
 # https://unix.stackexchange.com/a/113768
-if os_is_cygwin && local_terminal; then
-    # Skip, as it's too slow for some reason.
-    true
-elif multiplexed; then
+if multiplexed; then
     # Skip, we're already running a multiplexer.
     true
 elif command -v tmux &> /dev/null; then

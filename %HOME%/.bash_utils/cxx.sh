@@ -5,14 +5,6 @@
 # For details, see https://github.com/egor-tensin/linux-home.
 # Distributed under the MIT License.
 
-_runc_os_is_cygwin() {
-    test "$OSTYPE" = cygwin
-}
-
-if _runc_os_is_cygwin; then
-    _runc_exe_ext='.exe'
-fi
-
 runc_use_gcc() {
     runc_compiler=gcc
     runcxx_compiler=g++

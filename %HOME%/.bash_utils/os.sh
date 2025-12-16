@@ -7,7 +7,6 @@
 
 _os=''
 
-_CYGWIN='Cygwin'
 _MACOS='macOS'
 _UBUNTU='Ubuntu'
 _DEBIAN='Debian GNU/Linux'
@@ -18,10 +17,6 @@ _FEDORA='Fedora'
 
 os_detect() {
     case "$OSTYPE" in
-        cygwin)
-            _os="$_CYGWIN"
-            return 0
-            ;;
         darwin*)
             _os="$_MACOS"
             return 0
@@ -49,7 +44,6 @@ os_detect
 
 os_detected() { test -n "$_os" ; }
 
-os_is_cygwin() { test "$_os" == "$_CYGWIN" ; }
 os_is_macos()  { test "$_os" == "$_MACOS"  ; }
 
 os_is_ubuntu() { test "$_os" == "$_UBUNTU" ; }
@@ -60,17 +54,6 @@ os_is_fedora() { test "$_os" == "$_FEDORA" ; }
 
 os_is_ubuntu_like() { os_is_ubuntu || os_is_debian || os_is_mint ; }
 os_is_linux() { os_is_ubuntu_like || os_is_arch || os_is_fedora ; }
-
-# Cygwin
-
-pkg_list_cygwin() (
-    set -o errexit -o nounset -o pipefail
-    shopt -s inherit_errexit 2> /dev/null || true
-
-    cygcheck --check-setup --dump-only \
-        | tail -n +3                   \
-        | cut -d ' ' -f 1
-)
 
 # Ubuntu-likes
 
@@ -161,9 +144,7 @@ pkg_list() (
     set -o errexit -o nounset -o pipefail
     shopt -s inherit_errexit 2> /dev/null || true
 
-    if os_is_cygwin; then
-        pkg_list_cygwin
-    elif os_is_ubuntu_like; then
+    if os_is_ubuntu_like; then
         pkg_list_ubuntu
     elif os_is_arch; then
         pkg_list_arch
