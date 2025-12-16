@@ -10,10 +10,8 @@ _os=''
 _MACOS='macOS'
 _UBUNTU='Ubuntu'
 _DEBIAN='Debian GNU/Linux'
-_MINT='Linux Mint'
 _ARCH='Arch Linux'
 _ARCH_ARM='Arch Linux ARM'
-_FEDORA='Fedora'
 
 os_detect() {
     case "$OSTYPE" in
@@ -24,7 +22,7 @@ os_detect() {
         linux-gnu*)
             if [ -r /etc/os-release ] && _os="$( . /etc/os-release && echo "$NAME" )"; then
                 case "$_os" in
-                    "$_UBUNTU"|"$_DEBIAN"|"$_MINT"|"$_ARCH"|"$_ARCH_ARM"|"$_FEDORA")
+                    "$_UBUNTU"|"$_DEBIAN"|"$_ARCH"|"$_ARCH_ARM")
                         return 0
                         ;;
                     *)
@@ -48,12 +46,10 @@ os_is_macos()  { test "$_os" == "$_MACOS"  ; }
 
 os_is_ubuntu() { test "$_os" == "$_UBUNTU" ; }
 os_is_debian() { test "$_os" == "$_DEBIAN" ; }
-os_is_mint()   { test "$_os" == "$_MINT"   ; }
 os_is_arch()   { test "$_os" == "$_ARCH" -o "$_os" == "$_ARCH_ARM" ; }
-os_is_fedora() { test "$_os" == "$_FEDORA" ; }
 
-os_is_ubuntu_like() { os_is_ubuntu || os_is_debian || os_is_mint ; }
-os_is_linux() { os_is_ubuntu_like || os_is_arch || os_is_fedora ; }
+os_is_ubuntu_like() { os_is_ubuntu || os_is_debian ; }
+os_is_linux() { os_is_ubuntu_like || os_is_arch ; }
 
 # Ubuntu-likes
 
@@ -129,15 +125,6 @@ pkg_list_arch() {
     pacman -Qq
 }
 
-# Fedora
-
-pkg_list_fedora() (
-    set -o errexit -o nounset -o pipefail
-    shopt -s inherit_errexit 2> /dev/null || true
-
-    rpm --queryformat="%{NAME}\n" -qa | sort
-)
-
 # Generic routines
 
 pkg_list() (
@@ -148,8 +135,6 @@ pkg_list() (
         pkg_list_ubuntu
     elif os_is_arch; then
         pkg_list_arch
-    elif os_is_fedora; then
-        pkg_list_fedora
     else
         echo "${FUNCNAME[0]}: unsupported OS" >&2
         return 1
