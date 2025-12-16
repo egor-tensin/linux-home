@@ -33,7 +33,6 @@ export HISTSIZE=20000
 [ -r "$HOME/.bash_utils/cxx.sh"          ] && source "$HOME/.bash_utils/cxx.sh"
 [ -r "$HOME/.bash_utils/distr.sh"        ] && source "$HOME/.bash_utils/distr.sh"
 [ -r "$HOME/.bash_utils/git.sh"          ] && source "$HOME/.bash_utils/git.sh"
-[ -r "$HOME/.bash_utils/os.sh"           ] && source "$HOME/.bash_utils/os.sh"
 [ -r "$HOME/.bash_utils/path.sh"         ] && source "$HOME/.bash_utils/path.sh"
 
 [ -r "$HOME/.bashrc_local" ] && source "$HOME/.bashrc_local"
@@ -95,10 +94,11 @@ alias sed='sed --follow-symlinks'
 
 # Use in a pipeline:
 #     command | copy
-if os_is_linux; then
-    alias copy='xclip -sel clip'
-elif os_is_macos; then
+if command -v pbcopy &> /dev/null; then
+    # MacOS
     alias copy='pbcopy'
+elif command -v xclip &> /dev/null; then
+    alias copy='xclip -sel clip'
 fi
 
 # Make sure ssh-copy-id copies public keys along with their comments.
