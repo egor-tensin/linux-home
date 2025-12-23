@@ -62,9 +62,9 @@
 	ff = only
 
 [alias]
-	clean-all = clean -fdx
+	clean-all = clean -ffdx
 	clean-ignored = clean -fdX
-	clean-unknown = clean -fd
+	clean-unknown = clean -ffd
 
 	l = log --oneline
 	# This is awesome: http://stackoverflow.com/a/1838938/514684
