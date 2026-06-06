@@ -25,8 +25,8 @@ config_links_in_path() {
     fi
 
     # This is a common directory to clone config-links for me.
-    if [ -d "$script_dir/../config-links" ]; then
-        export PATH="$script_dir/../config-links:$PATH"
+    if [ -d "$script_dir/../../config-links" ]; then
+        export PATH="$script_dir/../../config-links/bin:$PATH"
         return 0
     fi
 
@@ -35,12 +35,12 @@ config_links_in_path() {
     trap cleanup_repo EXIT
     repo_dir="$( mktemp -d )"
 
-    git clone -q -- "$repo_url" "$repo_dir"
-    export PATH="$repo_dir:$PATH"
+    git clone -- "$repo_url" "$repo_dir"
+    export PATH="$repo_dir/bin:$PATH"
 }
 
 links_update() {
-    cd -- "$script_dir"
+    cd -- "$script_dir/.."
     links-update
 
     # Some utilities (for example, ssh) fix too relaxed file permissions
