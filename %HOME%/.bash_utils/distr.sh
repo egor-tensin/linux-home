@@ -7,8 +7,7 @@ sums_path='sha1sums.txt'
 sums_name="$( basename -- "$sums_path" )"
 
 _sums_unescape_path() (
-    set -o errexit -o nounset -o pipefail
-    shopt -s inherit_errexit 2> /dev/null || true
+    _bash_func_prelude
 
     if [ "$#" -ne 1 ]; then
         echo "usage: ${FUNCNAME[0]} PATH" >&2
@@ -22,8 +21,7 @@ _sums_unescape_path() (
 )
 
 sums_list_paths() (
-    set -o errexit -o nounset -o pipefail
-    shopt -s inherit_errexit 2> /dev/null || true
+    _bash_func_prelude
 
     local print_lines=
     local print_sums=
@@ -94,9 +92,7 @@ sums_list_paths() (
 )
 
 sums_add() (
-    set -o errexit -o nounset -o pipefail
-    shopt -s inherit_errexit 2> /dev/null || true
-    shopt -s lastpipe
+    _bash_func_prelude
 
     local -A existing
     local -a missing=()
@@ -116,9 +112,7 @@ sums_add() (
 )
 
 sums_add_all() (
-    set -o errexit -o nounset -o pipefail
-    shopt -s inherit_errexit 2> /dev/null || true
-    shopt -s lastpipe
+    _bash_func_prelude
 
     local -a paths
 
@@ -131,9 +125,7 @@ sums_add_all() (
 )
 
 sums_add_distr() (
-    set -o errexit -o nounset -o pipefail
-    shopt -s inherit_errexit 2> /dev/null || true
-    shopt -s lastpipe
+    _bash_func_prelude
 
     local -a paths
     local path
@@ -156,16 +148,13 @@ sums_add_distr() (
 )
 
 sums_verify() (
-    set -o errexit -o nounset -o pipefail
-    shopt -s inherit_errexit 2> /dev/null || true
+    _bash_func_prelude
 
     sha1sum --check --strict --quiet -- "$sums_path"
 )
 
 sums_remove_missing() (
-    set -o errexit -o nounset -o pipefail
-    shopt -s inherit_errexit 2> /dev/null || true
-    shopt -s lastpipe
+    _bash_func_prelude
 
     local dry_run=
 

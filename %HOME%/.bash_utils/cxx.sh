@@ -24,8 +24,7 @@ _runc_get_absolute_path() {
 }
 
 _runc_usage() (
-    set -o errexit -o nounset -o pipefail
-    shopt -s inherit_errexit 2> /dev/null || true
+    _bash_func_prelude
 
     local prefix="${FUNCNAME[0]}"
     [ "${#FUNCNAME[@]}" -gt 1 ] && prefix="${FUNCNAME[1]}"
@@ -39,9 +38,7 @@ _runc_usage() (
 )
 
 runc() (
-    set -o errexit -o nounset -o pipefail
-    shopt -s inherit_errexit 2> /dev/null || true
-    shopt -s lastpipe
+    _bash_func_prelude
 
     local -a c_flags=(${runc_flags[@]+"${runc_flags[@]}"})
     local -a src_files=()
@@ -146,8 +143,7 @@ runc() (
 )
 
 runcxx() (
-    set -o errexit -o nounset -o pipefail
-    shopt -s inherit_errexit 2> /dev/null || true
+    _bash_func_prelude
 
     local -a runc_flags=(${runcxx_flags[@]+"${runcxx_flags[@]}"})
     BASH_ENV=<( declare -p runc_flags ) \

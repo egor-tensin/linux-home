@@ -27,6 +27,12 @@ export HISTSIZE=20000
 # Includes
 # -----------------------------------------------------------------------------
 
+_bash_func_prelude() {
+    set -o errexit -o nounset -o pipefail
+    shopt -s inherit_errexit 2> /dev/null || true
+    shopt -s lastpipe
+}
+
 _bash_includes() {
     local file
     for file in file text cxx distr git net path; do

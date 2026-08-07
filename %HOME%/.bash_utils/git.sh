@@ -4,9 +4,7 @@
 # Distributed under the MIT License.
 
 branch_eol_normalized() (
-    set -o errexit -o nounset -o pipefail
-    shopt -s inherit_errexit 2> /dev/null || true
-    shopt -s lastpipe
+    _bash_func_prelude
 
     local status
     status="$( git status --porcelain )"
@@ -47,9 +45,7 @@ branch_eol_normalized() (
 )
 
 branch_doslint() (
-    set -o errexit -o nounset -o pipefail
-    shopt -s inherit_errexit 2> /dev/null || true
-    shopt -s lastpipe
+    _bash_func_prelude
 
     local -a paths
 
@@ -62,9 +58,7 @@ branch_doslint() (
 )
 
 branch_lint() (
-    set -o errexit -o nounset -o pipefail
-    shopt -s inherit_errexit 2> /dev/null || true
-    shopt -s lastpipe
+    _bash_func_prelude
 
     local -a paths
 
@@ -77,9 +71,7 @@ branch_lint() (
 )
 
 git_replace() (
-    set -o errexit -o nounset -o pipefail
-    shopt -s inherit_errexit 2> /dev/null || true
-    shopt -s lastpipe
+    _bash_func_prelude
 
     if [ "$#" -ne 2 ]; then
         echo "usage: ${FUNCNAME[0]} STR SUB" 1>&2
@@ -93,9 +85,7 @@ git_replace() (
 )
 
 git_replace_word() (
-    set -o errexit -o nounset -o pipefail
-    shopt -s inherit_errexit 2> /dev/null || true
-    shopt -s lastpipe
+    _bash_func_prelude
 
     if [ "$#" -ne 2 ]; then
         echo "usage: ${FUNCNAME[0]} STR SUB" 1>&2

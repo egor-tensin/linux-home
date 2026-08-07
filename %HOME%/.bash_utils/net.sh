@@ -8,17 +8,11 @@ _curl() {
 }
 
 whatsmyip() (
-    set -o errexit -o nounset -o pipefail
-    shopt -s inherit_errexit 2> /dev/null || true
-    shopt -s lastpipe
-
+    _bash_func_prelude
     _curl "https://ifconfig.co/"
 )
 
 whatsmycountry() (
-    set -o errexit -o nounset -o pipefail
-    shopt -s inherit_errexit 2> /dev/null || true
-    shopt -s lastpipe
-
+    _bash_func_prelude
     _curl "https://ifconfig.co/country"
 )

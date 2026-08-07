@@ -4,9 +4,7 @@
 # Distributed under the MIT License.
 
 path_add() (
-    set -o errexit -o nounset -o pipefail
-    shopt -s inherit_errexit 2> /dev/null || true
-    shopt -s lastpipe
+    _bash_func_prelude
 
     local prepend=
 

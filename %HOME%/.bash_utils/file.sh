@@ -4,8 +4,7 @@
 # Distributed under the MIT License.
 
 swap_files() (
-    set -o errexit -o nounset -o pipefail
-    shopt -s inherit_errexit 2> /dev/null || true
+    _bash_func_prelude
 
     if [ "$#" -ne 2 ]; then
         echo "usage: ${FUNCNAME[0]} PATH1 PATH2" >&2
@@ -37,8 +36,7 @@ swap_files() (
 )
 
 pastebin() (
-    set -o errexit -o nounset -o pipefail
-    shopt -s inherit_errexit 2> /dev/null || true
+    _bash_func_prelude
 
     if [ "$#" -gt 1 ]; then
         echo "usage: ${FUNCNAME[0]} [PATH]" >&2
