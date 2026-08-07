@@ -27,14 +27,14 @@ export HISTSIZE=20000
 # Includes
 # -----------------------------------------------------------------------------
 
-_bashrc_includes() {
+_bash_includes() {
     local file
     for file in file text cxx distr git net path; do
         [ -r "$HOME/.bash_utils/$file.sh" ] && source "$HOME/.bash_utils/$file.sh"
     done
 }
 
-_bashrc_includes
+_bash_includes
 
 [ -r "$HOME/.bashrc_local" ] && source "$HOME/.bashrc_local"
 
@@ -130,7 +130,7 @@ export GPG_TTY
 # nnn
 # -----------------------------------------------------------------------------
 
-inside_nnn() {
+_bash_inside_nnn() {
     [ -n "$NNNLVL" ] && [ "${NNNLVL:-0}" -ge 1 ]
 }
 
@@ -139,7 +139,7 @@ alias ncp="cat ${NNN_SEL:-${XDG_CONFIG_HOME:-$HOME/.config}/nnn/.selection} | tr
 
 # nnn: like quitcd.bash_zsh, but better.
 n() {
-    inside_nnn && exit
+    _bash_inside_nnn && exit
 
     export NNN_TMPFILE="${XDG_CONFIG_HOME:-$HOME/.config}/nnn/.lastd"
 
@@ -159,19 +159,19 @@ nnn() {
 # tmux
 # -----------------------------------------------------------------------------
 
-remote_terminal() {
+_bash_remote_terminal() {
     test -n "$SSH_CONNECTION"
 }
 
-local_terminal() {
-    ! remote_terminal
+_bash_local_terminal() {
+    ! _bash_remote_terminal
 }
 
-multiplexed() {
+_bash_multiplexed() {
     test -n "$STY" -o -n "$TMUX"
 }
 
-if multiplexed && ! inside_nnn && local_terminal; then
+if _bash_multiplexed && ! _bash_inside_nnn && _bash_local_terminal; then
     # Launch nnn automatically in tmux, except when I'm inside a ssh session.
     # `which` instead of the normal `command -v` here because we need the
     # actual external executable, not the function defined above.
@@ -180,15 +180,15 @@ fi
 
 # tmux: start automatically.
 # https://unix.stackexchange.com/a/113768
-if multiplexed; then
+if _bash_multiplexed; then
     # Skip, we're already running a multiplexer.
     true
 elif command -v tmux &> /dev/null; then
     # On a remote terminal, always connect to the same session; on a local
     # terminal, create a new one every time a new terminal is opened.
-    if remote_terminal; then
+    if _bash_remote_terminal; then
         exec tmux new -A -s main
-    elif local_terminal; then
+    elif _bash_local_terminal; then
         exec tmux new
     fi
 fi
