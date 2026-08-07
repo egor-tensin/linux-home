@@ -33,6 +33,7 @@ export HISTSIZE=20000
 [ -r "$HOME/.bash_utils/cxx.sh"   ] && source "$HOME/.bash_utils/cxx.sh"
 [ -r "$HOME/.bash_utils/distr.sh" ] && source "$HOME/.bash_utils/distr.sh"
 [ -r "$HOME/.bash_utils/git.sh"   ] && source "$HOME/.bash_utils/git.sh"
+[ -r "$HOME/.bash_utils/net.sh"   ] && source "$HOME/.bash_utils/net.sh"
 [ -r "$HOME/.bash_utils/path.sh"  ] && source "$HOME/.bash_utils/path.sh"
 
 [ -r "$HOME/.bashrc_local" ] && source "$HOME/.bashrc_local"
