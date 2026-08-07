@@ -1,5 +1,3 @@
-#!/usr/bin/env bash
-
 # Copyright (c) 2016 Egor Tensin <egor@tensin.name>
 # This file is part of the "linux-home" project.
 # For details, see https://github.com/egor-tensin/linux-home.
