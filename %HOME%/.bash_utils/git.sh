@@ -81,7 +81,15 @@ git_replace() (
     readonly str="$1"
     readonly sub="$2"
 
-    git grep --files-with-matches -- "$str" | xargs sed -i "s/$str/$sub/g"
+    local path
+    local -a paths=()
+
+    git grep -z --files-with-matches -- "$str" |
+    while IFS= read -d '' -r path; do
+        paths+=("$path")
+    done
+
+    file_replace "$str" "$sub" ${paths[@]+"${paths[@]}"}
 )
 
 git_replace_word() (
@@ -95,5 +103,13 @@ git_replace_word() (
     readonly str="$1"
     readonly sub="$2"
 
-    git grep --files-with-matches --word-regexp -- "$str" | xargs sed -i "s/\b$str\b/$sub/g"
+    local path
+    local -a paths=()
+
+    git grep -z --files-with-matches -- "$str" |
+    while IFS= read -d '' -r path; do
+        paths+=("$path")
+    done
+
+    file_replace_word "$str" "$sub" ${paths[@]+"${paths[@]}"}
 )
