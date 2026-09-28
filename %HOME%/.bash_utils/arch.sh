@@ -10,7 +10,7 @@ yay_upgrade() (
 
 yay_install() (
     _bash_func_prelude
-    yay -Sy --noconfirm --needed --cleanafter "$@"
+    yay -Sya --noconfirm --needed --cleanafter "$@"
 )
 
 arch_upgrade() (
