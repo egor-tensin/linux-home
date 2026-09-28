@@ -3,21 +3,43 @@
 # For details, see https://github.com/egor-tensin/linux-home
 # Distributed under the MIT License.
 
+pacman_upgrade() (
+    _bash_func_prelude
+    sudo pacman -Syu --noconfirm
+)
+
+pacman_cleanup() (
+    _bash_func_prelude
+
+    local output
+    output="$( pacman -Qqdt )" || true
+    if [ -n "$output" ]; then
+        echo "$output" | sudo pacman -Rcsn --noconfirm -
+    fi
+)
+
+yay_opts='--noconfirm --needed --cleanafter --removemake'
+
 yay_upgrade() (
     _bash_func_prelude
-    yay -Syua --noconfirm --needed --cleanafter
+    yay -Syua $yay_opts
 )
 
 yay_install() (
     _bash_func_prelude
-    yay -Sya --noconfirm --needed --cleanafter "$@"
+    yay -Sya $yay_opts "$@"
+)
+
+yay_cleanup() (
+    _bash_func_prelude
+    yay -Sca --noconfirm
 )
 
 arch_upgrade() (
     _bash_func_prelude
 
     echo ======================================================================
-    sudo pacman -Syu --noconfirm
+    pacman_upgrade
     echo ======================================================================
     yay_upgrade
     echo ======================================================================
@@ -32,12 +54,8 @@ arch_cleanup() (
     _bash_func_prelude
 
     echo ======================================================================
-    local output
-    output="$( pacman -Qqdt )" || true
-    if [ -n "$output" ]; then
-        echo "$output" | sudo pacman -Rcsn --noconfirm -
-    fi
+    pacman_cleanup
     echo ======================================================================
-    yay -Sca --noconfirm
+    yay_cleanup
     echo ======================================================================
 )
