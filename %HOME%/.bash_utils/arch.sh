@@ -3,13 +3,23 @@
 # For details, see https://github.com/egor-tensin/linux-home
 # Distributed under the MIT License.
 
+yay_upgrade() (
+    _bash_func_prelude
+    yay -Syua --noconfirm --needed --cleanafter
+)
+
+yay_install() (
+    _bash_func_prelude
+    yay -Sy --noconfirm --needed --cleanafter "$@"
+)
+
 arch_upgrade() (
     _bash_func_prelude
 
     echo ======================================================================
     sudo pacman -Syu --noconfirm
     echo ======================================================================
-    yay -Syua --noconfirm --needed --cleanafter
+    yay_upgrade
     echo ======================================================================
 
     local reboot_timeout=10
@@ -22,13 +32,12 @@ arch_cleanup() (
     _bash_func_prelude
 
     echo ======================================================================
-    pacman -Qqdt | sudo pacman -Rcsn --noconfirm -
+    local output
+    output="$( pacman -Qqdt )" || true
+    if [ -n "$output" ]; then
+        echo "$output" | sudo pacman -Rcsn --noconfirm -
+    fi
     echo ======================================================================
     yay -Sca --noconfirm
     echo ======================================================================
-)
-
-arch_yay_install() (
-    _bash_func_prelude
-    yay -Sy --noconfirm --needed --cleanafter "$@"
 )
