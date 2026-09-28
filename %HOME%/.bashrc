@@ -35,7 +35,7 @@ _bash_func_prelude() {
 
 _bash_includes() {
     local file
-    for file in file text cxx distr git net path; do
+    for file in file text arch cxx distr git net path; do
         [ -r "$HOME/.bash_utils/$file.sh" ] && source "$HOME/.bash_utils/$file.sh"
     done
 }
