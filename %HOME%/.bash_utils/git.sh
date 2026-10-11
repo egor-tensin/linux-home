@@ -113,3 +113,32 @@ git_replace_word() (
 
     file_replace_word "$str" "$sub" ${paths[@]+"${paths[@]}"}
 )
+
+clone() (
+    _bash_func_prelude
+
+    if [ "$#" -lt 1 ] || [ "$#" -gt 2 ]; then
+        echo "usage: ${FUNCNAME[0]} NAME [bb]" >&2
+        exit 1
+    fi
+
+    local username=egor-tensin
+    local host=
+    [ "$#" -gt 1 ] && host="$2"
+    local name="$1"
+
+    case "$host" in
+        '')
+            host='github.com'
+            ;;
+        bb)
+            host='bitbucket.org'
+            ;;
+        *)
+            echo "${FUNCNAME[0]}: invalid host: $host" >&2
+            return 1
+            ;;
+    esac
+
+    git clone --recursive "ssh://git@$host/egor-tensin/$name.git"
+)
