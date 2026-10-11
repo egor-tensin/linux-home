@@ -78,8 +78,8 @@ git_replace() (
         exit 1
     fi
 
-    readonly str="$1"
-    readonly sub="$2"
+    local str="$1"
+    local sub="$2"
 
     local path
     local -a paths=()
@@ -100,8 +100,8 @@ git_replace_word() (
         exit 1
     fi
 
-    readonly str="$1"
-    readonly sub="$2"
+    local str="$1"
+    local sub="$2"
 
     local path
     local -a paths=()
