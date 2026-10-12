@@ -128,3 +128,7 @@ let loaded_netrwPlugin=1
 
 " Access X clipboard.
 set clipboard=unnamedplus
+
+" Larger copy-paste buffer.
+" Last 100 edited files, 2048 lines each, 100 KB total max.
+set viminfo='100,<2048,s100,h
