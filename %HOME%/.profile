@@ -9,6 +9,11 @@ elif command -v nano > /dev/null 2>&1; then
     export EDITOR=nano
 fi
 
+# https://wiki.archlinux.org/title/SSH_keys#Start_ssh-agent_with_systemd_user
+if systemctl --user is-enabled --quiet ssh-agent > /dev/null 2>&1; then
+    export SSH_AUTH_SOCK="$XDG_RUNTIME_DIR/ssh-agent.socket"
+fi
+
 path_export() {
     local path
     for path; do
