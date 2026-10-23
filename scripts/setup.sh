@@ -51,8 +51,7 @@ links_update() {
 }
 
 post_update() {
-    # Update the vim plugins:
-    "$script_dir/vim_plugins.sh"
+    "$script_dir/vim.sh"
 
     # Remove ~/.ssh/known_hosts, I don't use it (and have a corresponding
     # setting in ~/.ssh/config):
