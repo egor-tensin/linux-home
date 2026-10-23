@@ -50,7 +50,8 @@ links_update() {
     links-chmod go-w
 }
 
-post_update() {
+pre_update() {
+    "$script_dir/alacritty.sh"
     "$script_dir/vim.sh"
 
     # Remove ~/.ssh/known_hosts, I don't use it (and have a corresponding
@@ -59,9 +60,9 @@ post_update() {
 }
 
 main() {
+    pre_update
     config_links_in_path
     links_update
-    post_update
 }
 
 main

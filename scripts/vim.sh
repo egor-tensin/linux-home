@@ -19,10 +19,10 @@ pull() {
         name="${plugin#*/}"
 
         if [ -d "$name" ]; then
-            echo "Updating plugin: $plugin"
+            echo "Updating vim plugin: $plugin"
             git -C "$name" pull
         else
-            echo "Installing plugin: $plugin"
+            echo "Installing vim plugin: $plugin"
             git clone -q "https://github.com/$plugin.git"
         fi
     done
