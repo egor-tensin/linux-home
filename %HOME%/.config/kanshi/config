@@ -7,6 +7,8 @@
 #     wlr-randr --output eDP-1 --scale 1.2
 
 profile {
-     # tensin-laptop3
-     output "Chimei Innolux Corporation N140JCA-ELP*" scale 1.25
+    # tensin-laptop2
+    output "BOE 0x06DF*" scale 1.2
+    # tensin-laptop3
+    output "Chimei Innolux Corporation N140JCA-ELP*" scale 1.25
 }
