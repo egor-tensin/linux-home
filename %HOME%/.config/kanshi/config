@@ -1,0 +1,12 @@
+# More info can be found here:
+# https://labwc.github.io/hidpi-scaling.html
+
+# List your outputs:
+#     wlr-randr
+# Change scaling dynamically:
+#     wlr-randr --output eDP-1 --scale 1.2
+
+profile {
+     # tensin-laptop3
+     output "Chimei Innolux Corporation N140JCA-ELP*" scale 1.25
+}
