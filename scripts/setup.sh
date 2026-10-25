@@ -51,7 +51,6 @@ links_update() {
 }
 
 pre_update() {
-    "$script_dir/alacritty.sh"
     "$script_dir/vim.sh"
 
     # Remove ~/.ssh/known_hosts, I don't use it (and have a corresponding
