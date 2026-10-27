@@ -119,7 +119,8 @@ command -v fd > /dev/null 2>&1 \
 # -A    Don't auto-enter directories.
 # -e    Open text files in $EDITOR.
 # -o    Only open on Enter, not on l.
-export NNN_OPTS=Aeo
+# -u    Act on selection by default, not the hovered item.
+export NNN_OPTS=Aeou
 
 export NNN_PLUG='f:myfzcd'
 export NNN_BMS="d:$HOME/Downloads;w:$HOME/workspace/personal"
