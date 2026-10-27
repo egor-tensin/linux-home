@@ -34,24 +34,6 @@ path_export() {
 path_export "$HOME/.local/bin"
 
 # -----------------------------------------------------------------------------
-# Homebrew
-# -----------------------------------------------------------------------------
-
-brew_setup() {
-    [ -x /opt/homebrew/bin/brew ] && \
-        eval "$( /opt/homebrew/bin/brew shellenv )" && \
-        prefix="$( brew --prefix )" && \
-        path_export \
-            "$prefix/opt/coreutils/libexec/gnubin" \
-            "$prefix/opt/findutils/libexec/gnubin" \
-            "$prefix/opt/gnu-sed/libexec/gnubin" \
-            "$prefix/opt/grep/libexec/gnubin" \
-            "$prefix/opt/python/libexec/bin"
-}
-
-brew_setup
-
-# -----------------------------------------------------------------------------
 # Ruby
 # -----------------------------------------------------------------------------
 
