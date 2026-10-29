@@ -1,38 +1,30 @@
-# the following line is actually
-# equivalent to "\C-?": delete-char
-"\e[3~": delete-char
+# https://www.gnu.org/software/bash/manual/html_node/Readline-Init-File-Syntax.html
 
-# VT
-"\e[1~": beginning-of-line
-"\e[4~": end-of-line
+# Don't ever bug me with audio, please, everybody:
+set bell-style visible
 
-# kvt
-"\e[H": beginning-of-line
-"\e[F": end-of-line
+# Auto-completion:
+set completion-ignore-case on
+# This makes it so when you type in something like "wl-<TAB>", instead of a
+# terminal bell going off (whatever it is), the possible matches are listed
+# immediately. In practice, on my machines, it means that if those are "off",
+# you need to press <TAB> one more time to list the completions. Not sure how
+# this works with the TAB: menu-complete setting below.
+set show-all-if-ambiguous on
+# Try to figure out the description of this option, it's incomprehensible.
+# Anyways, I never want to press <TAB> twice.
+set show-all-if-unmodified on
 
-# rxvt and konsole (i.e. the KDE-app...)
-"\e[7~": beginning-of-line
-"\e[8~": end-of-line
+# When typing something like `vim ~/.vim<TAB>`, expand the "~" to a full
+# $HOME path. Idk, just seems reasonable.
+set expand-tilde on
 
-# VT220
-"\eOH": beginning-of-line
-"\eOF": end-of-line
+# The default is fucking stupid; if you type something like `vim ~/.confi<TAB>`,
+# it will auto-complete to ".config", but will not append the slash to it,
+# and you have to type in the "/" manually.
+set mark-directories on
+set mark-symlinked-directories on
 
-# Allow 8-bit input/output
-#set meta-flag on
-#set convert-meta off
-#set input-meta on
-#set output-meta on
-$if Bash
-  #set bell-style none
-  set bell-style visible
-  set completion-ignore-case on
-  set show-all-if-unmodified on
-  set show-all-if-ambiguous on
-  set expand-tilde on
-  set mark-directories on
-  set mark-symlinked-directories on
-  set match-hidden-files on
-  #Space: magic-space
-  TAB: menu-complete
-$endif
+# Cycle through completions; so, when you type in "wl-<TAB>", it will suggest
+# every completion in turn instead of whatever else it does.
+TAB: menu-complete
