@@ -103,7 +103,9 @@ alias sed='sed --follow-symlinks'
 #     command | copy
 if command -v pbcopy &> /dev/null; then
     # MacOS
-    alias copy='pbcopy'
+    alias copy=pbcopy
+elif command -v wl-copy &> /dev/null; then
+    alias copy=wl-copy
 elif command -v xclip &> /dev/null; then
     alias copy='xclip -sel clip'
 fi
