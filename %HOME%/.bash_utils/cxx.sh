@@ -7,7 +7,7 @@ runc_use_gcc() {
     runc_compiler=gcc
     runcxx_compiler=g++
     declare -ag runc_flags=('-Wall' '-Wextra')
-    declare -ag runcxx_flags=('-Wall' '-Wextra' '-std=c++14')
+    declare -ag runcxx_flags=('-Wall' '-Wextra')
 }
 
 runc_use_clang() {
