@@ -34,6 +34,7 @@
 [alias]
 	# Pull and sync submodules.
 	pulll = !git pull && git submodule sync --recursive && git submodule update --init --recursive
+	p = pulll
 
 # Automatically remove obsolete things/publish new things.
 [fetch]
